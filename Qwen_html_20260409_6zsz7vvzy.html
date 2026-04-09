@@ -1,0 +1,1192 @@
+﻿<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>14th Orano-Eurelian Meeting of Rheumatology | 2nd International Congress</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=Noto+Sans+Arabic:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0a5e7c;
+      --primary-dark: #063d50;
+      --primary-light: #0d8ab0;
+      --accent: #00b4d8;
+      --accent2: #48cae4;
+      --accent3: #90e0ef;
+      --gold: #c9a84c;
+      --gold-light: #e8d48b;
+      --dark: #0b1a2b;
+      --dark2: #12263a;
+      --text: #2c3e50;
+      --text-light: #5a7a9a;
+      --white: #ffffff;
+      --bg-light: #f0f7fa;
+      --gradient1: linear-gradient(135deg, #0a5e7c 0%, #0d8ab0 50%, #00b4d8 100%);
+      --gradient2: linear-gradient(135deg, #0b1a2b 0%, #0a5e7c 100%);
+      --gradient3: linear-gradient(135deg, #c9a84c 0%, #e8d48b 50%, #f5e6a3 100%);
+      --shadow: 0 20px 60px rgba(10,94,124,0.15);
+      --shadow-lg: 0 30px 80px rgba(10,94,124,0.25);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background: var(--white);
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+    [dir="rtl"] body { font-family: 'Noto Sans Arabic', 'Inter', sans-serif; }
+
+    /* Preloader */
+    #preloader {
+      position: fixed; top:0; left:0; width:100%; height:100%;
+      background: var(--dark); z-index: 99999;
+      display: flex; align-items: center; justify-content: center; flex-direction: column;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+    #preloader.hidden { opacity: 0; visibility: hidden; }
+    .loader-dna { width: 80px; height: 120px; position: relative; }
+    .loader-dna span {
+      position: absolute; width: 12px; height: 12px; border-radius: 50%;
+      background: var(--accent); animation: dnaAnim 1.5s ease-in-out infinite;
+    }
+    .loader-dna span:nth-child(1){left:0;animation-delay:0s}
+    .loader-dna span:nth-child(2){left:20px;animation-delay:0.15s}
+    .loader-dna span:nth-child(3){left:40px;animation-delay:0.3s}
+    .loader-dna span:nth-child(4){left:60px;animation-delay:0.45s}
+    .loader-dna span:nth-child(5){left:40px;animation-delay:0.6s}
+    .loader-dna span:nth-child(6){left:20px;animation-delay:0.75s}
+    .loader-dna span:nth-child(7){left:0;animation-delay:0.9s}
+    .loader-dna span:nth-child(8){left:20px;animation-delay:1.05s}
+    .loader-dna span:nth-child(9){left:40px;animation-delay:1.2s}
+    .loader-dna span:nth-child(10){left:60px;animation-delay:1.35s}
+    @keyframes dnaAnim {
+      0%,100%{transform:translateX(0) scale(1);opacity:0.3}
+      50%{transform:translateX(20px) scale(1.3);opacity:1}
+    }
+    .loader-text { color: var(--accent); font-size: 0.85rem; letter-spacing: 3px; margin-top: 30px; text-transform: uppercase; }
+
+    /* Particles */
+    #particles-container { position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden; }
+    .particle { position:absolute;border-radius:50%;opacity:0.1;animation:floatParticle linear infinite; }
+    @keyframes floatParticle {
+      0%{transform:translateY(100vh) rotate(0deg);opacity:0}
+      10%{opacity:0.1}90%{opacity:0.1}
+      100%{transform:translateY(-100px) rotate(720deg);opacity:0}
+    }
+
+    /* Navbar */
+    .navbar {
+      position:fixed;top:0;width:100%;z-index:1000;padding:15px 0;
+      transition:all 0.5s cubic-bezier(0.4,0,0.2,1);background:transparent;
+    }
+    .navbar.scrolled {
+      background:rgba(11,26,43,0.95);backdrop-filter:blur(20px);padding:8px 0;
+      box-shadow:0 4px 30px rgba(0,0,0,0.3);
+    }
+    .nav-container {
+      max-width:1400px;margin:0 auto;padding:0 30px;
+      display:flex;align-items:center;justify-content:space-between;
+    }
+    .nav-logo { display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--white); }
+    .nav-logo-icon {
+      width:45px;height:45px;background:var(--gradient3);border-radius:12px;
+      display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:800;color:var(--primary-dark);
+    }
+    .nav-logo-text { font-family:'Playfair Display',serif;font-weight:700;font-size:1.1rem;line-height:1.2; }
+    .nav-logo-text small { font-size:0.65rem;font-weight:400;opacity:0.7;display:block;font-family:'Inter',sans-serif; }
+    .nav-links { display:flex;align-items:center;gap:25px;list-style:none; }
+    .nav-links a {
+      color:rgba(255,255,255,0.85);text-decoration:none;font-size:0.85rem;font-weight:500;
+      letter-spacing:0.5px;transition:all 0.3s ease;position:relative;
+    }
+    .nav-links a::after {
+      content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;
+      background:var(--accent);transition:width 0.3s ease;
+    }
+    .nav-links a:hover{color:var(--white)}
+    .nav-links a:hover::after{width:100%}
+
+    /* Lang Switcher */
+    .lang-switcher { position:relative; }
+    .lang-btn {
+      background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);
+      color:var(--white);padding:8px 16px;border-radius:25px;cursor:pointer;
+      font-size:0.8rem;font-weight:500;display:flex;align-items:center;gap:8px;
+      transition:all 0.3s ease;backdrop-filter:blur(10px);
+    }
+    .lang-btn:hover { background:rgba(255,255,255,0.25); }
+    .lang-btn .flag { font-size:1.1rem; }
+    .lang-dropdown {
+      position:absolute;top:110%;right:0;background:rgba(11,26,43,0.97);
+      backdrop-filter:blur(20px);border-radius:16px;padding:10px;min-width:180px;
+      opacity:0;visibility:hidden;transform:translateY(-10px);
+      transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
+      box-shadow:0 20px 60px rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.1);z-index:1001;
+    }
+    .lang-switcher:hover .lang-dropdown, .lang-dropdown.active {
+      opacity:1;visibility:visible;transform:translateY(0);
+    }
+    .lang-option {
+      display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;
+      cursor:pointer;transition:all 0.3s ease;color:rgba(255,255,255,0.8);font-size:0.85rem;
+    }
+    .lang-option:hover { background:rgba(255,255,255,0.1);color:var(--white); }
+    .lang-option.active { background:var(--primary);color:var(--white); }
+    .lang-option .flag { font-size:1.3rem; }
+
+    /* Mobile Menu */
+    .mobile-toggle { display:none;flex-direction:column;gap:5px;cursor:pointer;padding:5px;z-index:1002; }
+    .mobile-toggle span { width:28px;height:2px;background:var(--white);transition:all 0.3s ease;border-radius:2px; }
+    .mobile-toggle.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+    .mobile-toggle.active span:nth-child(2){opacity:0}
+    .mobile-toggle.active span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+
+    /* Hero */
+    .hero {
+      min-height:100vh;background:var(--gradient2);position:relative;
+      display:flex;align-items:center;justify-content:center;overflow:hidden;
+    }
+    .hero-bg-pattern {
+      position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.05;
+      background-image:radial-gradient(circle at 20% 50%,var(--accent) 1px,transparent 1px),radial-gradient(circle at 80% 20%,var(--accent) 1px,transparent 1px),radial-gradient(circle at 40% 80%,var(--accent) 1px,transparent 1px);
+      background-size:60px 60px,80px 80px,100px 100px;animation:patternMove 30s linear infinite;
+    }
+    @keyframes patternMove { 0%{transform:translate(0,0)}100%{transform:translate(60px,60px)} }
+    .hero-gradient-orb { position:absolute;border-radius:50%;filter:blur(80px);animation:orbFloat 8s ease-in-out infinite; }
+    .hero-gradient-orb:nth-child(1){width:600px;height:600px;background:rgba(0,180,216,0.15);top:-200px;right:-100px;animation-delay:0s}
+    .hero-gradient-orb:nth-child(2){width:400px;height:400px;background:rgba(201,168,76,0.1);bottom:-100px;left:-100px;animation-delay:-3s}
+    .hero-gradient-orb:nth-child(3){width:300px;height:300px;background:rgba(72,202,228,0.1);top:50%;left:50%;animation-delay:-5s}
+    @keyframes orbFloat {
+      0%,100%{transform:translate(0,0) scale(1)}
+      33%{transform:translate(30px,-30px) scale(1.05)}
+      66%{transform:translate(-20px,20px) scale(0.95)}
+    }
+    .hero-content { position:relative;z-index:10;text-align:center;max-width:1000px;padding:120px 30px 80px; }
+    .hero-badge {
+      display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.15);padding:10px 24px;border-radius:50px;
+      color:var(--accent2);font-size:0.85rem;font-weight:500;margin-bottom:30px;
+      backdrop-filter:blur(10px);animation:fadeInDown 1s ease 0.5s both;
+    }
+    .hero-badge .badge-dot { width:8px;height:8px;background:var(--accent);border-radius:50%;animation:pulse 2s ease infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.5)} }
+    .hero-edition {
+      font-family:'Playfair Display',serif;font-size:5rem;font-weight:900;color:var(--white);
+      line-height:1;margin-bottom:5px;animation:fadeInUp 1s ease 0.7s both;position:relative;
+    }
+    .hero-edition .th { font-size:2rem;vertical-align:super;font-weight:600;color:var(--accent2); }
+    .hero-edition .edition-line {
+      display:block;font-size:1.5rem;font-weight:400;font-family:'Inter',sans-serif;
+      color:rgba(255,255,255,0.6);margin-top:5px;letter-spacing:2px;
+    }
+    .hero-title {
+      font-family:'Playfair Display',serif;font-size:3.2rem;font-weight:700;color:var(--white);
+      line-height:1.2;margin-bottom:15px;animation:fadeInUp 1s ease 0.9s both;
+    }
+    .hero-title .highlight {
+      background:linear-gradient(135deg,var(--accent2),var(--accent));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+    .hero-subtitle {
+      font-size:1.3rem;color:var(--accent3);font-weight:300;margin-bottom:20px;
+      animation:fadeInUp 1s ease 1.1s both;letter-spacing:1px;
+    }
+    .hero-details {
+      display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;
+      margin-bottom:40px;animation:fadeInUp 1s ease 1.3s both;
+    }
+    .hero-detail-item {
+      display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.8);font-size:0.95rem;
+      background:rgba(255,255,255,0.06);padding:10px 20px;border-radius:30px;border:1px solid rgba(255,255,255,0.1);
+    }
+    .hero-detail-item .icon { font-size:1.1rem; }
+    .hero-cta {
+      display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;
+      animation:fadeInUp 1s ease 1.5s both;
+    }
+    .btn {
+      display:inline-flex;align-items:center;gap:10px;padding:16px 36px;border-radius:50px;
+      font-size:0.95rem;font-weight:600;text-decoration:none;transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
+      cursor:pointer;border:none;position:relative;overflow:hidden;
+    }
+    .btn-primary {
+      background:var(--gradient3);color:var(--primary-dark);box-shadow:0 10px 40px rgba(201,168,76,0.3);
+    }
+    .btn-primary:hover { transform:translateY(-3px);box-shadow:0 15px 50px rgba(201,168,76,0.4); }
+    .btn-secondary {
+      background:rgba(255,255,255,0.1);color:var(--white);border:1px solid rgba(255,255,255,0.3);
+      backdrop-filter:blur(10px);
+    }
+    .btn-secondary:hover { background:rgba(255,255,255,0.2);transform:translateY(-3px); }
+    .hero-scroll-indicator {
+      position:absolute;bottom:30px;left:50%;transform:translateX(-50%);
+      display:flex;flex-direction:column;align-items:center;gap:8px;
+      color:rgba(255,255,255,0.5);font-size:0.75rem;letter-spacing:2px;text-transform:uppercase;
+      animation:fadeInUp 1s ease 2s both;
+    }
+    .scroll-mouse { width:26px;height:40px;border:2px solid rgba(255,255,255,0.3);border-radius:13px;position:relative; }
+    .scroll-mouse::after {
+      content:'';position:absolute;top:8px;left:50%;transform:translateX(-50%);
+      width:3px;height:8px;background:var(--accent);border-radius:2px;animation:scrollDown 2s ease infinite;
+    }
+    @keyframes scrollDown { 0%{transform:translateX(-50%) translateY(0);opacity:1}100%{transform:translateX(-50%) translateY(12px);opacity:0} }
+    @keyframes fadeInUp { from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeInDown { from{opacity:0;transform:translateY(-30px)}to{opacity:1;transform:translateY(0)} }
+
+    /* Countdown */
+    .countdown-section { background:var(--dark);padding:0;position:relative;z-index:5;margin-top:-1px; }
+    .countdown-container { max-width:1000px;margin:0 auto;display:flex;align-items:center;justify-content:center;padding:40px 30px; }
+    .countdown-item { text-align:center;padding:0 30px;position:relative; }
+    .countdown-item:not(:last-child)::after {
+      content:':';position:absolute;right:-5px;top:50%;transform:translateY(-60%);
+      font-size:2.5rem;color:var(--accent);font-weight:300;
+    }
+    .countdown-number {
+      font-family:'Playfair Display',serif;font-size:3.5rem;font-weight:800;color:var(--white);
+      line-height:1;min-width:80px;display:block;
+    }
+    .countdown-label { font-size:0.75rem;color:var(--text-light);text-transform:uppercase;letter-spacing:2px;margin-top:8px; }
+
+    /* Sections */
+    .section { padding:100px 30px;position:relative;overflow:hidden; }
+    .section-header { text-align:center;max-width:700px;margin:0 auto 60px; }
+    .section-label {
+      display:inline-flex;align-items:center;gap:8px;color:var(--primary-light);
+      font-size:0.85rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:15px;
+    }
+    .section-label::before,.section-label::after { content:'';width:30px;height:1px;background:var(--primary-light); }
+    .section-title {
+      font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:700;color:var(--dark);line-height:1.2;margin-bottom:20px;
+    }
+    .section-desc { color:var(--text-light);font-size:1.05rem;line-height:1.8; }
+
+    /* About */
+    .about-section { background:var(--bg-light); }
+    .about-grid { max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center; }
+    .about-image-wrapper { position:relative; }
+    .about-image {
+      width:100%;height:500px;background:var(--gradient1);border-radius:24px;
+      overflow:hidden;position:relative;box-shadow:var(--shadow-lg);
+    }
+    .about-image::before {
+      content:'🦴';position:absolute;font-size:15rem;opacity:0.15;top:50%;left:50%;transform:translate(-50%,-50%);
+    }
+    .about-image-overlay {
+      position:absolute;bottom:0;left:0;right:0;padding:30px;
+      background:linear-gradient(transparent,rgba(0,0,0,0.7));color:var(--white);
+    }
+    .about-image-overlay h3 { font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:5px; }
+    .about-float-card {
+      position:absolute;top:-20px;right:-20px;background:var(--white);padding:20px 25px;
+      border-radius:16px;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px;
+      animation:floatCard 4s ease-in-out infinite;
+    }
+    @keyframes floatCard { 0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)} }
+    .about-float-card .card-icon {
+      width:50px;height:50px;background:var(--gradient1);border-radius:12px;
+      display:flex;align-items:center;justify-content:center;font-size:1.5rem;
+    }
+    .about-float-card .card-text h4 { font-size:1.4rem;font-weight:700;color:var(--primary); }
+    .about-float-card .card-text p { font-size:0.8rem;color:var(--text-light); }
+    .about-text h3 { font-family:'Playfair Display',serif;font-size:2rem;color:var(--dark);margin-bottom:20px; }
+    .about-text p { color:var(--text-light);margin-bottom:15px;line-height:1.8; }
+    .about-features { display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:25px; }
+    .about-feature {
+      display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--white);
+      border-radius:12px;font-size:0.9rem;font-weight:500;box-shadow:0 4px 15px rgba(0,0,0,0.05);
+      transition:all 0.3s ease;
+    }
+    .about-feature:hover { transform:translateX(5px);box-shadow:0 8px 25px rgba(0,0,0,0.1); }
+    .about-feature .check {
+      width:24px;height:24px;background:var(--accent);border-radius:50%;
+      display:flex;align-items:center;justify-content:center;color:var(--white);font-size:0.7rem;flex-shrink:0;
+    }
+
+    /* Topics */
+    .topics-section { background:var(--white); }
+    .topics-grid { max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:25px; }
+    .topic-card {
+      background:var(--white);border-radius:20px;padding:35px 30px;border:1px solid rgba(0,0,0,0.06);
+      transition:all 0.5s cubic-bezier(0.4,0,0.2,1);position:relative;overflow:hidden;cursor:pointer;
+    }
+    .topic-card::before {
+      content:'';position:absolute;top:0;left:0;width:100%;height:4px;
+      background:var(--gradient1);transform:scaleX(0);transition:transform 0.5s ease;transform-origin:left;
+    }
+    .topic-card:hover::before { transform:scaleX(1); }
+    .topic-card:hover { transform:translateY(-8px);box-shadow:var(--shadow);border-color:transparent; }
+    .topic-icon {
+      width:60px;height:60px;background:linear-gradient(135deg,rgba(10,94,124,0.1),rgba(0,180,216,0.1));
+      border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;
+      margin-bottom:20px;transition:all 0.3s ease;
+    }
+    .topic-card:hover .topic-icon { background:var(--gradient1);transform:scale(1.1); }
+    .topic-card h3 { font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--dark);margin-bottom:10px; }
+    .topic-card p { color:var(--text-light);font-size:0.9rem;line-height:1.7; }
+
+    /* Program */
+    #program {
+      --navy:#0B2545;--navy2:#163566;--teal:#0D8A85;--teal2:#12B5AF;
+      --gold:#C9A84C;--gold2:#E5C97A;--red:#C0392B;--off:#F7F5F2;
+      --card:#FFFFFF;--border:#E2DDD8;--text:#1a1a2e;--muted:#6b7280;
+      background:var(--off);
+      color:var(--text);
+    }
+    #program .section-title { color:var(--navy); }
+    #program .section-desc { color:var(--muted); }
+    #program .section-label { color:var(--teal); }
+    #program .section-label::before,#program .section-label::after { background:var(--teal); }
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.15);opacity:.8}}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+    @keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
+    #program .fade-up{animation:fadeUp .6s cubic-bezier(.22,1,.36,1) both}
+    #program .pulse-dot{animation:pulse 2s ease-in-out infinite}
+    #program .float-badge{animation:float 3s ease-in-out infinite}
+
+    #program #day-nav{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+    #program .nav-inner{max-width:960px;margin:0 auto;display:flex}
+    #program .day-btn{flex:1;padding:14px 8px;border:none;background:transparent;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12.5px;color:var(--muted);font-weight:400;border-bottom:3px solid transparent;transition:all .25s}
+    #program .day-btn.active{color:var(--navy);font-weight:600;border-bottom-color:var(--teal)}
+    #program .day-btn:hover{color:var(--navy);background:#fafaf9}
+
+    #program #main-content{max-width:960px;margin:0 auto;padding:40px 20px 10px}
+
+    #program .timeline{position:relative;padding-left:52px}
+    [dir="rtl"] #program .timeline{padding-left:0;padding-right:52px}
+    #program .tl-line{position:absolute;left:20px;top:8px;bottom:0;width:3px;background:linear-gradient(to bottom,var(--teal),var(--navy2) 60%,rgba(11,37,69,.1));border-radius:2px}
+    [dir="rtl"] #program .tl-line{left:auto;right:20px}
+
+    #program .tl-item{position:relative;margin-bottom:24px;opacity:0}
+    #program .tl-item.visible{animation:fadeUp .55s cubic-bezier(.22,1,.36,1) both}
+    #program .tl-dot{position:absolute;left:-40px;top:12px;width:16px;height:16px;background:var(--teal);border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 3px rgba(13,138,133,.25);z-index:2}
+    [dir="rtl"] #program .tl-dot{left:auto;right:-40px}
+    #program .tl-dot.gold{background:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.25)}
+    #program .tl-dot.break{background:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,.25)}
+
+    #program .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 20px;transition:box-shadow .2s,transform .2s}
+    #program .card:hover{box-shadow:0 4px 20px rgba(0,0,0,.08);transform:translateY(-1px)}
+
+    #program .session-header{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;border-radius:14px;padding:18px 22px;margin-bottom:4px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:box-shadow .2s;border:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif}
+    [dir="rtl"] #program .session-header{text-align:right}
+    #program .session-header:hover{box-shadow:0 6px 24px rgba(11,37,69,.35)}
+    #program .session-num{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:700;color:var(--gold2);line-height:1;margin-right:16px;min-width:40px}
+    [dir="rtl"] #program .session-num{margin-right:0;margin-left:16px}
+    #program .session-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:3px}
+    #program .chevron{font-size:18px;color:var(--gold2);transition:transform .3s;flex-shrink:0}
+    #program .chevron.open{transform:rotate(180deg)}
+
+    #program .talk-row{background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:8px;transition:all .2s}
+    #program .talk-row:hover{border-color:var(--teal);box-shadow:0 2px 12px rgba(13,138,133,.1)}
+    #program .talk-time{font-size:11px;font-weight:600;color:var(--teal);letter-spacing:.5px;background:rgba(13,138,133,.08);padding:2px 8px;border-radius:10px;display:inline-block;margin-bottom:6px}
+    #program .talk-title{font-size:13.5px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:5px}
+    #program .talk-speaker{font-size:12px;color:var(--muted)}
+    #program .talk-loc{color:#9ca3af}
+    #program .zoom-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;background:#e0f2fe;color:#0369a1;padding:2px 8px;border-radius:8px;margin-left:8px}
+    [dir="rtl"] #program .zoom-badge{margin-left:0;margin-right:8px}
+
+    #program .symp-card{background:linear-gradient(135deg,#fdf8ee,#fef3cd);border:1px solid var(--gold);border-radius:12px;padding:14px 18px;margin-bottom:8px;position:relative;overflow:hidden}
+    #program .symp-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold));background-size:200% 100%;animation:shimmer 3s linear infinite}
+    #program .symp-sponsor{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+    #program .symp-label{display:inline-block;font-size:10px;background:var(--gold);color:#fff;padding:1px 8px;border-radius:10px;margin-bottom:6px;font-weight:600;letter-spacing:.5px}
+    #program .symp-title{font-size:13.5px;font-weight:600;color:#78350f;line-height:1.4;margin-bottom:5px}
+    #program .symp-speaker{font-size:12px;color:#92400e}
+
+    #program .debate-card{background:rgba(11,37,69,.05);border:1px dashed rgba(11,37,69,.25);border-radius:10px;padding:10px 16px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+    #program .break-card{background:linear-gradient(135deg,#ecfdf5,#d1fae5);border:1px solid #6ee7b7;border-radius:12px;padding:14px 20px;margin-bottom:16px;display:flex;align-items:center;gap:12px}
+    #program .lunch-card{background:linear-gradient(135deg,#fff7ed,#ffedd5);border:1px solid #fdba74;border-radius:12px;padding:14px 20px;margin-bottom:16px;display:flex;align-items:center;gap:12px}
+    #program .closing-card{background:linear-gradient(135deg,var(--navy),var(--navy2));border-radius:14px;padding:20px 24px;margin-bottom:16px;display:flex;align-items:center;gap:14px}
+    #program .reg-card{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #86efac;border-radius:14px;padding:20px 24px;margin-bottom:8px}
+    #program .speech-card{background:#fff;border:1px solid var(--border);border-left:4px solid var(--teal);border-radius:12px;padding:16px 20px;margin-bottom:8px}
+    [dir="rtl"] #program .speech-card{border-left:1px solid var(--border);border-right:4px solid var(--teal)}
+
+    #program .workshop-header{background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:14px;padding:16px 22px;margin-bottom:16px;display:flex;align-items:center;gap:14px}
+    #program .workshops-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px}
+    @media(max-width:600px){#program .workshops-grid{grid-template-columns:1fr}}
+    #program .wk-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px;position:relative;overflow:hidden;transition:all .2s}
+    #program .wk-card:hover{border-color:var(--navy2);box-shadow:0 4px 16px rgba(22,53,102,.12)}
+    #program .wk-number{position:absolute;top:-6px;right:-6px;width:32px;height:32px;background:var(--navy);color:#fff;font-weight:700;font-size:12px;border-radius:0 12px 0 10px;display:flex;align-items:center;justify-content:center}
+    [dir="rtl"] #program .wk-number{right:auto;left:-6px;border-radius:12px 0 10px 0}
+    #program .wk-title{font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:8px;line-height:1.4;padding-right:28px}
+    [dir="rtl"] #program .wk-title{padding-right:0;padding-left:28px}
+    #program .wk-speaker{font-size:11.5px;color:var(--muted)}
+    #program .wk-moderator{font-size:11px;color:var(--teal);font-weight:500;margin-top:6px}
+    #program .hall-badge{display:inline-block;font-size:10px;background:var(--navy);color:#fff;padding:2px 8px;border-radius:8px;margin-top:6px;font-weight:500}
+
+    #program .session-talks{margin-left:8px;overflow:hidden}
+    [dir="rtl"] #program .session-talks{margin-left:0;margin-right:8px}
+    #program .icon-circle{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+    @media(max-width:700px){#program #main-content{padding:24px 14px 10px}#program .timeline{padding-left:40px}[dir="rtl"] #program .timeline{padding-left:0;padding-right:40px}}
+
+    /* Venue */
+    .venue-section { background:var(--white); }
+    .venue-container { max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center; }
+    .venue-map {
+      height:450px;background:linear-gradient(135deg,#1a3a5c,#0a5e7c);border-radius:24px;
+      overflow:hidden;position:relative;box-shadow:var(--shadow-lg);
+    }
+    .venue-map::after { content:'🏨';position:absolute;font-size:5rem;top:50%;left:50%;transform:translate(-50%,-50%); }
+    .venue-map-overlay {
+      position:absolute;bottom:0;left:0;right:0;padding:25px;
+      background:linear-gradient(transparent,rgba(0,0,0,0.8));color:var(--white);
+    }
+    .venue-map-overlay h3 { font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:5px; }
+    .venue-info h3 { font-family:'Playfair Display',serif;font-size:2rem;color:var(--dark);margin-bottom:20px; }
+    .venue-info p { color:var(--text-light);margin-bottom:15px;line-height:1.8; }
+    .venue-amenities { display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:25px; }
+    .amenity {
+      display:flex;align-items:center;gap:10px;padding:12px;background:var(--bg-light);
+      border-radius:12px;font-size:0.9rem;font-weight:500;
+    }
+    .amenity .icon { font-size:1.2rem; }
+
+    /* Organizers */
+    .organizers-section { background:var(--bg-light); }
+    .organizers-grid { max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:30px; }
+    .organizer-card {
+      background:var(--white);border-radius:20px;padding:35px;text-align:center;
+      transition:all 0.4s ease;box-shadow:0 5px 20px rgba(0,0,0,0.04);
+    }
+    .organizer-card:hover { transform:translateY(-5px);box-shadow:var(--shadow); }
+    .organizer-logo {
+      width:90px;height:90px;background:var(--bg-light);border-radius:50%;
+      margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;
+    }
+    .organizer-card h3 { font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--dark);margin-bottom:5px; }
+    .organizer-card p { color:var(--text-light);font-size:0.85rem;line-height:1.7; }
+
+    /* CTA */
+    .cta-section {
+      background:var(--gradient2);padding:80px 30px;text-align:center;position:relative;overflow:hidden;
+    }
+    .cta-section::before {
+      content:'';position:absolute;top:0;left:0;width:100%;height:100%;
+      background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300b4d8' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .cta-content { position:relative;z-index:2;max-width:700px;margin:0 auto; }
+    .cta-content h2 { font-family:'Playfair Display',serif;font-size:2.5rem;color:var(--white);margin-bottom:20px; }
+    .cta-content p { color:rgba(255,255,255,0.7);font-size:1.1rem;margin-bottom:30px; }
+
+    /* Footer */
+    .footer { background:var(--dark);color:rgba(255,255,255,0.6);padding:60px 30px 30px; }
+    .footer-container { max-width:1200px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px; }
+    .footer-brand h3 { font-family:'Playfair Display',serif;color:var(--white);font-size:1.3rem;margin-bottom:15px; }
+    .footer-brand p { font-size:0.9rem;line-height:1.8;margin-bottom:20px; }
+    .footer-social { display:flex;gap:10px; }
+    .footer-social a {
+      width:40px;height:40px;background:rgba(255,255,255,0.08);border-radius:10px;
+      display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.6);
+      text-decoration:none;transition:all 0.3s ease;
+    }
+    .footer-social a:hover { background:var(--primary);color:var(--white); }
+    .footer-col h4 { color:var(--white);font-size:1rem;margin-bottom:20px;font-weight:600; }
+    .footer-col ul { list-style:none; }
+    .footer-col ul li { margin-bottom:10px; }
+    .footer-col ul li a {
+      color:rgba(255,255,255,0.5);text-decoration:none;font-size:0.9rem;transition:all 0.3s ease;
+    }
+    .footer-col ul li a:hover { color:var(--accent);padding-left:5px; }
+    .footer-bottom {
+      border-top:1px solid rgba(255,255,255,0.08);padding-top:25px;text-align:center;
+      font-size:0.85rem;max-width:1200px;margin:0 auto;
+    }
+
+    /* Back to top */
+    .back-to-top {
+      position:fixed;bottom:30px;right:30px;width:50px;height:50px;background:var(--gradient1);
+      border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--white);
+      font-size:1.2rem;cursor:pointer;opacity:0;visibility:hidden;transform:translateY(20px);
+      transition:all 0.4s ease;z-index:999;box-shadow:0 5px 20px rgba(10,94,124,0.3);border:none;
+    }
+    .back-to-top.visible { opacity:1;visibility:visible;transform:translateY(0); }
+    .back-to-top:hover { transform:translateY(-5px);box-shadow:0 10px 30px rgba(10,94,124,0.4); }
+
+    /* Reveal animations */
+    .reveal { opacity:0;transform:translateY(40px);transition:all 0.8s cubic-bezier(0.4,0,0.2,1); }
+    .reveal.visible { opacity:1;transform:translateY(0); }
+    .reveal-left { opacity:0;transform:translateX(-40px);transition:all 0.8s cubic-bezier(0.4,0,0.2,1); }
+    .reveal-left.visible { opacity:1;transform:translateX(0); }
+    .reveal-right { opacity:0;transform:translateX(40px);transition:all 0.8s cubic-bezier(0.4,0,0.2,1); }
+    .reveal-right.visible { opacity:1;transform:translateX(0); }
+    .stagger-1{transition-delay:0.1s}
+    .stagger-2{transition-delay:0.2s}
+    .stagger-3{transition-delay:0.3s}
+    .stagger-4{transition-delay:0.4s}
+    .stagger-5{transition-delay:0.5s}
+    .stagger-6{transition-delay:0.6s}
+
+    .glow-text { text-shadow:0 0 20px rgba(0,180,216,0.3); }
+
+    /* Stats */
+    .stats-row { display:flex;justify-content:center;gap:60px;flex-wrap:wrap;margin-top:40px; }
+    .stat-item { text-align:center; }
+    .stat-number { font-family:'Playfair Display',serif;font-size:3rem;font-weight:800;color:var(--primary);line-height:1; }
+    .stat-label { font-size:0.85rem;color:var(--text-light);margin-top:5px;text-transform:uppercase;letter-spacing:1px; }
+
+    /* Contact */
+    .contact-grid { max-width:1000px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:40px; }
+    .contact-form input,.contact-form textarea {
+      width:100%;padding:14px 20px;border:1px solid rgba(0,0,0,0.1);border-radius:12px;
+      font-family:inherit;font-size:0.95rem;margin-bottom:15px;transition:all 0.3s ease;background:var(--white);
+    }
+    .contact-form input:focus,.contact-form textarea:focus {
+      outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,180,216,0.1);
+    }
+    .contact-form textarea { height:120px;resize:vertical; }
+    .contact-form .btn { width:100%;justify-content:center; }
+    .contact-info-item { display:flex;gap:15px;margin-bottom:25px;align-items:flex-start; }
+    .contact-info-item .icon {
+      width:50px;height:50px;background:var(--bg-light);border-radius:12px;
+      display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;
+    }
+    .contact-info-item h4 { font-size:1rem;color:var(--dark);margin-bottom:3px; }
+    .contact-info-item p { color:var(--text-light);font-size:0.9rem; }
+
+    /* Responsive */
+    @media(max-width:1024px){
+      .about-grid,.venue-container,.contact-grid { grid-template-columns:1fr; }
+      .footer-container { grid-template-columns:1fr 1fr; }
+      .hero-edition{font-size:3.5rem}
+      .hero-title{font-size:2.4rem}
+    }
+    @media(max-width:768px){
+      .nav-links{display:none}
+      .mobile-toggle{display:flex}
+      .nav-links.mobile-open {
+        display:flex;flex-direction:column;position:fixed;top:0;left:0;width:100%;height:100vh;
+        background:rgba(11,26,43,0.98);backdrop-filter:blur(20px);align-items:center;justify-content:center;
+        gap:25px;z-index:1001;
+      }
+      .nav-links.mobile-open a{font-size:1.2rem}
+      .hero-edition{font-size:2.8rem}
+      .hero-title{font-size:1.8rem}
+      .hero-subtitle{font-size:1rem}
+      .section-title{font-size:2rem}
+      .countdown-item{padding:0 12px}
+      .countdown-number{font-size:2.2rem}
+      .countdown-item:not(:last-child)::after{font-size:1.8rem}
+      .about-features{grid-template-columns:1fr}
+      .venue-amenities{grid-template-columns:1fr}
+      .footer-container{grid-template-columns:1fr}
+      .hero-cta{flex-direction:column}
+      .btn{width:100%;justify-content:center}
+      .program-tabs{gap:6px}
+      .program-tab{padding:8px 16px;font-size:0.8rem}
+      .timeline-time{width:70px;font-size:0.95rem}
+      .timeline-item{gap:15px}
+    }
+    @media(max-width:480px){
+      .hero-edition{font-size:2.2rem}
+      .hero-title{font-size:1.4rem}
+      .section{padding:60px 20px}
+      .section-title{font-size:1.6rem}
+      .hero-details{flex-direction:column}
+      .countdown-item{padding:0 8px}
+      .countdown-number{font-size:1.8rem;min-width:50px}
+      .stats-row{gap:30px}
+    }
+  </style>
+</head>
+<body>
+
+<!-- Preloader -->
+<div id="preloader">
+  <div class="loader-dna">
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+  <div class="loader-text">Loading Congress...</div>
+</div>
+
+<!-- Particles -->
+<div id="particles-container"></div>
+
+<!-- Navbar -->
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon">RH</div>
+      <div class="nav-logo-text">
+        RHEUMATOLOGY
+        <small data-i18n="nav_subtitle">14th Orano-Eurelian Meeting</small>
+      </div>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home" data-i18n="nav_home">Home</a></li>
+      <li><a href="#about" data-i18n="nav_about">About</a></li>
+      <li><a href="#topics" data-i18n="nav_topics">Topics</a></li>
+      <li><a href="#program" data-i18n="nav_program">Program</a></li>
+      <li><a href="#venue" data-i18n="nav_venue">Venue</a></li>
+      <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
+      <li>
+        <div class="lang-switcher">
+          <button class="lang-btn" id="langBtn">
+            <span class="flag">🇬🇧</span>
+            <span>EN</span>
+            <span>▾</span>
+          </button>
+          <div class="lang-dropdown" id="langDropdown">
+            <div class="lang-option active" data-lang="en" data-flag="🇬">
+              <span class="flag">🇬🇧</span>
+              <span class="lang-name">English</span>
+            </div>
+            <div class="lang-option" data-lang="fr" data-flag="🇫🇷">
+              <span class="flag">🇫🇷</span>
+              <span class="lang-name">Français</span>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <div class="mobile-toggle" id="mobileToggle">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="home">
+  <div class="hero-gradient-orb"></div>
+  <div class="hero-gradient-orb"></div>
+  <div class="hero-gradient-orb"></div>
+  <div class="hero-bg-pattern"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      <span data-i18n="hero_badge">April 23rd – 25rd, 2026 • Oran, Algeria</span>
+    </div>
+    <div class="hero-edition">
+      <span>14</span><span class="th">th</span>
+      <span class="edition-line" data-i18n="hero_edition_line">Orano-Eurelian Meeting of</span>
+    </div>
+    <h1 class="hero-title glow-text">
+      <span data-i18n="hero_title_highlight">RHEUMATOLOGY</span><br>
+      <span style="font-size:0.55em;font-weight:400;" data-i18n="hero_title_sub">2nd International Congress</span>
+    </h1>
+    <p class="hero-subtitle" data-i18n="hero_subtitle">
+      Department Rheumatology — Hospital Establishment Dr Medjbeur Tami Aïn El Turck Oran
+    </p>
+    <div class="hero-details">
+      <div class="hero-detail-item">
+        <span class="icon">📅</span>
+        <span>APRIL 23rd TO 25rd, 2026</span>
+      </div>
+      <div class="hero-detail-item">
+        <span class="icon">📍</span>
+        <span>ORAN BAY ACCOR HOTEL</span>
+      </div>
+      <div class="hero-detail-item">
+        <span class="icon">🏥</span>
+        <span data-i18n="hero_organizer">Directorate of Health and Population of Oran</span>
+      </div>
+    </div>
+    <div class="hero-cta">
+      <a href="#program" class="btn btn-primary">
+        <span>📋</span>
+        <span data-i18n="btn_program">View Program</span>
+      </a>
+      <a href="#contact" class="btn btn-secondary">
+        <span>✉️</span>
+        <span data-i18n="btn_register">Register Now</span>
+      </a>
+    </div>
+  </div>
+  <div class="hero-scroll-indicator">
+    <div class="scroll-mouse"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- Countdown -->
+<section class="countdown-section">
+  <div class="countdown-container">
+    <div class="countdown-item">
+      <span class="countdown-number" id="countdown-days">000</span>
+      <span class="countdown-label" data-i18n="countdown_days">Days</span>
+    </div>
+    <div class="countdown-item">
+      <span class="countdown-number" id="countdown-hours">00</span>
+      <span class="countdown-label" data-i18n="countdown_hours">Hours</span>
+    </div>
+    <div class="countdown-item">
+      <span class="countdown-number" id="countdown-minutes">00</span>
+      <span class="countdown-label" data-i18n="countdown_minutes">Minutes</span>
+    </div>
+    <div class="countdown-item">
+      <span class="countdown-number" id="countdown-seconds">00</span>
+      <span class="countdown-label" data-i18n="countdown_seconds">Seconds</span>
+    </div>
+  </div>
+</section>
+
+<!-- About -->
+<section class="section about-section" id="about">
+  <div class="section-header reveal">
+    <div class="section-label" data-i18n="about_label">About The Congress</div>
+    <h2 class="section-title" data-i18n="about_title">Advancing Rheumatology in the Mediterranean Region</h2>
+    <p class="section-desc" data-i18n="about_desc">
+      The 14th Orano-Eurelian Meeting of Rheumatology and 2nd International Congress brings together leading experts, researchers, and clinicians to discuss the latest advances in rheumatology and autoimmune diseases.
+    </p>
+  </div>
+  <div class="about-grid">
+    <div class="about-image-wrapper reveal-left">
+      <div class="about-image">
+        <div class="about-image-overlay">
+          <h3 data-i18n="about_image_title">Department Rheumatology</h3>
+          <p data-i18n="about_image_sub">Hospital Establishment Dr Medjbeur Tami Aïn El Turck Oran</p>
+        </div>
+      </div>
+      <div class="about-float-card">
+        <div class="card-icon">🏆</div>
+        <div class="card-text">
+          <h4>14th</h4>
+          <p data-i18n="about_card_edition">Edition</p>
+        </div>
+      </div>
+    </div>
+    <div class="about-text reveal-right">
+      <h3 data-i18n="about_text_title">A Premier Gathering for Rheumatology Professionals</h3>
+      <p data-i18n="about_text_p1">
+        Organized under the auspices of the People's Democratic Republic of Algeria, Ministry of Health, Directorate of Health and Population of Oran, this congress represents a landmark event in the field of rheumatology.
+      </p>
+      <p data-i18n="about_text_p2">
+        The Orano-Eurelian Meeting of Rheumatology has established itself as a key platform for scientific exchange, bringing together practitioners from Algeria, Europe, and beyond to share knowledge and innovations in diagnosis and treatment.
+      </p>
+      <div class="about-features">
+        <div class="about-feature"><span class="check">✓</span><span data-i18n="feature_1">International Experts</span></div>
+        <div class="about-feature"><span class="check">✓</span><span data-i18n="feature_2">Latest Research</span></div>
+        <div class="about-feature"><span class="check">✓</span><span data-i18n="feature_3">Clinical Workshops</span></div>
+        <div class="about-feature"><span class="check">✓</span><span data-i18n="feature_4">Networking</span></div>
+        <div class="about-feature"><span class="check">✓</span><span data-i18n="feature_5">CME Credits</span></div>
+        <div class="about-feature"><span class="check">✓</span><span data-i18n="feature_6">Poster Sessions</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="stats-row reveal">
+    <div class="stat-item"><div class="stat-number" data-count="50">0</div><div class="stat-label" data-i18n="stat_speakers">Speakers</div></div>
+    <div class="stat-item"><div class="stat-number" data-count="30">0</div><div class="stat-label" data-i18n="stat_countries">Countries</div></div>
+    <div class="stat-item"><div class="stat-number" data-count="500">0</div><div class="stat-label" data-i18n="stat_attendees">Attendees</div></div>
+    <div class="stat-item"><div class="stat-number" data-count="3">0</div><div class="stat-label" data-i18n="stat_days">Days</div></div>
+  </div>
+</section>
+
+<!-- Topics -->
+<section class="section topics-section" id="topics">
+  <div class="section-header reveal">
+    <div class="section-label" data-i18n="topics_label">Scientific Topics</div>
+    <h2 class="section-title" data-i18n="topics_title">Congress Scientific Themes</h2>
+    <p class="section-desc" data-i18n="topics_desc">Explore the cutting-edge topics that will be discussed during this 3-day international congress.</p>
+  </div>
+  <div class="topics-grid">
+    <div class="topic-card reveal stagger-1"><div class="topic-icon">🦴</div><h3 data-i18n="topic_1_title">Rheumatoid Arthritis</h3><p data-i18n="topic_1_desc">Latest advances in the management and treatment of Rheumatoid Arthritis, including biologic therapies and targeted synthetic DMARDs.</p></div>
+    <div class="topic-card reveal stagger-2"><div class="topic-icon">🔬</div><h3 data-i18n="topic_2_title">Spondyloarthritis</h3><p data-i18n="topic_2_desc">Axial and peripheral spondyloarthritis: from pathogenesis to personalized treatment strategies.</p></div>
+    <div class="topic-card reveal stagger-3"><div class="topic-icon">🧬</div><h3 data-i18n="topic_3_title">Autoimmune Diseases</h3><p data-i18n="topic_3_desc">Systemic Lupus Erythematosus, Sjögren's syndrome, and other autoimmune connective tissue diseases.</p></div>
+    <div class="topic-card reveal stagger-4"><div class="topic-icon">💊</div><h3 data-i18n="topic_4_title">Osteoporosis</h3><p data-i18n="topic_4_desc">Osteoporosis diagnosis, prevention, and treatment. Bone mineral density assessment and fracture risk evaluation.</p></div>
+    <div class="topic-card reveal stagger-5"><div class="topic-icon">🩺</div><h3 data-i18n="topic_5_title">Osteoarthritis</h3><p data-i18n="topic_5_desc">Osteoarthritis management, regenerative medicine approaches, and emerging therapeutic targets.</p></div>
+    <div class="topic-card reveal stagger-6"><div class="topic-icon">🧪</div><h3 data-i18n="topic_6_title">Vasculitis & Rare Diseases</h3><p data-i18n="topic_6_desc">Systemic vasculitides, rare rheumatologic conditions, and orphan drug development.</p></div>
+    <div class="topic-card reveal stagger-1"><div class="topic-icon">📊</div><h3 data-i18n="topic_7_title">Immunotherapy & Biologics</h3><p data-i18n="topic_7_desc">Biosimilars, novel biologic agents, and the future of immunotherapy in rheumatologic practice.</p></div>
+    <div class="topic-card reveal stagger-2"><div class="topic-icon">💎</div><h3 data-i18n="topic_8_title">Crystal Arthropathies</h3><p data-i18n="topic_8_desc">Gout and pseudogout: diagnosis, management, and prevention of crystal-induced arthritis.</p></div>
+    <div class="topic-card reveal stagger-3"><div class="topic-icon"></div><h3 data-i18n="topic_9_title">Pediatric Rheumatology</h3><p data-i18n="topic_9_desc">Juvenile idiopathic arthritis and other pediatric rheumatologic conditions: early diagnosis and treatment.</p></div>
+  </div>
+</section>
+
+<!-- Program -->
+<section class="section program-section" id="program">
+  <div class="section-header reveal">
+    <div class="section-label" data-i18n="program_label">Scientific Program</div>
+    <h2 class="section-title" data-i18n="program_title">Congress Program</h2>
+    <p class="section-desc" data-i18n="program_desc">Three days of intensive scientific programming featuring keynotes, panels, workshops, and poster sessions.</p>
+  </div>
+  <div id="program-app">
+    <nav id="day-nav"><div class="nav-inner" id="day-tabs"></div></nav>
+    <div id="main-content"><div id="program-content"></div></div>
+  </div>
+</section>
+
+<!-- Venue -->
+<section class="section venue-section" id="venue">
+  <div class="section-header reveal">
+    <div class="section-label" data-i18n="venue_label">Congress Venue</div>
+    <h2 class="section-title" data-i18n="venue_title">Oran Bay Accor Hotel</h2>
+    <p class="section-desc" data-i18n="venue_desc">Located in the beautiful city of Oran, Algeria, the Oran Bay Accor Hotel offers world-class facilities for this international congress.</p>
+  </div>
+  <div class="venue-container">
+    <div class="venue-map reveal-left">
+      <div class="venue-map-overlay">
+        <h3>Oran Bay Accor Hotel</h3>
+        <p>Oran, Algeria</p>
+      </div>
+    </div>
+    <div class="venue-info reveal-right">
+      <h3 data-i18n="venue_info_title">A Premier Conference Destination</h3>
+      <p data-i18n="venue_info_p1">The Oran Bay Accor Hotel is a state-of-the-art conference facility located on the Mediterranean coast of Oran, Algeria. With panoramic views of the bay and modern meeting spaces, it provides the perfect setting for this prestigious rheumatology congress.</p>
+      <p data-i18n="venue_info_p2">The hotel offers easy access from Oran International Airport and is surrounded by the city's rich cultural heritage and beautiful coastline.</p>
+      <div class="venue-amenities">
+        <div class="amenity"><span class="icon">🏥</span><span data-i18n="amenity_1">Conference Halls</span></div>
+        <div class="amenity"><span class="icon">📶</span><span data-i18n="amenity_2">Free WiFi</span></div>
+        <div class="amenity"><span class="icon">🅿️</span><span data-i18n="amenity_3">Free Parking</span></div>
+        <div class="amenity"><span class="icon">🍽️</span><span data-i18n="amenity_4">Restaurant</span></div>
+        <div class="amenity"><span class="icon">🛏️</span><span data-i18n="amenity_5">Accommodation</span></div>
+        <div class="amenity"><span class="icon">✈️</span><span data-i18n="amenity_6">Airport Shuttle</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Organizers -->
+<section class="section organizers-section" id="organizers">
+  <div class="section-header reveal">
+    <div class="section-label" data-i18n="org_label">Organizing Bodies</div>
+    <h2 class="section-title" data-i18n="org_title">Organizers & Partners</h2>
+    <p class="section-desc" data-i18n="org_desc">This congress is organized under the highest institutional support.</p>
+  </div>
+  <div class="organizers-grid">
+    <div class="organizer-card reveal stagger-1">
+      <div class="organizer-logo">🏛️</div>
+      <h3>People's Democratic Republic of Algeria</h3>
+      <p data-i18n="org_1_desc">Ministry of Health, Directorate of Health and Population of Oran</p>
+    </div>
+    <div class="organizer-card reveal stagger-2">
+      <div class="organizer-logo">🏥</div>
+      <h3>Hospital Establishment Dr Medjbeur Tami</h3>
+      <p data-i18n="org_2_desc">Aïn El Turck, Oran — Department of Rheumatology</p>
+    </div>
+    <div class="organizer-card reveal stagger-3">
+      <div class="organizer-logo">🤝</div>
+      <h3 data-i18n="org_3_title">International Partners</h3>
+      <p data-i18n="org_3_desc">Collaborating with rheumatology societies across the Mediterranean and European regions.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-content reveal">
+    <h2 data-i18n="cta_title">Join Us in Oran, Algeria</h2>
+    <p data-i18n="cta_desc">Don't miss the 14th Orano-Eurelian Meeting of Rheumatology and 2nd International Congress. Register now to secure your place at this premier scientific event.</p>
+    <div style="display:flex;gap:15px;justify-content:center;flex-wrap:wrap;">
+      <a href="#contact" class="btn btn-primary"><span>📝</span><span data-i18n="cta_btn_register">Register Now</span></a>
+      <a href="#program" class="btn btn-secondary"><span>📋</span><span data-i18n="cta_btn_program">Download Program</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section class="section" id="contact">
+  <div class="section-header reveal">
+    <div class="section-label" data-i18n="contact_label">Get In Touch</div>
+    <h2 class="section-title" data-i18n="contact_title">Contact & Registration</h2>
+    <p class="section-desc" data-i18n="contact_desc">Have questions about the congress? Reach out to our organizing committee.</p>
+  </div>
+  <div class="contact-grid">
+    <div class="contact-form reveal-left">
+      <input type="text" placeholder="Full Name" data-i18n-placeholder="form_name">
+      <input type="email" placeholder="Email Address" data-i18n-placeholder="form_email">
+      <input type="text" placeholder="Institution" data-i18n-placeholder="form_institution">
+      <textarea placeholder="Your Message" data-i18n-placeholder="form_message"></textarea>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;"><span>📩</span><span data-i18n="form_submit">Send Message</span></button>
+    </div>
+    <div class="reveal-right">
+      <div class="contact-info-item"><div class="icon">📍</div><div><h4 data-i18n="contact_address_title">Congress Venue</h4><p>ORAN BAY ACCOR HOTEL, Oran, Algeria</p></div></div>
+      <div class="contact-info-item"><div class="icon">📅</div><div><h4 data-i18n="contact_dates_title">Congress Dates</h4><p>FROM APRIL 23rd TO 25rd, 2026</p></div></div>
+      <div class="contact-info-item"><div class="icon">🏥</div><div><h4 data-i18n="contact_organizer_title">Organizer</h4><p data-i18n="contact_organizer_text">Hospital Establishment Dr Medjbeur Tami Aïn El Turck Oran</p></div></div>
+      <div class="contact-info-item"><div class="icon">📧</div><div><h4 data-i18n="contact_email_title">Email</h4><p>contact@rheumatology-oran2026.com</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-brand">
+      <h3>14<sup>th</sup> Orano-Eurelian Meeting of Rheumatology</h3>
+      <p data-i18n="footer_desc">People's Democratic Republic of Algeria — Ministry of Health — Directorate of Health and Population of Oran — Hospital Establishment Dr Medjbeur Tami Aïn El Turck Oran</p>
+      <div class="footer-social"><a href="#">📘</a><a href="#">🐦</a><a href="#">📸</a><a href="#">🔗</a></div>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer_quick">Quick Links</h4>
+      <ul>
+        <li><a href="#home" data-i18n="nav_home">Home</a></li>
+        <li><a href="#about" data-i18n="nav_about">About</a></li>
+        <li><a href="#topics" data-i18n="nav_topics">Topics</a></li>
+        <li><a href="#program" data-i18n="nav_program">Program</a></li>
+        <li><a href="#venue" data-i18n="nav_venue">Venue</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer_info">Information</h4>
+      <ul>
+        <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
+        <li><a href="#" data-i18n="footer_registration">Registration</a></li>
+        <li><a href="#" data-i18n="footer_abstract">Abstract Submission</a></li>
+        <li><a href="#" data-i18n="footer_accommodation">Accommodation</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer_contact">Contact</h4>
+      <ul>
+        <li><a href="#">Oran Bay Accor Hotel</a></li>
+        <li><a href="#">Oran, Algeria</a></li>
+        <li><a href="#">April 23-25, 2026</a></li>
+        <li><a href="mailto:contact@rheumatology-oran2026.com">contact@rheumatology-oran2026.com</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 14th Orano-Eurelian Meeting of Rheumatology | 2nd International Congress. All rights reserved.</p>
+  </div>
+</footer>
+
+<button class="back-to-top" id="backToTop">↑</button>
+
+<script>
+  const translations = {
+    en: {
+      nav_subtitle:"14th Orano-Eurelian Meeting",nav_home:"Home",nav_about:"About",nav_topics:"Topics",
+      nav_program:"Program",nav_venue:"Venue",nav_contact:"Contact",
+      hero_badge:"April 23rd – 25rd, 2026 • Oran, Algeria",
+      hero_edition_line:"Orano-Eurelian Meeting of",
+      hero_title_highlight:"RHEUMATOLOGY",hero_title_sub:"2nd International Congress",
+      hero_subtitle:"Department Rheumatology — Hospital Establishment Dr Medjbeur Tami Aïn El Turck Oran",
+      hero_organizer:"Directorate of Health and Population of Oran",
+      btn_program:"View Program",btn_register:"Register Now",
+      countdown_days:"Days",countdown_hours:"Hours",countdown_minutes:"Minutes",countdown_seconds:"Seconds",
+      about_label:"About The Congress",about_title:"Advancing Rheumatology in the Mediterranean Region",
+      about_desc:"The 14th Orano-Eurelian Meeting of Rheumatology and 2nd International Congress brings together leading experts, researchers, and clinicians to discuss the latest advances in rheumatology and autoimmune diseases.",
+      about_image_title:"Department Rheumatology",about_image_sub:"Hospital Establishment Dr Medjbeur Tami Aïn El Turck Oran",
+      about_card_edition:"Edition",about_text_title:"A Premier Gathering for Rheumatology Professionals",
+      about_text_p1:"Organized under the auspices of the People's Democratic Republic of Algeria, Ministry of Health, Directorate of Health and Population of Oran, this congress represents a landmark event in the field of rheumatology.",
+      about_text_p2:"The Orano-Eurelian Meeting of Rheumatology has established itself as a key platform for scientific exchange, bringing together practitioners from Algeria, Europe, and beyond to share knowledge and innovations in diagnosis and treatment.",
+      feature_1:"International Experts",feature_2:"Latest Research",feature_3:"Clinical Workshops",
+      feature_4:"Networking",feature_5:"CME Credits",feature_6:"Poster Sessions",
+      stat_speakers:"Speakers",stat_countries:"Countries",stat_attendees:"Attendees",stat_days:"Days",
+      topics_label:"Scientific Topics",topics_title:"Congress Scientific Themes",
+      topics_desc:"Explore the cutting-edge topics that will be discussed during this 3-day international congress.",
+      topic_1_title:"Rheumatoid Arthritis",topic_1_desc:"Latest advances in the management and treatment of Rheumatoid Arthritis, including biologic therapies and targeted synthetic DMARDs.",
+      topic_2_title:"Spondyloarthritis",topic_2_desc:"Axial and peripheral spondyloarthritis: from pathogenesis to personalized treatment strategies.",
+      topic_3_title:"Autoimmune Diseases",topic_3_desc:"Systemic Lupus Erythematosus, Sjögren's syndrome, and other autoimmune connective tissue diseases.",
+      topic_4_title:"Osteoporosis",topic_4_desc:"Osteoporosis diagnosis, prevention, and treatment. Bone mineral density assessment and fracture risk evaluation.",
+      topic_5_title:"Osteoarthritis",topic_5_desc:"Osteoarthritis management, regenerative medicine approaches, and emerging therapeutic targets.",
+      topic_6_title:"Vasculitis & Rare Diseases",topic_6_desc:"Systemic vasculitides, rare rheumatologic conditions, and orphan drug development.",
+      topic_7_title:"Immunotherapy & Biologics",topic_7_desc:"Biosimilars, novel biologic agents, and the future of immunotherapy in rheumatologic practice.",
+      topic_8_title:"Crystal Arthropathies",topic_8_desc:"Gout and pseudogout: diagnosis, management, and prevention of crystal-induced arthritis.",
+      topic_9_title:"Pediatric Rheumatology",topic_9_desc:"Juvenile idiopathic arthritis and other pediatric rheumatologic conditions: early diagnosis and treatment.",
+      program_label:"Scientific Program",program_title:"Congress Program",
+      program_desc:"Three days of intensive scientific programming featuring keynotes, panels, workshops, and poster sessions.",
+      tab_day1:"Day 1 — April 23rd",tab_day2:"Day 2 — April 24th",tab_day3:"Day 3 — April 25th",
+      d1_1300_title:"Reception of Guests and Registration",
+      d1_1400_title:"Opening Ceremony",
+      d1_1400_desc:"Opening welcome speech by the Honorary President A Ladjouze Rezig, The president of the congress Lamri Zahia, The General Director of Tami Medjbeur Hospital Mr Tarek Belbey, M Medjadi Head of the Rheumatology Department - President of AAMRO",
+      tag_reception:"Reception",tag_opening:"Opening",tag_talk:"Talk",tag_symposium:"Symposium",
+      tag_debate:"Debate",tag_coffee:"Coffee break",tag_lunch:"Lunch",tag_workshop:"Workshop",
+      tag_keynote:"Keynote",tag_closing:"Closing",
+      venue_label:"Congress Venue",venue_title:"Oran Bay Accor Hotel",
+      venue_desc:"Located in the beautiful city of Oran, Algeria, the Oran Bay Accor Hotel offers world-class facilities for this international congress.",
+      venue_info_title:"A Premier Conference Destination",
+      venue_info_p1:"The Oran Bay Accor Hotel is a state-of-the-art conference facility located on the Mediterranean coast of Oran, Algeria.",
+      venue_info_p2:"The hotel offers easy access from Oran International Airport and is surrounded by the city's rich cultural heritage and beautiful coastline.",
+      amenity_1:"Conference Halls",amenity_2:"Free WiFi",amenity_3:"Free Parking",amenity_4:"Restaurant",amenity_5:"Accommodation",amenity_6:"Airport Shuttle",
+      org_label:"Organizing Bodies",org_title:"Organizers & Partners",
+      org_desc:"This congress is organized under the highest institutional support.",
+      org_1_desc:"Ministry of Health, Directorate of Health and Population of Oran",
+      org_2_desc:"Aïn El Turck, Oran — Department of Rheumatology",
+      org_3_title:"International Partners",org_3_desc:"Collaborating with rheumatology societies across the Mediterranean and European regions.",
+      cta_title:"Join Us in Oran, Algeria",
+      cta_desc:"Don't miss the 14th Orano-Eurelian Meeting of Rheumatology and 2nd International Congress. Register now to secure your place.",
+      cta_btn_register:"Register Now",cta_btn_program:"Download Program",
+      contact_label:"Get In Touch",contact_title:"Contact & Registration",
+      contact_desc:"Have questions about the congress? Reach out to our organizing committee.",
+      form_name:"Full Name",form_email:"Email Address",form_institution:"Institution",
+      form_message:"Your Message",form_submit:"Send Message",
+      contact_address_title:"Congress Venue",contact_dates_title:"Congress Dates",
+      contact_organizer_title:"Organizer",contact_organizer_text:"Hospital Establishment Dr Medjbeur Tami Aïn El Turck Oran",
+      contact_email_title:"Email",
+      footer_desc:"People's Democratic Republic of Algeria — Ministry of Health — Directorate of Health and Population of Oran — Hospital Establishment Dr Medjbeur Tami Aïn El Turck Oran",
+      footer_quick:"Quick Links",footer_info:"Information",footer_contact:"Contact",
+      footer_registration:"Registration",footer_abstract:"Abstract Submission",footer_accommodation:"Accommodation"
+    },
+    fr: {
+      nav_subtitle:"14e Rencontre Orano-Eurélienne",nav_home:"Accueil",nav_about:"À propos",nav_topics:"Thèmes",
+      nav_program:"Programme",nav_venue:"Lieu",nav_contact:"Contact",
+      hero_badge:"23 – 25 Avril 2026 • Oran, Algérie",
+      hero_edition_line:"Rencontre Orano-Eurélienne de",
+      hero_title_highlight:"RHUMATOLOGIE",hero_title_sub:"2e Congrès International",
+      hero_subtitle:"Service de Rhumatologie — EPH Dr Medjbeur Tami Aïn El Turck Oran",
+      hero_organizer:"Direction de la Santé et de la Population d'Oran",
+      btn_program:"Voir le Programme",btn_register:"S'inscrire",
+      countdown_days:"Jours",countdown_hours:"Heures",countdown_minutes:"Minutes",countdown_seconds:"Secondes",
+      about_label:"À propos du Congrès",about_title:"Faire avancer la Rhumatologie dans la Région Méditerranéenne",
+      about_desc:"La 14e Rencontre Orano-Eurélienne de Rhumatologie et 2e Congrès International réunit des experts de premier plan, des chercheurs et des cliniciens pour discuter des dernières avancées en rhumatologie et maladies auto-immunes.",
+      about_image_title:"Service de Rhumatologie",about_image_sub:"EPH Dr Medjbeur Tami Aïn El Turck Oran",
+      about_card_edition:"Édition",about_text_title:"Un rassemblement de premier plan pour les professionnels de la rhumatologie",
+      about_text_p1:"Organisé sous les auspices de la République Algérienne Démocratique et Populaire, Ministère de la Santé, Direction de la Santé et de la Population d'Oran, ce congrès représente un événement marquant dans le domaine de la rhumatologie.",
+      about_text_p2:"La Rencontre Orano-Eurélienne de Rhumatologie s'est imposée comme une plateforme clé d'échange scientifique, réunissant des praticiens d'Algérie, d'Europe et d'ailleurs pour partager connaissances et innovations.",
+      feature_1:"Experts Internationaux",feature_2:"Dernières Recherches",feature_3:"Ateliers Cliniques",
+      feature_4:"Réseautage",feature_5:"Crédits FMC",feature_6:"Sessions Posters",
+      stat_speakers:"Intervenants",stat_countries:"Pays",stat_attendees:"Participants",stat_days:"Jours",
+      topics_label:"Thèmes Scientifiques",topics_title:"Thèmes Scientifiques du Congrès",
+      topics_desc:"Découvrez les sujets de pointe qui seront discutés lors de ce congrès international de 3 jours.",
+      topic_1_title:"Polyarthrite Rhumatoïde",topic_1_desc:"Dernières avancées dans la prise en charge et le traitement de la polyarthrite rhumatoïde, y compris les biothérapies et les DMARD synthétiques ciblés.",
+      topic_2_title:"Spondylarthrite",topic_2_desc:"Spondylarthrite axiale et périphérique: de la pathogenèse aux stratégies de traitement personnalisées.",
+      topic_3_title:"Maladies Auto-immunes",topic_3_desc:"Lupus érythémateux systémique, syndrome de Sjögren et autres maladies auto-immunes du tissu conjonctif.",
+      topic_4_title:"Ostéoporose",topic_4_desc:"Diagnostic, prévention et traitement de l'ostéoporose. Évaluation de la densité minérale osseuse et du risque de fracture.",
+      topic_5_title:"Arthrose",topic_5_desc:"Prise en charge de l'arthrose, approches de médecine régénérative et cibles thérapeutiques émergentes.",
+      topic_6_title:"Vascularites & Maladies Rares",topic_6_desc:"Vascularites systémiques, affections rhumatologiques rares et développement de médicaments orphelins.",
+      topic_7_title:"Immunothérapie & Biothérapies",topic_7_desc:"Biosimilaires, nouveaux agents biologiques et avenir de l'immunothérapie en pratique rhumatologique.",
+      topic_8_title:"Arthropathies Microcristallines",topic_8_desc:"Goutte et pseudogoutte: diagnostic, prise en charge et prévention de l'arthrite microcristalline.",
+      topic_9_title:"Rhumatologie Pédiatrique",topic_9_desc:"Arthrite juvénile idiopathique et autres affections rhumatologiques pédiatriques: diagnostic et traitement précoces.",
+      program_label:"Programme Scientifique",program_title:"Programme du Congrès",
+      program_desc:"Trois jours de programmation scientifique intensive avec des conférences, panels, ateliers et sessions posters.",
+      tab_day1:"Jour 1 — 23 Avril",tab_day2:"Jour 2 — 24 Avril",tab_day3:"Jour 3 — 25 Avril",
+      d1_1300_title:"Accueil des Invités et Inscription",
+      d1_1400_title:"Cérémonie d'Ouverture",
+      d1_1400_desc:"Discours de bienvenue par le Président Honoraire A Ladjouze Rezig, Le président du congrès Lamri Zahia, Le Directeur Général de l'Hôpital Tami Medjbeur M Tarek Belbey, M Medjadi Chef du Service de Rhumatologie - Président de l'AAMRO",
+      tag_reception:"Accueil",tag_opening:"Ouverture",tag_talk:"Communication",tag_symposium:"Symposium",
+      tag_debate:"Débat",tag_coffee:"Pause café",tag_lunch:"Déjeuner",tag_workshop:"Atelier",
+      tag_keynote:"Conférence",tag_closing:"Clôture",
+      venue_label:"Lieu du Congrès",venue_title:"Hôtel Oran Bay Accor",
+      venue_desc:"Situé dans la belle ville d'Oran, en Algérie, l'Hôtel Oran Bay Accor offre des installations de classe mondiale pour ce congrès international.",
+      venue_info_title:"Une destination de conférence de premier plan",
+      venue_info_p1:"L'Hôtel Oran Bay Accor est un centre de conférence ultramoderne situé sur la côte méditerranéenne d'Oran, en Algérie.",
+      venue_info_p2:"L'hôtel offre un accès facile depuis l'Aéroport International d'Oran et est entouré du riche patrimoine culturel de la ville et de son magnifique littoral.",
+      amenity_1:"Salles de Conférence",amenity_2:"WiFi Gratuit",amenity_3:"Parking Gratuit",amenity_4:"Restaurant",amenity_5:"Hébergement",amenity_6:"Navette Aéroport",
+      org_label:"Organisateurs",org_title:"Organisateurs & Partenaires",
+      org_desc:"Ce congrès est organisé sous le plus haut soutien institutionnel.",
+      org_1_desc:"Ministère de la Santé, Direction de la Santé et de la Population d'Oran",
+      org_2_desc:"Aïn El Turck, Oran — Service de Rhumatologie",
+      org_3_title:"Partenaires Internationaux",org_3_desc:"Collaboration avec les sociétés de rhumatologie à travers les régions méditerranéenne et européenne.",
+      cta_title:"Rejoignez-nous à Oran, Algérie",
+      cta_desc:"Ne manquez pas la 14e Rencontre Orano-Eurélienne de Rhumatologie et le 2e Congrès International. Inscrivez-vous maintenant.",
+      cta_btn_register:"S'inscrire",cta_btn_program:"Télécharger le Programme",
+      contact_label:"Contactez-nous",contact_title:"Contact & Inscription",
+      contact_desc:"Des questions sur le congrès? Contactez notre comité d'organisation.",
+      form_name:"Nom Complet",form_email:"Adresse Email",form_institution:"Institution",
+      form_message:"Votre Message",form_submit:"Envoyer",
+      contact_address_title:"Lieu du Congrès",contact_dates_title:"Dates du Congrès",
+      contact_organizer_title:"Organisateur",contact_organizer_text:"EPH Dr Medjbeur Tami Aïn El Turck Oran",
+      contact_email_title:"Email",
+      footer_desc:"République Algérienne Démocratique et Populaire — Ministère de la Santé — Direction de la Santé et de la Population d'Oran — EPH Dr Medjbeur Tami Aïn El Turck Oran",
+      footer_quick:"Liens Rapides",footer_info:"Informations",footer_contact:"Contact",
+      footer_registration:"Inscription",footer_abstract:"Soumission de Résumé",footer_accommodation:"Hébergement"
+    }
+  };
+
+  let currentLang = 'en';
+  function setLanguage(lang) {
+    currentLang = lang;
+    const t = translations[lang];
+    if (!t) return;
+    if (lang === 'ar') {
+      document.documentElement.setAttribute('dir', 'rtl');
+      document.documentElement.setAttribute('lang', 'ar');
+    } else {
+      document.documentElement.setAttribute('dir', 'ltr');
+      document.documentElement.setAttribute('lang', lang);
+    }
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (t[key]) el.textContent = t[key];
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const key = el.getAttribute('data-i18n-placeholder');
+      if (t[key]) el.setAttribute('placeholder', t[key]);
+    });
+    const langBtn = document.getElementById('langBtn');
+    const option = document.querySelector(`.lang-option[data-lang="${lang}"]`);
+    if (option) {
+      langBtn.querySelector('.flag').textContent = option.querySelector('.flag').textContent;
+      langBtn.querySelector('span:nth-child(2)').textContent = lang.toUpperCase();
+    }
+    document.querySelectorAll('.lang-option').forEach(o => o.classList.remove('active'));
+    if (option) option.classList.add('active');
+    if (window.timelineSetLang) window.timelineSetLang(lang);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => document.getElementById('preloader').classList.add('hidden'), 2000);
+
+    const pc = document.getElementById('particles-container');
+    for (let i = 0; i < 30; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const s = Math.random() * 8 + 3;
+      p.style.cssText = `width:${s}px;height:${s}px;left:${Math.random()*100}%;background:${Math.random()>0.5?'var(--accent)':'var(--gold)'};animation-duration:${Math.random()*20+15}s;animation-delay:${Math.random()*15}s;`;
+      pc.appendChild(p);
+    }
+
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 50));
+
+    const mt = document.getElementById('mobileToggle'), nl = document.getElementById('navLinks');
+    mt.addEventListener('click', () => { mt.classList.toggle('active'); nl.classList.toggle('mobile-open'); });
+    nl.querySelectorAll('a').forEach(l => l.addEventListener('click', () => { mt.classList.remove('active'); nl.classList.remove('mobile-open'); }));
+
+    document.querySelectorAll('.lang-option').forEach(o => o.addEventListener('click', () => setLanguage(o.getAttribute('data-lang'))));
+
+    document.querySelectorAll('.program-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.program-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        document.querySelectorAll('.program-day').forEach(d => d.classList.remove('active'));
+        document.getElementById(tab.getAttribute('data-day')).classList.add('active');
+      });
+    });
+
+    function updateCountdown() {
+      const target = new Date('April 23, 2026 09:00:00').getTime();
+      const now = new Date().getTime();
+      const diff = target - now;
+      if (diff > 0) {
+        document.getElementById('countdown-days').textContent = String(Math.floor(diff/(1000*60*60*24))).padStart(3,'0');
+        document.getElementById('countdown-hours').textContent = String(Math.floor((diff%(1000*60*60*24))/(1000*60*60))).padStart(2,'0');
+        document.getElementById('countdown-minutes').textContent = String(Math.floor((diff%(1000*60*60))/(1000*60))).padStart(2,'0');
+        document.getElementById('countdown-seconds').textContent = String(Math.floor((diff%(1000*60))/1000)).padStart(2,'0');
+      }
+    }
+    updateCountdown(); setInterval(updateCountdown, 1000);
+
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el => obs.observe(el));
+
+    const co = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.querySelectorAll('.stat-number').forEach(c => {
+            const target = parseInt(c.getAttribute('data-count'));
+            let cur = 0; const inc = target/60;
+            const timer = setInterval(() => {
+              cur += inc;
+              if (cur >= target) { c.textContent = target+'+'; clearInterval(timer); }
+              else c.textContent = Math.floor(cur);
+            }, 30);
+          });
+          co.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    const sr = document.querySelector('.stats-row');
+    if (sr) co.observe(sr);
+
+    const btt = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => btt.classList.toggle('visible', window.scrollY > 500));
+    btt.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
+
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', function(e) {
+        e.preventDefault();
+        const t = document.querySelector(this.getAttribute('href'));
+        if (t) t.scrollIntoView({ behavior:'smooth', block:'start' });
+      });
+    });
+  });
+</script>
+</body>
+</html>
+

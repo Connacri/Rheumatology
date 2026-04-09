@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>14th Orano-Eurelian Meeting of Rheumatology – Scientific Program</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0B2545;--navy2:#163566;--teal:#0D8A85;--teal2:#12B5AF;
+  --gold:#C9A84C;--gold2:#E5C97A;--red:#C0392B;--off:#F7F5F2;
+  --card:#FFFFFF;--border:#E2DDD8;--text:#1a1a2e;--muted:#6b7280;
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--off);color:var(--text);line-height:1.6}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.15);opacity:.8}}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
+.fade-up{animation:fadeUp .6s cubic-bezier(.22,1,.36,1) both}
+.pulse-dot{animation:pulse 2s ease-in-out infinite}
+.float-badge{animation:float 3s ease-in-out infinite}
+
+#site-header{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 60%,#1a4a8a 100%);
+  position:relative;overflow:hidden;padding:48px 24px 40px;
+}
+.mol-canvas{position:absolute;inset:0;opacity:.18;pointer-events:none}
+.header-inner{max-width:960px;margin:0 auto;position:relative;z-index:1}
+.congress-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.4);
+  color:var(--gold2);font-size:11px;letter-spacing:2px;text-transform:uppercase;
+  padding:4px 12px;border-radius:20px;margin-bottom:20px;
+}
+.header-title-row{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.edition-num{font-family:'Cormorant Garamond',serif;font-size:88px;font-weight:700;color:#fff;line-height:.9;letter-spacing:-2px}
+.edition-sup{font-size:22px;vertical-align:super;color:var(--gold2);font-family:'Cormorant Garamond',serif}
+.title-text{flex:1}
+.meeting-label{color:var(--gold2);font-size:11px;letter-spacing:3px;text-transform:uppercase;margin-bottom:4px}
+.meeting-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:600;color:#fff;line-height:1.1}
+.meeting-sub{color:rgba(255,255,255,.65);font-size:13px;margin-top:4px}
+.h-sep{width:2px;height:64px;background:linear-gradient(to bottom,var(--gold),transparent);margin:0 6px}
+.header-meta{margin-top:20px;display:flex;gap:20px;flex-wrap:wrap}
+.meta-chip{display:flex;align-items:center;gap:6px;color:rgba(255,255,255,.7);font-size:12px;border-left:2px solid var(--gold);padding-left:10px}
+[dir="rtl"] .meta-chip{border-left:none;border-right:2px solid var(--gold);padding-left:0;padding-right:10px}
+
+#day-nav{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.nav-inner{max-width:960px;margin:0 auto;display:flex}
+.day-btn{flex:1;padding:14px 8px;border:none;background:transparent;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12.5px;color:var(--muted);font-weight:400;border-bottom:3px solid transparent;transition:all .25s}
+.day-btn.active{color:var(--navy);font-weight:600;border-bottom-color:var(--teal)}
+.day-btn:hover{color:var(--navy);background:#fafaf9}
+
+#main-content{max-width:960px;margin:0 auto;padding:40px 20px 100px}
+
+.timeline{position:relative;padding-left:52px}
+[dir="rtl"] .timeline{padding-left:0;padding-right:52px}
+.tl-line{position:absolute;left:20px;top:8px;bottom:0;width:3px;background:linear-gradient(to bottom,var(--teal),var(--navy2) 60%,rgba(11,37,69,.1));border-radius:2px}
+[dir="rtl"] .tl-line{left:auto;right:20px}
+
+.tl-item{position:relative;margin-bottom:24px;opacity:0}
+.tl-item.visible{animation:fadeUp .55s cubic-bezier(.22,1,.36,1) both}
+.tl-dot{position:absolute;left:-40px;top:12px;width:16px;height:16px;background:var(--teal);border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 3px rgba(13,138,133,.25);z-index:2}
+[dir="rtl"] .tl-dot{left:auto;right:-40px}
+.tl-dot.gold{background:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.25)}
+.tl-dot.break{background:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,.25)}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 20px;transition:box-shadow .2s,transform .2s}
+.card:hover{box-shadow:0 4px 20px rgba(0,0,0,.08);transform:translateY(-1px)}
+
+.session-header{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;border-radius:14px;padding:18px 22px;margin-bottom:4px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:box-shadow .2s;border:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif}
+[dir="rtl"] .session-header{text-align:right}
+.session-header:hover{box-shadow:0 6px 24px rgba(11,37,69,.35)}
+.session-num{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:700;color:var(--gold2);line-height:1;margin-right:16px;min-width:40px}
+[dir="rtl"] .session-num{margin-right:0;margin-left:16px}
+.session-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:3px}
+.chevron{font-size:18px;color:var(--gold2);transition:transform .3s;flex-shrink:0}
+.chevron.open{transform:rotate(180deg)}
+
+.talk-row{background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:8px;transition:all .2s}
+.talk-row:hover{border-color:var(--teal);box-shadow:0 2px 12px rgba(13,138,133,.1)}
+.talk-time{font-size:11px;font-weight:600;color:var(--teal);letter-spacing:.5px;background:rgba(13,138,133,.08);padding:2px 8px;border-radius:10px;display:inline-block;margin-bottom:6px}
+.talk-title{font-size:13.5px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:5px}
+.talk-speaker{font-size:12px;color:var(--muted)}
+.talk-loc{color:#9ca3af}
+.zoom-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;background:#e0f2fe;color:#0369a1;padding:2px 8px;border-radius:8px;margin-left:8px}
+[dir="rtl"] .zoom-badge{margin-left:0;margin-right:8px}
+
+.symp-card{background:linear-gradient(135deg,#fdf8ee,#fef3cd);border:1px solid var(--gold);border-radius:12px;padding:14px 18px;margin-bottom:8px;position:relative;overflow:hidden}
+.symp-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold));background-size:200% 100%;animation:shimmer 3s linear infinite}
+.symp-sponsor{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.symp-label{display:inline-block;font-size:10px;background:var(--gold);color:#fff;padding:1px 8px;border-radius:10px;margin-bottom:6px;font-weight:600;letter-spacing:.5px}
+.symp-title{font-size:13.5px;font-weight:600;color:#78350f;line-height:1.4;margin-bottom:5px}
+.symp-speaker{font-size:12px;color:#92400e}
+
+.debate-card{background:rgba(11,37,69,.05);border:1px dashed rgba(11,37,69,.25);border-radius:10px;padding:10px 16px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.break-card{background:linear-gradient(135deg,#ecfdf5,#d1fae5);border:1px solid #6ee7b7;border-radius:12px;padding:14px 20px;margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.lunch-card{background:linear-gradient(135deg,#fff7ed,#ffedd5);border:1px solid #fdba74;border-radius:12px;padding:14px 20px;margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.closing-card{background:linear-gradient(135deg,var(--navy),var(--navy2));border-radius:14px;padding:20px 24px;margin-bottom:16px;display:flex;align-items:center;gap:14px}
+.reg-card{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #86efac;border-radius:14px;padding:20px 24px;margin-bottom:8px}
+.speech-card{background:#fff;border:1px solid var(--border);border-left:4px solid var(--teal);border-radius:12px;padding:16px 20px;margin-bottom:8px}
+[dir="rtl"] .speech-card{border-left:1px solid var(--border);border-right:4px solid var(--teal)}
+
+.workshop-header{background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:14px;padding:16px 22px;margin-bottom:16px;display:flex;align-items:center;gap:14px}
+.workshops-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px}
+@media(max-width:600px){.workshops-grid{grid-template-columns:1fr}}
+.wk-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px;position:relative;overflow:hidden;transition:all .2s}
+.wk-card:hover{border-color:var(--navy2);box-shadow:0 4px 16px rgba(22,53,102,.12)}
+.wk-number{position:absolute;top:-6px;right:-6px;width:32px;height:32px;background:var(--navy);color:#fff;font-weight:700;font-size:12px;border-radius:0 12px 0 10px;display:flex;align-items:center;justify-content:center}
+[dir="rtl"] .wk-number{right:auto;left:-6px;border-radius:12px 0 10px 0}
+.wk-title{font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:8px;line-height:1.4;padding-right:28px}
+[dir="rtl"] .wk-title{padding-right:0;padding-left:28px}
+.wk-speaker{font-size:11.5px;color:var(--muted)}
+.wk-moderator{font-size:11px;color:var(--teal);font-weight:500;margin-top:6px}
+.hall-badge{display:inline-block;font-size:10px;background:var(--navy);color:#fff;padding:2px 8px;border-radius:8px;margin-top:6px;font-weight:500}
+
+#lang-fab{position:fixed;bottom:28px;right:28px;z-index:200}
+.lang-fab-btn{width:52px;height:52px;border-radius:50%;background:var(--navy);color:#fff;border:none;cursor:pointer;font-size:22px;box-shadow:0 4px 20px rgba(11,37,69,.4);transition:transform .2s,box-shadow .2s;display:flex;align-items:center;justify-content:center}
+.lang-fab-btn:hover{transform:scale(1.1);box-shadow:0 6px 28px rgba(11,37,69,.5)}
+.lang-menu{position:absolute;bottom:62px;right:0;background:#fff;border-radius:14px;box-shadow:0 8px 40px rgba(0,0,0,.15);overflow:hidden;min-width:190px;animation:slideDown .2s ease;border:1px solid var(--border)}
+.lang-item{display:flex;align-items:center;gap:10px;padding:10px 16px;border:none;background:transparent;cursor:pointer;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);transition:background .15s;text-align:left}
+[dir="rtl"] .lang-item{text-align:right;flex-direction:row-reverse}
+.lang-item:hover{background:var(--off)}
+.lang-item.active{color:var(--teal);font-weight:600;background:rgba(13,138,133,.06)}
+.lang-flag{font-size:18px}
+.session-talks{margin-left:8px;overflow:hidden}
+[dir="rtl"] .session-talks{margin-left:0;margin-right:8px}
+.icon-circle{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.accent-bar{height:4px;background:linear-gradient(90deg,var(--gold),var(--teal),var(--gold2));width:100%}
+@media(max-width:700px){.edition-num{font-size:56px}.meeting-title{font-size:22px}#main-content{padding:24px 14px 100px}.timeline{padding-left:40px}[dir="rtl"] .timeline{padding-left:0;padding-right:40px}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="accent-bar"></div>
+  <header id="site-header">
+    <canvas class="mol-canvas" id="mol-canvas"></canvas>
+    <div class="header-inner">
+      <div class="congress-badge float-badge"><span>⚕</span> April 23–25, 2026 · Oran, Algeria</div>
+      <div class="header-title-row">
+        <div><div class="edition-num">14<span class="edition-sup">th</span></div></div>
+        <div class="h-sep"></div>
+        <div class="title-text">
+          <div class="meeting-label">Orano-Eurelian Meeting</div>
+          <div class="meeting-title">OF RHEUMATOLOGY</div>
+          <div class="meeting-sub">And 2<sup>nd</sup> International Congress</div>
+        </div>
+      </div>
+      <div class="header-meta">
+        <div class="meta-chip"><span>📍</span><span>CHU Benaouda Benzerdjeb, Oran</span></div>
+        <div class="meta-chip"><span>🩺</span><span>Scientific Program</span></div>
+        <div class="meta-chip"><span>🌐</span><span>9 Languages</span></div>
+      </div>
+    </div>
+  </header>
+  <nav id="day-nav"><div class="nav-inner" id="day-tabs"></div></nav>
+  <main id="main-content"><div id="program-content"></div></main>
+  <div id="lang-fab">
+    <button class="lang-fab-btn" onclick="toggleLang()" title="Language">🌐</button>
+    <div class="lang-menu" id="lang-menu" style="display:none"></div>
+  </div>
+</div>
+
+<script>
+const LANGS=[{c:'en',l:'English',f:'🇬🇧'},{c:'fr',l:'Français',f:'🇫🇷'},{c:'es',l:'Español',f:'🇪🇸'},{c:'pt',l:'Português',f:'🇵🇹'},{c:'de',l:'Deutsch',f:'🇩🇪'},{c:'ru',l:'Русский',f:'🇷🇺'},{c:'zh',l:'中文',f:'🇨🇳'},{c:'id',l:'Indonesia',f:'🇮🇩'},{c:'ar',l:'العربية',f:'🇩🇿'}];
+const T={
+  en:{days:['Thursday · Apr 23','Friday · Apr 24','Saturday · Apr 25'],session:'Session',workshop:'Workshop',workshops:'Workshops',mod:'Moderator',debate:'Debate',coffee:'Coffee Break',lunch:'Lunch',closing:'Closing Ceremony & Awards',chairs:'Chairs',hall:'Hall',sym:'Symposium',opening:'Opening Ceremony',reg:'Reception & Registration',zoom:'Zoom'},
+  fr:{days:['Jeudi · 23 Avril','Vendredi · 24 Avril','Samedi · 25 Avril'],session:'Session',workshop:'Atelier',workshops:'Ateliers',mod:'Modérateur',debate:'Débat',coffee:'Pause Café',lunch:'Déjeuner',closing:'Clôture & Remise des Prix',chairs:'Présidents',hall:'Salle',sym:'Symposium',opening:"Cérémonie d'Ouverture",reg:'Accueil & Inscription',zoom:'Zoom'},
+  es:{days:['Jueves · 23 Abril','Viernes · 24 Abril','Sábado · 25 Abril'],session:'Sesión',workshop:'Taller',workshops:'Talleres',mod:'Moderador',debate:'Debate',coffee:'Pausa Café',lunch:'Almuerzo',closing:'Clausura & Premiación',chairs:'Presidentes',hall:'Sala',sym:'Simposio',opening:'Apertura',reg:'Registro',zoom:'Zoom'},
+  pt:{days:['Quinta · 23 Abril','Sexta · 24 Abril','Sábado · 25 Abril'],session:'Sessão',workshop:'Workshop',workshops:'Workshops',mod:'Moderador',debate:'Debate',coffee:'Pausa Café',lunch:'Almoço',closing:'Encerramento & Premiação',chairs:'Presidentes',hall:'Sala',sym:'Simpósio',opening:'Cerimônia de Abertura',reg:'Recepção & Inscrição',zoom:'Zoom'},
+  de:{days:['Donnerstag · 23. April','Freitag · 24. April','Samstag · 25. April'],session:'Sitzung',workshop:'Workshop',workshops:'Workshops',mod:'Moderator',debate:'Diskussion',coffee:'Kaffeepause',lunch:'Mittagessen',closing:'Kongressabschluss & Preisverleihung',chairs:'Sitzungsleiter',hall:'Saal',sym:'Symposium',opening:'Eröffnungsfeier',reg:'Empfang & Anmeldung',zoom:'Zoom'},
+  ru:{days:['Четверг · 23 апреля','Пятница · 24 апреля','Суббота · 25 апреля'],session:'Сессия',workshop:'Мастер-класс',workshops:'Мастер-классы',mod:'Модератор',debate:'Дискуссия',coffee:'Кофе-пауза',lunch:'Обед',closing:'Закрытие & Награждение',chairs:'Председатели',hall:'Зал',sym:'Симпозиум',opening:'Открытие',reg:'Регистрация',zoom:'Zoom'},
+  zh:{days:['4月23日 周四','4月24日 周五','4月25日 周六'],session:'专场',workshop:'工作坊',workshops:'工作坊',mod:'主持人',debate:'讨论',coffee:'茶歇',lunch:'午餐',closing:'闭幕式及颁奖',chairs:'主席团',hall:'会议厅',sym:'研讨会',opening:'开幕式',reg:'注册报到',zoom:'Zoom'},
+  id:{days:['Kamis · 23 April','Jumat · 24 April','Sabtu · 25 April'],session:'Sesi',workshop:'Workshop',workshops:'Workshop',mod:'Moderator',debate:'Debat',coffee:'Istirahat Kopi',lunch:'Makan Siang',closing:'Penutupan & Penganugerahan',chairs:'Ketua Sesi',hall:'Aula',sym:'Simposium',opening:'Pembukaan',reg:'Pendaftaran',zoom:'Zoom'},
+  ar:{days:['الخميس · ٢٣ أبريل','الجمعة · ٢٤ أبريل','السبت · ٢٥ أبريل'],session:'جلسة',workshop:'ورشة عمل',workshops:'ورش العمل',mod:'المنسق',debate:'نقاش',coffee:'استراحة القهوة',lunch:'غداء',closing:'حفل الختام وتوزيع الجوائز',chairs:'رؤساء الجلسة',hall:'قاعة',sym:'ندوة علمية',opening:'حفل الافتتاح',reg:'الاستقبال والتسجيل',zoom:'Zoom'}
+};
+const DAYS=[
+  [{type:'reg',time:'13h00'},{type:'speech',time:'14h00',text:'Opening welcome speech by the Honorary President A Ladjouze Rezig, The president of the congress Lamri Zahia, The General Director of Tami Medjbeur Hospital Mr Tarek Belbey, M Medjadi Head of the Rheumatology Department - President of AAMRO'},
+   {type:'session',num:'1',numLabel:'1st',chairs:'A Ladjouze - M Djebbar - I Bencharif - N Huseynova',talks:[
+    {time:'14h30',title:'Management of hyperparathyroidism',speaker:'Ibrahim Medhet',loc:'Cairo - Egypt'},
+    {time:'14h55',title:'Customized Management of Osteoporosis Beyond WHO Guidelines',speaker:'Basel K Masri',loc:'Amman - Jordan'},
+    {time:'15h20',title:'Behind the fracture: A Forgotten Diagnosis in Men',speaker:'Boukabous Abdenour',loc:'Algiers – Algeria'},
+    {time:'15h35',title:'Updates of osteoporosis of chronic inflammatory rheumatism',speaker:'Ouafi Mouloud',loc:'Paris – France'},
+    {time:'15h55',title:'Fractures in elderly subjects',speaker:'Yakoubi Mustapha',loc:'Algiers – Algeria'},
+    {time:'16h15',type:'sym',sponsor:'AMGEN',title:'Denosumab in Osteoporosis\nExperience of the Rheumatology Department',speaker:'Medjadi Mohsine',loc:'Ain El Turck/Oran – Algeria'},
+    {time:'16h45',type:'debate'},{time:'17h05',type:'coffee'}
+   ]},
+   {type:'session',num:'2',numLabel:'2nd',chairs:'A Abi Ayad - S Slimani - B Masri – M Merad',talks:[
+    {time:'17h30',title:'Botulinum toxin: the pain reliever of tomorrow? The pain reliever of today?',speaker:'Viel Eric',loc:'Nîmes - France'},
+    {time:'17h55',title:'Immunomodulatory Properties of Baclofen and Novel Structural Analogue: Potential Therapeutic Targets for Autoimmune Rheumatic Diseases',speaker:'Keniche Assia',loc:'Tlemcen – Algeria'},
+    {time:'18h10',title:'Concept du "Care or healing" à travers l\'Evidence-Based Medicine',speaker:'Djebbar Mourad',loc:'Oran - Algeria'},
+    {time:'18h35',title:'Long-term corticosteroid therapy in 2026: Endocrine Society recommandations applied to Rheumatologic withdrawal',speaker:'Merad Samir',loc:'Oran - Algeria'},
+    {time:'18h55',type:'sym',sponsor:'Pharmadic',title:'Management of corticosteroids on RA',speaker:'Khaled Tarek',loc:'Constantine – Algeria'},
+    {time:'19h25',type:'debate'}
+   ]}
+  ],
+  [{type:'workshops',time:'08h30',items:[
+    {n:1,title:'Interventional ultrasound of the knee « beyond the barrier »',speaker:'Dr Belmouhoub Abdessamad',loc:'Privas - France',mod:'R Chiheub',hall:'Mascara hall'},
+    {n:2,title:"When RA Isn't typical: Navigating Diagnostic Challenges, Through Real Cases",speaker:'Pr Acheli Dehbia',loc:'Algiers - Algeria',mod:'A Boukabous',hall:'Tlemcen hall'},
+    {n:3,title:"Dupuytren's needle aponeurotomy",speaker:'Pr Touzi Mongi',loc:'Monastir – Tunisie',mod:'K Khelif',hall:'Chlef hall'},
+    {n:4,title:'Capillaroscopy',speaker:'Pr Rahou Amine',loc:'Oran - Algeria',mod:'R Chetouane',hall:'Saida hall'},
+    {n:5,title:'Clinical cases: Spinal Pathologies',speaker:'Dr Rouidi Sid Ahmed',loc:'Châteaudun - France',mod:'S Ouadah',hall:'Andalous hall'}
+   ]},
+   {type:'session',num:'3',numLabel:'3rd',chairs:'C Haouichet - H Sahli - M Boukredera - S M Bouanani',talks:[
+    {time:'09h20',title:'Juvenile idiopathic arthritis',speaker:'Hashad Soad Salem',loc:'Tripoli - Libya'},
+    {time:'09h40',title:'Rheumatoid Vasculitis',speaker:'Huseynova Nargiz',loc:'Baku – Azerbaijan'},
+    {time:'10h00',title:'The new role of al artificial intelligence in managing patient with autoimmune diseases',speaker:'Ghadanfar Yaser',loc:'Koweït City – Koweït'},
+    {time:'10h20',type:'sym',sponsor:'Johnson & Johnson',title:'Role of IL-23 inhibitors in the treatment of psoriatic arthritis',speaker:'Bengana Bilal',loc:'Algiers – Algeria'},
+    {time:'11h05',title:'PSORIATIC ARTHRITIS: Predicting its appearance for better management',speaker:'Bouziane Kheira',loc:'Ain El Türck Oran - Algeria'},
+    {time:'11h20',title:'Psoriatic arthritis is difficult to treat: an overview of the concepts and proposed definition',speaker:'Abdelaoui Selma',loc:'Alger - Algeria'},
+    {time:'11h35',type:'sym',sponsor:'Biopharm Lilly',title:'Spondyloarthropathies in 2026. The Role of Anti-IL-17 Therapy',speaker:'Pr Durez Patrick',loc:'Louvain Bruselles – Belgium'},
+    {time:'12h20',type:'debate'},{time:'13h00',type:'lunch'}
+   ]},
+   {type:'session',num:'4',numLabel:'4th',chairs:'Z Lamri - T Duruoz - F Hafi - S Rahim',talks:[
+    {time:'14h30',title:'Maghreb recommendations for musculoskeletal ultrasound in rheumatoid arthritis',speaker:'Haddouche Assia Algiers & Slimani Samy Batna',loc:'EULAR teachers Algeria'},
+    {time:'15h00',title:"What's new in interventional rheumatology?",speaker:'Ould Henia Ahmed',loc:'Chartres - France'},
+    {time:'15h30',title:'Gout: Epidemiology, Clinical characteristics and management strategies',speaker:'Kurmann Patric Thierry',loc:'Neuchatel - Switzerland'},
+    {time:'15h50',title:'Updates Criteria for pseudo gout',speaker:'El Sayed Rageh',loc:'Tanta - Egypt',zoom:true},
+    {time:'16h10',title:'Updates in the surgical treatment of osteonecrosis of the hip: what role for preservation techniques?',speaker:'Amouri Saadedine Hichem',loc:'Ben Aknoun Algiers - Algeria'},
+    {time:'16h25',title:'Current trends and perspectives in the management of rheumatoid Wrist: Evaluation of strategies and functional outcomes',speaker:'Bessaa Fouad',loc:'Ben Aknoun Algiers - Algeria'},
+    {time:'16h40',type:'sym',sponsor:'SANOFI',title:"Early recognition of Mucopolysaccharidosis type 1 (MPS I): The Rheumatologist's Pivot Role",speaker:'Bencharif Imene',loc:'Constantine – Algeria'},
+    {time:'17h15',type:'debate'},{time:'18h10',type:'coffee'}
+   ]}
+  ],
+  [
+   {type:'session',num:'5',numLabel:'5th',chairs:'A Lounici - W Maameri - S Hadiyeva - K Tarek',talks:[
+    {time:'08h30',title:'Inflammatory rheumatism and work',speaker:'Bordji Youcef',loc:'Hammam Bouhdjar/Ain-Témouchent - Algeria'},
+    {time:'08h45',title:'Diet and rheumatism',speaker:'Bencharif Imene',loc:'Constantine - Algeria'},
+    {time:'09h05',title:'Rheumatoid Vasculitis',speaker:'Huseynova Nargiz',loc:'Baku – Azerbaijan'},
+    {time:'09h25',title:'RA-ILD',speaker:'Elomir Mohammed',loc:'Abha - Saudi Arabia'},
+    {time:'09h45',title:'Stress and rheumatic diseases',speaker:'Ndiaye Abdou Rajack',loc:'Dakar – Senegal'},
+    {time:'10h05',type:'sym',sponsor:'Johnson & Johnson',title:'The role of Golimumab in the management of inflammatory rheumatism',speaker:'Dr Medjadi Mohsine',loc:'Ain El Turck Oran – Algeria'},
+    {time:'10h35',type:'debate'},{time:'10h50',type:'coffee'}
+   ]},
+   {type:'session',num:'6',numLabel:'6th',chairs:'A Haddouche - A Ndiaye - S A Rouidi – T Mongi',talks:[
+    {time:'11h10',title:'Overcoming Diagnostic Delays in Axial Spondyloarthritis: Moving Toward Action',speaker:'Duruoz Tuncay',loc:'Istanbul – Turkey'},
+    {time:'11h35',title:'Structural Progression in axial Spondyloarthritis',speaker:'Abi Ayad Abdelatif',loc:'Tlemcen – Algeria'},
+    {time:'11h55',title:'Difficult To-Treat Spondyloarthritis (SPA)',speaker:'Hadiyeva Shahla',loc:'Baku – Azerbaijan'},
+    {time:'12h15',title:'Axial spondyloarthritis associated with IBD',speaker:'Sahli Hela',loc:'Tunis – Tunisia'},
+    {time:'12h35',title:'IBD and its treatment',speaker:'Gamar Leila',loc:'Algiers – Algeria'},
+    {time:'12h55',type:'sym',sponsor:'Roche',title:'Role of Tocilizumab in the management of RA',speaker:'Lamri Zahia',loc:'Oran – Algeria'},
+    {time:'13h00',type:'debate'},{time:'14h30',type:'closing'},{time:'14h30',type:'lunch'}
+   ]}
+  ]
+];
+
+let currentLang='en',currentDay=0;
+const openSessions={};
+function t(k){return T[currentLang][k]||T.en[k]||k}
+function isRTL(){return currentLang==='ar'}
+
+function initMolCanvas(){
+  const c=document.getElementById('mol-canvas');if(!c)return;
+  c.width=c.offsetWidth||1200;c.height=c.offsetHeight||220;
+  const ctx=c.getContext('2d'),pts=[];
+  for(let i=0;i<40;i++)pts.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*3+1});
+  ctx.clearRect(0,0,c.width,c.height);
+  pts.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,0.6)';ctx.fill();});
+  for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
+    const d=Math.hypot(pts[i].x-pts[j].x,pts[i].y-pts[j].y);
+    if(d<120){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(255,255,255,${.4*(1-d/120)})`;ctx.lineWidth=.7;ctx.stroke();}
+  }
+}
+function buildLangMenu(){
+  const menu=document.getElementById('lang-menu');
+  menu.innerHTML=LANGS.map(l=>`<button class="lang-item${l.c===currentLang?' active':''}" onclick="setLang('${l.c}')"><span class="lang-flag">${l.f}</span>${l.l}</button>`).join('');
+}
+function toggleLang(){const m=document.getElementById('lang-menu');m.style.display=m.style.display==='none'?'block':'none';buildLangMenu();}
+function setLang(code){
+  currentLang=code;document.getElementById('lang-menu').style.display='none';
+  const rtl=isRTL();
+  document.getElementById('app').setAttribute('dir',rtl?'rtl':'ltr');
+  const fab=document.getElementById('lang-fab');fab.style.right=rtl?'auto':'28px';fab.style.left=rtl?'28px':'auto';
+  const menu=document.getElementById('lang-menu');menu.style.right=rtl?'auto':'0';menu.style.left=rtl?'0':'auto';
+  renderAll();
+}
+function buildDayTabs(){
+  document.getElementById('day-tabs').innerHTML=T[currentLang].days.map((d,i)=>`<button class="day-btn${i===currentDay?' active':''}" onclick="setDay(${i})">${d}</button>`).join('');
+}
+function setDay(i){currentDay=i;renderAll();}
+function escHtml(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\n/g,'<br>')}
+function talkHTML(tk,idx){
+  if(tk.type==='sym')return`<div class="symp-card"><div class="symp-label">★ ${t('sym')}</div><div class="symp-sponsor">${escHtml(tk.sponsor)}</div><div class="talk-time">${tk.time||''}</div><div class="symp-title">${escHtml(tk.title)}</div><div class="symp-speaker">${escHtml(tk.speaker)} <span class="talk-loc">· ${escHtml(tk.loc)}</span></div></div>`;
+  if(tk.type==='debate')return`<div class="debate-card"><span style="font-size:18px">💬</span><span style="font-size:13px;color:var(--muted);font-style:italic">${t('debate')}</span><span style="font-size:11px;color:#9ca3af;margin-left:auto">${tk.time||''}</span></div>`;
+  if(tk.type==='coffee')return`<div class="break-card"><div class="icon-circle" style="background:rgba(16,185,129,.12)">☕</div><div><div style="font-weight:600;font-size:14px;color:#065f46">${t('coffee')}</div><div style="font-size:12px;color:#6b7280">${tk.time||''}</div></div></div>`;
+  if(tk.type==='lunch')return`<div class="lunch-card"><div class="icon-circle" style="background:rgba(251,146,60,.15)">🍽️</div><div><div style="font-weight:600;font-size:14px;color:#9a3412">${t('lunch')}</div><div style="font-size:12px;color:#6b7280">${tk.time||''}</div></div></div>`;
+  if(tk.type==='closing')return`<div class="closing-card"><div class="icon-circle" style="background:rgba(201,168,76,.2)">🏆</div><div><div style="font-weight:600;font-size:14px;color:var(--gold2)">${t('closing')}</div><div style="font-size:12px;color:rgba(255,255,255,.5)">${tk.time||''}</div></div></div>`;
+  return`<div class="talk-row"><span class="talk-time">${tk.time||''}</span>${tk.zoom?`<span class="zoom-badge">📹 ${t('zoom')}</span>`:''}<div class="talk-title">${escHtml(tk.title)}</div><div class="talk-speaker">${escHtml(tk.speaker)} <span class="talk-loc">· ${escHtml(tk.loc)}</span></div></div>`;
+}
+function sessionHTML(ev,idx){
+  const sid=`session-${idx}`;if(!(sid in openSessions))openSessions[sid]=true;
+  const isOpen=openSessions[sid];
+  const rm={'1':'I','2':'II','3':'III','4':'IV','5':'V','6':'VI'};
+  return`<div class="tl-item" style="animation-delay:${idx*80}ms"><div class="tl-dot pulse-dot"></div>
+    <button class="session-header" onclick="toggleSession('${sid}',this)">
+      <div style="display:flex;align-items:center;flex:1">
+        <div class="session-num">${rm[ev.num]||ev.num}</div>
+        <div><div class="session-label">${ev.numLabel} ${t('session')}</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:#fff">${t('chairs')}: <em style="font-weight:400">${escHtml(ev.chairs)}</em></div></div>
+      </div><span class="chevron ${isOpen?'open':''}">▾</span>
+    </button>
+    <div class="session-talks" id="${sid}" style="display:${isOpen?'block':'none'}">
+      <div style="height:8px"></div>${ev.talks.map((tk,i)=>talkHTML(tk,i)).join('')}
+    </div></div>`;
+}
+function workshopsHTML(ev){
+  return`<div class="tl-item"><div class="tl-dot gold"></div>
+    <div class="workshop-header">
+      <div class="icon-circle" style="background:rgba(201,168,76,.2);font-size:24px">🔬</div>
+      <div><div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold2);margin-bottom:3px">${ev.time} · ${t('workshops')}</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:#fff;font-weight:600">Parallel Workshops</div></div>
+    </div>
+    <div class="workshops-grid">${ev.items.map(w=>`<div class="wk-card"><div class="wk-number">${w.n}</div>
+      <div class="wk-title">${t('workshop')} ${w.n}: ${escHtml(w.title)}</div>
+      <div class="wk-speaker">${escHtml(w.speaker)} · ${escHtml(w.loc)}</div>
+      <div class="wk-moderator">▸ ${t('mod')}: ${w.mod}</div>
+      <span class="hall-badge">🏛 ${w.hall}</span></div>`).join('')}
+    </div></div>`;
+}
+function regHTML(ev){return`<div class="tl-item"><div class="tl-dot break"></div><div class="reg-card"><div style="display:flex;align-items:center;gap:12px"><div class="icon-circle" style="background:rgba(16,185,129,.15);font-size:24px">🏥</div><div><div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#059669;margin-bottom:2px">${ev.time}</div><div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:#065f46">${t('reg')}</div></div></div></div></div>`;}
+function speechHTML(ev){return`<div class="tl-item"><div class="tl-dot"></div><div class="speech-card"><div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--teal);margin-bottom:6px">${ev.time} · ${t('opening')}</div><div style="font-size:13.5px;color:var(--text);line-height:1.6">${escHtml(ev.text)}</div></div></div>`;}
+function toggleSession(sid,btn){
+  openSessions[sid]=!openSessions[sid];
+  const el=document.getElementById(sid);if(el)el.style.display=openSessions[sid]?'block':'none';
+  const ch=btn.querySelector('.chevron');if(ch)ch.classList.toggle('open',openSessions[sid]);
+}
+function renderAll(){
+  buildDayTabs();
+  const day=DAYS[currentDay];let html='<div class="timeline"><div class="tl-line"></div>';
+  day.forEach((ev,i)=>{
+    if(ev.type==='reg')html+=regHTML(ev);
+    else if(ev.type==='speech')html+=speechHTML(ev);
+    else if(ev.type==='workshops')html+=workshopsHTML(ev);
+    else if(ev.type==='session')html+=sessionHTML(ev,i);
+  });
+  html+='</div>';
+  document.getElementById('program-content').innerHTML=html;
+  setTimeout(()=>{
+    const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.05});
+    document.querySelectorAll('.tl-item').forEach(el=>obs.observe(el));
+  },50);
+}
+window.addEventListener('DOMContentLoaded',()=>{
+  initMolCanvas();renderAll();window.addEventListener('resize',initMolCanvas);
+  document.addEventListener('click',e=>{const m=document.getElementById('lang-menu');const f=document.getElementById('lang-fab');if(!f.contains(e.target))m.style.display='none';});
+});
+</script>
+</body>
+</html>
