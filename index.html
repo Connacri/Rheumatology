@@ -1119,8 +1119,189 @@
     }
     document.querySelectorAll('.lang-option').forEach(o => o.classList.remove('active'));
     if (option) option.classList.add('active');
+    if (window.timelineSetLang) window.timelineSetLang(lang);
   }
 
+    const TIMELINE_TRANSLATIONS = {
+    en:{days:['Thursday · Apr 23','Friday · Apr 24','Saturday · Apr 25'],session:'Session',workshop:'Workshop',workshops:'Workshops',mod:'Moderator',debate:'Debate',coffee:'Coffee Break',lunch:'Lunch',closing:'Closing Ceremony & Awards',chairs:'Chairs',hall:'Hall',sym:'Symposium',opening:'Opening Ceremony',reg:'Reception & Registration',zoom:'Zoom'},
+    fr:{days:['Jeudi · 23 Avril','Vendredi · 24 Avril','Samedi · 25 Avril'],session:'Session',workshop:'Atelier',workshops:'Ateliers',mod:'Modérateur',debate:'Débat',coffee:'Pause Café',lunch:'Déjeuner',closing:'Clôture & Remise des Prix',chairs:'Présidents',hall:'Salle',sym:'Symposium',opening:"Cérémonie d'Ouverture",reg:'Accueil & Inscription',zoom:'Zoom'},
+    es:{days:['Jueves · 23 Abril','Viernes · 24 Abril','Sábado · 25 Abril'],session:'Sesión',workshop:'Taller',workshops:'Talleres',mod:'Moderador',debate:'Debate',coffee:'Pausa Café',lunch:'Almuerzo',closing:'Clausura & Premiación',chairs:'Presidentes',hall:'Sala',sym:'Simposio',opening:'Apertura',reg:'Registro',zoom:'Zoom'},
+    pt:{days:['Quinta · 23 Abril','Sexta · 24 Abril','Sábado · 25 Abril'],session:'Sessão',workshop:'Workshop',workshops:'Workshops',mod:'Moderador',debate:'Debate',coffee:'Pausa Café',lunch:'Almoço',closing:'Encerramento & Premiação',chairs:'Presidentes',hall:'Sala',sym:'Simpósio',opening:'Cerimônia de Abertura',reg:'Recepção & Inscrição',zoom:'Zoom'},
+    de:{days:['Donnerstag · 23. April','Freitag · 24. April','Samstag · 25. April'],session:'Sitzung',workshop:'Workshop',workshops:'Workshops',mod:'Moderator',debate:'Diskussion',coffee:'Kaffeepause',lunch:'Mittagessen',closing:'Kongressabschluss & Preisverleihung',chairs:'Sitzungsleiter',hall:'Saal',sym:'Symposium',opening:'Eröffnungsfeier',reg:'Empfang & Anmeldung',zoom:'Zoom'},
+    ru:{days:['Четверг · 23 апреля','Пятница · 24 апреля','Суббота · 25 апреля'],session:'Сессия',workshop:'Мастер-класс',workshops:'Мастер-классы',mod:'Модератор',debate:'Дискуссия',coffee:'Кофе-пауза',lunch:'Обед',closing:'Закрытие & Награждение',chairs:'Председатели',hall:'Зал',sym:'Симпозиум',opening:'Открытие',reg:'Регистрация',zoom:'Zoom'},
+    zh:{days:['4月23日 周四','4月24日 周五','4月25日 周六'],session:'专场',workshop:'工作坊',workshops:'工作坊',mod:'主持人',debate:'讨论',coffee:'茶歇',lunch:'午餐',closing:'闭幕式及颁奖',chairs:'主席团',hall:'会议厅',sym:'研讨会',opening:'开幕式',reg:'注册报到',zoom:'Zoom'},
+    id:{days:['Kamis · 23 April','Jumat · 24 April','Sabtu · 25 April'],session:'Sesi',workshop:'Workshop',workshops:'Workshop',mod:'Moderator',debate:'Debat',coffee:'Istirahat Kopi',lunch:'Makan Siang',closing:'Penutupan & Penganugerahan',chairs:'Ketua Sesi',hall:'Aula',sym:'Simposium',opening:'Pembukaan',reg:'Pendaftaran',zoom:'Zoom'},
+    ar:{days:['الخميس · ٢٣ أبريل','الجمعة · ٢٤ أبريل','السبت · ٢٥ أبريل'],session:'جلسة',workshop:'ورشة عمل',workshops:'ورش العمل',mod:'المنسق',debate:'نقاش',coffee:'استراحة القهوة',lunch:'غداء',closing:'حفل الختام وتوزيع الجوائز',chairs:'رؤساء الجلسة',hall:'قاعة',sym:'ندوة علمية',opening:'حفل الافتتاح',reg:'الاستقبال والتسجيل',zoom:'Zoom'}
+  };
+  const TIMELINE_DAYS=[
+    [{type:'reg',time:'13h00'},{type:'speech',time:'14h00',text:'Opening welcome speech by the Honorary President A Ladjouze Rezig, The president of the congress Lamri Zahia, The General Director of Tami Medjbeur Hospital Mr Tarek Belbey, M Medjadi Head of the Rheumatology Department - President of AAMRO'},
+     {type:'session',num:'1',numLabel:'1st',chairs:'A Ladjouze - M Djebbar - I Bencharif - N Huseynova',talks:[
+      {time:'14h30',title:'Management of hyperparathyroidism',speaker:'Ibrahim Medhet',loc:'Cairo - Egypt'},
+      {time:'14h55',title:'Customized Management of Osteoporosis Beyond WHO Guidelines',speaker:'Basel K Masri',loc:'Amman - Jordan'},
+      {time:'15h20',title:'Behind the fracture: A Forgotten Diagnosis in Men',speaker:'Boukabous Abdenour',loc:'Algiers – Algeria'},
+      {time:'15h35',title:'Updates of osteoporosis of chronic inflammatory rheumatism',speaker:'Ouafi Mouloud',loc:'Paris – France'},
+      {time:'15h55',title:'Fractures in elderly subjects',speaker:'Yakoubi Mustapha',loc:'Algiers – Algeria'},
+      {time:'16h15',type:'sym',sponsor:'AMGEN',title:'Denosumab in Osteoporosis\nExperience of the Rheumatology Department',speaker:'Medjadi Mohsine',loc:'Ain El Turck/Oran – Algeria'},
+      {time:'16h45',type:'debate'},{time:'17h05',type:'coffee'}
+     ]},
+     {type:'session',num:'2',numLabel:'2nd',chairs:'A Abi Ayad - S Slimani - B Masri – M Merad',talks:[
+      {time:'17h30',title:'Botulinum toxin: the pain reliever of tomorrow? The pain reliever of today?',speaker:'Viel Eric',loc:'Nîmes - France'},
+      {time:'17h55',title:'Immunomodulatory Properties of Baclofen and Novel Structural Analogue: Potential Therapeutic Targets for Autoimmune Rheumatic Diseases',speaker:'Keniche Assia',loc:'Tlemcen – Algeria'},
+      {time:'18h10',title:'Concept du "Care or healing" à travers l\'Evidence-Based Medicine',speaker:'Djebbar Mourad',loc:'Oran - Algeria'},
+      {time:'18h35',title:'Long-term corticosteroid therapy in 2026: Endocrine Society recommandations applied to Rheumatologic withdrawal',speaker:'Merad Samir',loc:'Oran - Algeria'},
+      {time:'18h55',type:'sym',sponsor:'Pharmadic',title:'Management of corticosteroids on RA',speaker:'Khaled Tarek',loc:'Constantine – Algeria'},
+      {time:'19h25',type:'debate'}
+     ]}
+    ],
+    [{type:'workshops',time:'08h30',items:[
+      {n:1,title:'Interventional ultrasound of the knee « beyond the barrier »',speaker:'Dr Belmouhoub Abdessamad',loc:'Privas - France',mod:'R Chiheub',hall:'Mascara hall'},
+      {n:2,title:"When RA Isn't typical: Navigating Diagnostic Challenges, Through Real Cases",speaker:'Pr Acheli Dehbia',loc:'Algiers - Algeria',mod:'A Boukabous',hall:'Tlemcen hall'},
+      {n:3,title:"Dupuytren's needle aponeurotomy",speaker:'Pr Touzi Mongi',loc:'Monastir – Tunisie',mod:'K Khelif',hall:'Chlef hall'},
+      {n:4,title:'Capillaroscopy',speaker:'Pr Rahou Amine',loc:'Oran - Algeria',mod:'R Chetouane',hall:'Saida hall'},
+      {n:5,title:'Clinical cases: Spinal Pathologies',speaker:'Dr Rouidi Sid Ahmed',loc:'Châteaudun - France',mod:'S Ouadah',hall:'Andalous hall'}
+     ]},
+     {type:'session',num:'3',numLabel:'3rd',chairs:'C Haouichet - H Sahli - M Boukredera - S M Bouanani',talks:[
+      {time:'09h20',title:'Juvenile idiopathic arthritis',speaker:'Hashad Soad Salem',loc:'Tripoli - Libya'},
+      {time:'09h40',title:'Rheumatoid Vasculitis',speaker:'Huseynova Nargiz',loc:'Baku – Azerbaijan'},
+      {time:'10h00',title:'The new role of al artificial intelligence in managing patient with autoimmune diseases',speaker:'Ghadanfar Yaser',loc:'Koweït City – Koweït'},
+      {time:'10h20',type:'sym',sponsor:'Johnson & Johnson',title:'Role of IL-23 inhibitors in the treatment of psoriatic arthritis',speaker:'Bengana Bilal',loc:'Algiers – Algeria'},
+      {time:'11h05',title:'PSORIATIC ARTHRITIS: Predicting its appearance for better management',speaker:'Bouziane Kheira',loc:'Ain El Türck Oran - Algeria'},
+      {time:'11h20',title:'Psoriatic arthritis is difficult to treat: an overview of the concepts and proposed definition',speaker:'Abdelaoui Selma',loc:'Alger - Algeria'},
+      {time:'11h35',type:'sym',sponsor:'Biopharm Lilly',title:'Spondyloarthropathies in 2026. The Role of Anti-IL-17 Therapy',speaker:'Pr Durez Patrick',loc:'Louvain Bruselles – Belgium'},
+      {time:'12h20',type:'debate'},{time:'13h00',type:'lunch'}
+     ]},
+     {type:'session',num:'4',numLabel:'4th',chairs:'Z Lamri - T Duruoz - F Hafi - S Rahim',talks:[
+      {time:'14h30',title:'Maghreb recommendations for musculoskeletal ultrasound in rheumatoid arthritis',speaker:'Haddouche Assia Algiers & Slimani Samy Batna',loc:'EULAR teachers Algeria'},
+      {time:'15h00',title:"What's new in interventional rheumatology?",speaker:'Ould Henia Ahmed',loc:'Chartres - France'},
+      {time:'15h30',title:'Gout: Epidemiology, Clinical characteristics and management strategies',speaker:'Kurmann Patric Thierry',loc:'Neuchatel - Switzerland'},
+      {time:'15h50',title:'Updates Criteria for pseudo gout',speaker:'El Sayed Rageh',loc:'Tanta - Egypt',zoom:true},
+      {time:'16h10',title:'Updates in the surgical treatment of osteonecrosis of the hip: what role for preservation techniques?',speaker:'Amouri Saadedine Hichem',loc:'Ben Aknoun Algiers - Algeria'},
+      {time:'16h25',title:'Current trends and perspectives in the management of rheumatoid Wrist: Evaluation of strategies and functional outcomes',speaker:'Bessaa Fouad',loc:'Ben Aknoun Algiers - Algeria'},
+      {time:'16h40',type:'sym',sponsor:'SANOFI',title:"Early recognition of Mucopolysaccharidosis type 1 (MPS I): The Rheumatologist's Pivot Role",speaker:'Bencharif Imene',loc:'Constantine – Algeria'},
+      {time:'17h15',type:'debate'},{time:'18h10',type:'coffee'}
+     ]}
+    ],
+    [
+     {type:'session',num:'5',numLabel:'5th',chairs:'A Lounici - W Maameri - S Hadiyeva - K Tarek',talks:[
+      {time:'08h30',title:'Inflammatory rheumatism and work',speaker:'Bordji Youcef',loc:'Hammam Bouhdjar/Ain-Témouchent - Algeria'},
+      {time:'08h45',title:'Diet and rheumatism',speaker:'Bencharif Imene',loc:'Constantine - Algeria'},
+      {time:'09h05',title:'Rheumatoid Vasculitis',speaker:'Huseynova Nargiz',loc:'Baku – Azerbaijan'},
+      {time:'09h25',title:'RA-ILD',speaker:'Elomir Mohammed',loc:'Abha - Saudi Arabia'},
+      {time:'09h45',title:'Stress and rheumatic diseases',speaker:'Ndiaye Abdou Rajack',loc:'Dakar – Senegal'},
+      {time:'10h05',type:'sym',sponsor:'Johnson & Johnson',title:'The role of Golimumab in the management of inflammatory rheumatism',speaker:'Dr Medjadi Mohsine',loc:'Ain El Turck Oran – Algeria'},
+      {time:'10h35',type:'debate'},{time:'10h50',type:'coffee'}
+     ]},
+     {type:'session',num:'6',numLabel:'6th',chairs:'A Haddouche - A Ndiaye - S A Rouidi – T Mongi',talks:[
+      {time:'11h10',title:'Overcoming Diagnostic Delays in Axial Spondyloarthritis: Moving Toward Action',speaker:'Duruoz Tuncay',loc:'Istanbul – Turkey'},
+      {time:'11h35',title:'Structural Progression in axial Spondyloarthritis',speaker:'Abi Ayad Abdelatif',loc:'Tlemcen – Algeria'},
+      {time:'11h55',title:'Difficult To-Treat Spondyloarthritis (SPA)',speaker:'Hadiyeva Shahla',loc:'Baku – Azerbaijan'},
+      {time:'12h15',title:'Axial spondyloarthritis associated with IBD',speaker:'Sahli Hela',loc:'Tunis – Tunisia'},
+      {time:'12h35',title:'IBD and its treatment',speaker:'Gamar Leila',loc:'Algiers – Algeria'},
+      {time:'12h55',type:'sym',sponsor:'Roche',title:'Role of Tocilizumab in the management of RA',speaker:'Lamri Zahia',loc:'Oran – Algeria'},
+      {time:'13h00',type:'debate'},{time:'14h30',type:'closing'},{time:'14h30',type:'lunch'}
+     ]}
+    ]
+  ];
+
+  const timelineState = { lang:'en', day:0, openSessions:{} };
+
+  function timelineT(key){
+    const dict = TIMELINE_TRANSLATIONS[timelineState.lang] || TIMELINE_TRANSLATIONS.en;
+    return dict[key] || TIMELINE_TRANSLATIONS.en[key] || key;
+  }
+  function timelineBuildDayTabs(){
+    const tabs = document.getElementById('day-tabs');
+    if (!tabs) return;
+    const labels = (TIMELINE_TRANSLATIONS[timelineState.lang] || TIMELINE_TRANSLATIONS.en).days || TIMELINE_TRANSLATIONS.en.days;
+    tabs.innerHTML = labels.map((d,i)=>`<button class="day-btn${i===timelineState.day?' active':''}" onclick="timelineSetDay(${i})">${d}</button>`).join('');
+  }
+  function timelineSetDay(i){timelineState.day=i;timelineRenderAll();}
+  window.timelineSetDay = timelineSetDay;
+
+  function timelineEscHtml(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\n/g,'<br>')}
+  function timelineTalkHTML(tk){
+    if(tk.type==='sym')return`<div class="symp-card"><div class="symp-label">★ ${timelineT('sym')}</div><div class="symp-sponsor">${timelineEscHtml(tk.sponsor)}</div><div class="talk-time">${tk.time||''}</div><div class="symp-title">${timelineEscHtml(tk.title)}</div><div class="symp-speaker">${timelineEscHtml(tk.speaker)} <span class="talk-loc">· ${timelineEscHtml(tk.loc)}</span></div></div>`;
+    if(tk.type==='debate')return`<div class="debate-card"><span style="font-size:18px">💬</span><span style="font-size:13px;color:var(--muted);font-style:italic">${timelineT('debate')}</span><span style="font-size:11px;color:#9ca3af;margin-left:auto">${tk.time||''}</span></div>`;
+    if(tk.type==='coffee')return`<div class="break-card"><div class="icon-circle" style="background:rgba(16,185,129,.12)">☕</div><div><div style="font-weight:600;font-size:14px;color:#065f46">${timelineT('coffee')}</div><div style="font-size:12px;color:#6b7280">${tk.time||''}</div></div></div>`;
+    if(tk.type==='lunch')return`<div class="lunch-card"><div class="icon-circle" style="background:rgba(251,146,60,.15)">🍽️</div><div><div style="font-weight:600;font-size:14px;color:#9a3412">${timelineT('lunch')}</div><div style="font-size:12px;color:#6b7280">${tk.time||''}</div></div></div>`;
+    if(tk.type==='closing')return`<div class="closing-card"><div class="icon-circle" style="background:rgba(201,168,76,.2)">🏆</div><div><div style="font-weight:600;font-size:14px;color:var(--gold2)">${timelineT('closing')}</div><div style="font-size:12px;color:rgba(255,255,255,.5)">${tk.time||''}</div></div></div>`;
+    return`<div class="talk-row"><span class="talk-time">${tk.time||''}</span>${tk.zoom?`<span class="zoom-badge">📹 ${timelineT('zoom')}</span>`:''}<div class="talk-title">${timelineEscHtml(tk.title)}</div><div class="talk-speaker">${timelineEscHtml(tk.speaker)} <span class="talk-loc">· ${timelineEscHtml(tk.loc)}</span></div></div>`;
+  }
+  function timelineSessionHTML(ev,idx){
+    const sid=`session-${idx}`;if(!(sid in timelineState.openSessions))timelineState.openSessions[sid]=true;
+    const isOpen=timelineState.openSessions[sid];
+    const rm={'1':'I','2':'II','3':'III','4':'IV','5':'V','6':'VI'};
+    return`<div class="tl-item" style="animation-delay:${idx*80}ms"><div class="tl-dot pulse-dot"></div>
+      <button class="session-header" onclick="timelineToggleSession('${sid}',this)">
+        <div style="display:flex;align-items:center;flex:1">
+          <div class="session-num">${rm[ev.num]||ev.num}</div>
+          <div><div class="session-label">${ev.numLabel} ${timelineT('session')}</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:#fff">${timelineT('chairs')}: <em style="font-weight:400">${timelineEscHtml(ev.chairs)}</em></div></div>
+        </div><span class="chevron ${isOpen?'open':''}">▾</span>
+      </button>
+      <div class="session-talks" id="${sid}" style="display:${isOpen?'block':'none'}">
+        <div style="height:8px"></div>${ev.talks.map((tk,i)=>timelineTalkHTML(tk,i)).join('')}
+      </div></div>`;
+  }
+  function timelineWorkshopsHTML(ev){
+    return`<div class="tl-item"><div class="tl-dot gold"></div>
+      <div class="workshop-header">
+        <div class="icon-circle" style="background:rgba(201,168,76,.2);font-size:24px">🔬</div>
+        <div><div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold2);margin-bottom:3px">${ev.time} · ${timelineT('workshops')}</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:#fff;font-weight:600">Parallel Workshops</div></div>
+      </div>
+      <div class="workshops-grid">${ev.items.map(w=>`<div class="wk-card"><div class="wk-number">${w.n}</div>
+        <div class="wk-title">${timelineT('workshop')} ${w.n}: ${timelineEscHtml(w.title)}</div>
+        <div class="wk-speaker">${timelineEscHtml(w.speaker)} · ${timelineEscHtml(w.loc)}</div>
+        <div class="wk-moderator">▸ ${timelineT('mod')}: ${w.mod}</div>
+        <span class="hall-badge">🏛 ${w.hall}</span></div>`).join('')}
+      </div></div>`;
+  }
+  function timelineRegHTML(ev){return`<div class="tl-item"><div class="tl-dot break"></div><div class="reg-card"><div style="display:flex;align-items:center;gap:12px"><div class="icon-circle" style="background:rgba(16,185,129,.15);font-size:24px">🏥</div><div><div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#059669;margin-bottom:2px">${ev.time}</div><div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:#065f46">${timelineT('reg')}</div></div></div></div></div>`;}
+  function timelineSpeechHTML(ev){return`<div class="tl-item"><div class="tl-dot"></div><div class="speech-card"><div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--teal);margin-bottom:6px">${ev.time} · ${timelineT('opening')}</div><div style="font-size:13.5px;color:var(--text);line-height:1.6">${timelineEscHtml(ev.text)}</div></div></div>`;}
+  function timelineToggleSession(sid,btn){
+    timelineState.openSessions[sid]=!timelineState.openSessions[sid];
+    const el=document.getElementById(sid);if(el)el.style.display=timelineState.openSessions[sid]?'block':'none';
+    const ch=btn.querySelector('.chevron');if(ch)ch.classList.toggle('open',timelineState.openSessions[sid]);
+  }
+  window.timelineToggleSession = timelineToggleSession;
+
+  function timelineRenderAll(){
+    timelineBuildDayTabs();
+    const container = document.getElementById('program-content');
+    if (!container) return;
+    const day = TIMELINE_DAYS[timelineState.day] || [];
+    let html='<div class="timeline"><div class="tl-line"></div>';
+    day.forEach((ev,i)=>{
+      if(ev.type==='reg')html+=timelineRegHTML(ev);
+      else if(ev.type==='speech')html+=timelineSpeechHTML(ev);
+      else if(ev.type==='workshops')html+=timelineWorkshopsHTML(ev);
+      else if(ev.type==='session')html+=timelineSessionHTML(ev,i);
+    });
+    html+='</div>';
+    container.innerHTML=html;
+    setTimeout(()=>{
+      const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.05});
+      document.querySelectorAll('#program .tl-item').forEach(el=>obs.observe(el));
+    },50);
+  }
+
+  function timelineSetLang(code){
+    timelineState.lang = TIMELINE_TRANSLATIONS[code] ? code : 'en';
+    timelineRenderAll();
+  }
+  window.timelineSetLang = timelineSetLang;
+
+  function timelineInit(){
+    const initialLang = document.documentElement.getAttribute('lang') || 'en';
+    if (TIMELINE_TRANSLATIONS[initialLang]) timelineState.lang = initialLang;
+    timelineRenderAll();
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', timelineInit);
+  } else {
+    timelineInit();
+  }
   document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => document.getElementById('preloader').classList.add('hidden'), 2000);
 
@@ -1203,3 +1384,4 @@
 </script>
 </body>
 </html>
+
