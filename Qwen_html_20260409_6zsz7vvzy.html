@@ -327,101 +327,41 @@
     .topic-card p { color:var(--text-light);font-size:0.9rem;line-height:1.7; }
 
     /* Program */
-    #program {
-      --navy:#0B2545;--navy2:#163566;--teal:#0D8A85;--teal2:#12B5AF;
-      --gold:#C9A84C;--gold2:#E5C97A;--red:#C0392B;--off:#F7F5F2;
-      --card:#FFFFFF;--border:#E2DDD8;--text:#1a1a2e;--muted:#6b7280;
-      background:var(--off);
-      color:var(--text);
+    .program-section { background:var(--dark);color:var(--white); }
+    .program-section .section-title { color:var(--white); }
+    .program-section .section-desc { color:rgba(255,255,255,0.6); }
+    .program-section .section-label { color:var(--accent2); }
+    .program-section .section-label::before,.program-section .section-label::after { background:var(--accent2); }
+    .program-tabs { display:flex;justify-content:center;gap:10px;margin-bottom:50px;flex-wrap:wrap; }
+    .program-tab {
+      padding:12px 30px;border-radius:50px;background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.7);cursor:pointer;
+      font-size:0.9rem;font-weight:500;transition:all 0.3s ease;
     }
-    #program .section-title { color:var(--navy); }
-    #program .section-desc { color:var(--muted); }
-    #program .section-label { color:var(--teal); }
-    #program .section-label::before,#program .section-label::after { background:var(--teal); }
-
-    @keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.15);opacity:.8}}
-    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-    @keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
-
-    #program .fade-up{animation:fadeUp .6s cubic-bezier(.22,1,.36,1) both}
-    #program .pulse-dot{animation:pulse 2s ease-in-out infinite}
-    #program .float-badge{animation:float 3s ease-in-out infinite}
-
-    #program #day-nav{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(0,0,0,.06)}
-    #program .nav-inner{max-width:960px;margin:0 auto;display:flex}
-    #program .day-btn{flex:1;padding:14px 8px;border:none;background:transparent;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12.5px;color:var(--muted);font-weight:400;border-bottom:3px solid transparent;transition:all .25s}
-    #program .day-btn.active{color:var(--navy);font-weight:600;border-bottom-color:var(--teal)}
-    #program .day-btn:hover{color:var(--navy);background:#fafaf9}
-
-    #program #main-content{max-width:960px;margin:0 auto;padding:40px 20px 10px}
-
-    #program .timeline{position:relative;padding-left:52px}
-    [dir="rtl"] #program .timeline{padding-left:0;padding-right:52px}
-    #program .tl-line{position:absolute;left:20px;top:8px;bottom:0;width:3px;background:linear-gradient(to bottom,var(--teal),var(--navy2) 60%,rgba(11,37,69,.1));border-radius:2px}
-    [dir="rtl"] #program .tl-line{left:auto;right:20px}
-
-    #program .tl-item{position:relative;margin-bottom:24px;opacity:0}
-    #program .tl-item.visible{animation:fadeUp .55s cubic-bezier(.22,1,.36,1) both}
-    #program .tl-dot{position:absolute;left:-40px;top:12px;width:16px;height:16px;background:var(--teal);border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 3px rgba(13,138,133,.25);z-index:2}
-    [dir="rtl"] #program .tl-dot{left:auto;right:-40px}
-    #program .tl-dot.gold{background:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.25)}
-    #program .tl-dot.break{background:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,.25)}
-
-    #program .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 20px;transition:box-shadow .2s,transform .2s}
-    #program .card:hover{box-shadow:0 4px 20px rgba(0,0,0,.08);transform:translateY(-1px)}
-
-    #program .session-header{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;border-radius:14px;padding:18px 22px;margin-bottom:4px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:box-shadow .2s;border:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif}
-    [dir="rtl"] #program .session-header{text-align:right}
-    #program .session-header:hover{box-shadow:0 6px 24px rgba(11,37,69,.35)}
-    #program .session-num{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:700;color:var(--gold2);line-height:1;margin-right:16px;min-width:40px}
-    [dir="rtl"] #program .session-num{margin-right:0;margin-left:16px}
-    #program .session-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:3px}
-    #program .chevron{font-size:18px;color:var(--gold2);transition:transform .3s;flex-shrink:0}
-    #program .chevron.open{transform:rotate(180deg)}
-
-    #program .talk-row{background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:8px;transition:all .2s}
-    #program .talk-row:hover{border-color:var(--teal);box-shadow:0 2px 12px rgba(13,138,133,.1)}
-    #program .talk-time{font-size:11px;font-weight:600;color:var(--teal);letter-spacing:.5px;background:rgba(13,138,133,.08);padding:2px 8px;border-radius:10px;display:inline-block;margin-bottom:6px}
-    #program .talk-title{font-size:13.5px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:5px}
-    #program .talk-speaker{font-size:12px;color:var(--muted)}
-    #program .talk-loc{color:#9ca3af}
-    #program .zoom-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;background:#e0f2fe;color:#0369a1;padding:2px 8px;border-radius:8px;margin-left:8px}
-    [dir="rtl"] #program .zoom-badge{margin-left:0;margin-right:8px}
-
-    #program .symp-card{background:linear-gradient(135deg,#fdf8ee,#fef3cd);border:1px solid var(--gold);border-radius:12px;padding:14px 18px;margin-bottom:8px;position:relative;overflow:hidden}
-    #program .symp-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold));background-size:200% 100%;animation:shimmer 3s linear infinite}
-    #program .symp-sponsor{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
-    #program .symp-label{display:inline-block;font-size:10px;background:var(--gold);color:#fff;padding:1px 8px;border-radius:10px;margin-bottom:6px;font-weight:600;letter-spacing:.5px}
-    #program .symp-title{font-size:13.5px;font-weight:600;color:#78350f;line-height:1.4;margin-bottom:5px}
-    #program .symp-speaker{font-size:12px;color:#92400e}
-
-    #program .debate-card{background:rgba(11,37,69,.05);border:1px dashed rgba(11,37,69,.25);border-radius:10px;padding:10px 16px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
-    #program .break-card{background:linear-gradient(135deg,#ecfdf5,#d1fae5);border:1px solid #6ee7b7;border-radius:12px;padding:14px 20px;margin-bottom:16px;display:flex;align-items:center;gap:12px}
-    #program .lunch-card{background:linear-gradient(135deg,#fff7ed,#ffedd5);border:1px solid #fdba74;border-radius:12px;padding:14px 20px;margin-bottom:16px;display:flex;align-items:center;gap:12px}
-    #program .closing-card{background:linear-gradient(135deg,var(--navy),var(--navy2));border-radius:14px;padding:20px 24px;margin-bottom:16px;display:flex;align-items:center;gap:14px}
-    #program .reg-card{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #86efac;border-radius:14px;padding:20px 24px;margin-bottom:8px}
-    #program .speech-card{background:#fff;border:1px solid var(--border);border-left:4px solid var(--teal);border-radius:12px;padding:16px 20px;margin-bottom:8px}
-    [dir="rtl"] #program .speech-card{border-left:1px solid var(--border);border-right:4px solid var(--teal)}
-
-    #program .workshop-header{background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:14px;padding:16px 22px;margin-bottom:16px;display:flex;align-items:center;gap:14px}
-    #program .workshops-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px}
-    @media(max-width:600px){#program .workshops-grid{grid-template-columns:1fr}}
-    #program .wk-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px;position:relative;overflow:hidden;transition:all .2s}
-    #program .wk-card:hover{border-color:var(--navy2);box-shadow:0 4px 16px rgba(22,53,102,.12)}
-    #program .wk-number{position:absolute;top:-6px;right:-6px;width:32px;height:32px;background:var(--navy);color:#fff;font-weight:700;font-size:12px;border-radius:0 12px 0 10px;display:flex;align-items:center;justify-content:center}
-    [dir="rtl"] #program .wk-number{right:auto;left:-6px;border-radius:12px 0 10px 0}
-    #program .wk-title{font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:8px;line-height:1.4;padding-right:28px}
-    [dir="rtl"] #program .wk-title{padding-right:0;padding-left:28px}
-    #program .wk-speaker{font-size:11.5px;color:var(--muted)}
-    #program .wk-moderator{font-size:11px;color:var(--teal);font-weight:500;margin-top:6px}
-    #program .hall-badge{display:inline-block;font-size:10px;background:var(--navy);color:#fff;padding:2px 8px;border-radius:8px;margin-top:6px;font-weight:500}
-
-    #program .session-talks{margin-left:8px;overflow:hidden}
-    [dir="rtl"] #program .session-talks{margin-left:0;margin-right:8px}
-    #program .icon-circle{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-    @media(max-width:700px){#program #main-content{padding:24px 14px 10px}#program .timeline{padding-left:40px}[dir="rtl"] #program .timeline{padding-left:0;padding-right:40px}}
+    .program-tab:hover,.program-tab.active { background:var(--primary);border-color:var(--primary);color:var(--white); }
+    .program-timeline { max-width:900px;margin:0 auto;position:relative; }
+    .program-day { display:none; }
+    .program-day.active { display:block;animation:fadeInUp 0.5s ease; }
+    .timeline-item {
+      display:flex;gap:25px;padding:25px 0;border-bottom:1px solid rgba(255,255,255,0.06);transition:all 0.3s ease;
+    }
+    .timeline-item:hover { padding-left:10px; }
+    .timeline-time {
+      flex-shrink:0;width:100px;font-family:'Playfair Display',serif;font-size:1.1rem;
+      font-weight:600;color:var(--accent);
+    }
+    .timeline-content { flex:1; }
+    .timeline-content h4 { font-size:1.1rem;font-weight:600;margin-bottom:5px;color:var(--white); }
+    .timeline-content p { color:rgba(255,255,255,0.5);font-size:0.85rem; }
+    .timeline-tag {
+      display:inline-block;padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:500;margin-top:8px;
+    }
+    .tag-keynote { background:rgba(201,168,76,0.2);color:var(--gold-light); }
+    .tag-panel { background:rgba(0,180,216,0.2);color:var(--accent2); }
+    .tag-workshop { background:rgba(72,202,228,0.2);color:var(--accent3); }
+    .tag-break { background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.5); }
+    .tag-symposium { background:rgba(201,168,76,0.2);color:var(--gold-light); }
+    .tag-debate { background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6); }
 
     /* Venue */
     .venue-section { background:var(--white); }
@@ -802,9 +742,84 @@
     <h2 class="section-title" data-i18n="program_title">Congress Program</h2>
     <p class="section-desc" data-i18n="program_desc">Three days of intensive scientific programming featuring keynotes, panels, workshops, and poster sessions.</p>
   </div>
-  <div id="program-app">
-    <nav id="day-nav"><div class="nav-inner" id="day-tabs"></div></nav>
-    <div id="main-content"><div id="program-content"></div></div>
+  <div class="program-tabs">
+    <button class="program-tab active" data-day="day1" data-i18n="tab_day1">Day 1 — April 23rd</button>
+    <button class="program-tab" data-day="day2" data-i18n="tab_day2">Day 2 — April 24th</button>
+    <button class="program-tab" data-day="day3" data-i18n="tab_day3">Day 3 — April 25th</button>
+  </div>
+  <div class="program-timeline">
+    <!-- Day 1 -->
+    <div class="program-day active" id="day1">
+      <div class="timeline-item"><div class="timeline-time">13h00</div><div class="timeline-content"><h4 data-i18n="d1_1300_title">Reception of Guests and Registration</h4><p></p><span class="timeline-tag tag-break" data-i18n="tag_reception">Reception</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">14h00</div><div class="timeline-content"><h4 data-i18n="d1_1400_title">Opening Ceremony</h4><p data-i18n="d1_1400_desc">Opening welcome speech by the Honorary President A Ladjouze Rezig, The president of the congress Lamri Zahia, The General Director of Tami Medjbeur Hospital Mr Tarek Belbey, M Medjadi Head of the Rheumatology Department - President of AAMRO</p><span class="timeline-tag tag-keynote" data-i18n="tag_opening">Opening</span></div></div>
+      <div class="timeline-item"><div class="timeline-time" style="font-size:0.85rem;color:var(--accent2);">1st Session</div><div class="timeline-content"><h4>A Ladjouze - M Djebbar - I Bencharif - N Huseynova</h4></div></div>
+      <div class="timeline-item"><div class="timeline-time">14h30</div><div class="timeline-content"><h4>Management of hyperparathyroidism</h4><p>Ibrahim Medhet Cairo - Egypt</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">14h55</div><div class="timeline-content"><h4>Customized Management of Osteoporosis Beyond WHO Guidelines</h4><p>Basel K Masri Amman - Jordan</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">15h20</div><div class="timeline-content"><h4>Behind the fracture: A Forgotten Diagnosis in Men</h4><p>Boukabous Abdenour Algiers - Algeria</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">15h35</div><div class="timeline-content"><h4>Updates of osteoporosis of chronic inflammatory rheumatism</h4><p>Ouafi Mouloud Paris - France</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">15h55</div><div class="timeline-content"><h4>Fractures in elderly subjects</h4><p>Yakoubi Mustapha Algiers - Algeria</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">16h15</div><div class="timeline-content"><h4>🔴 AMGEN Symposium</h4><p>Denosumab in Osteoporosis<br>Experience of the Rheumatology Department<br>Medjadi Mohsine Aïn El Turck/Oran - Algeria</p><span class="timeline-tag tag-symposium" data-i18n="tag_symposium">Symposium</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">16h45</div><div class="timeline-content"><h4 data-i18n="tag_debate">Debate</h4><span class="timeline-tag tag-debate" data-i18n="tag_debate">Debate</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">17h05</div><div class="timeline-content"><h4 style="color:var(--accent);" data-i18n="tag_coffee">Coffee break</h4><span class="timeline-tag tag-break" data-i18n="tag_coffee">Coffee</span></div></div>
+      <div class="timeline-item"><div class="timeline-time" style="font-size:0.85rem;color:var(--accent2);">2nd Session</div><div class="timeline-content"><h4>A Abi Ayad - S Slimani - B Masri - M Merad</h4></div></div>
+      <div class="timeline-item"><div class="timeline-time">17h30</div><div class="timeline-content"><h4>Botulinum toxin: the pain reliever of tomorrow? The pain reliever of today?</h4><p>Viel Eric Nimes - France</p><span class="timeline-tag tag-keynote" data-i18n="tag_keynote">Keynote</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">17h55</div><div class="timeline-content"><h4>Immunomodulatory Properties of Baclofen and Novel Structural Analogue: Potential Therapeutic Targets for Autoimmune Rheumatic Diseases</h4><p>Keniche Assia Tlemcen - Algeria</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">18h10</div><div class="timeline-content"><h4>Concept du "Care or healing" à travers l'Evidence-Based Medicine</h4><p>Djebbar Mourad Oran - Algeria</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">18h35</div><div class="timeline-content"><h4>Long-term corticosteroid therapy in 2026: Endocrine Society recommandations applied to Rheumatologic withdrawal</h4><p>Merad Samir Oran - Algeria</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">18h55</div><div class="timeline-content"><h4>🔴 Pharmadic Symposium</h4><p>Management of corticosteroids on RA<br>Khaled Tarek Constantine - Algeria</p><span class="timeline-tag tag-symposium" data-i18n="tag_symposium">Symposium</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">19h25</div><div class="timeline-content"><h4 data-i18n="tag_debate">Debate</h4><span class="timeline-tag tag-debate" data-i18n="tag_debate">Debate</span></div></div>
+    </div>
+
+    <!-- Day 2 -->
+    <div class="program-day" id="day2">
+      <!-- Workshops -->
+      <div class="timeline-item"><div class="timeline-time" style="font-size:0.85rem;color:var(--accent2);">Workshops — 08h30</div><div class="timeline-content"><h4>Parallel Workshop Sessions</h4></div></div>
+      <div class="timeline-item"><div class="timeline-time">08h30</div><div class="timeline-content"><h4>Workshop 1 — Interventional ultrasound of the knee « beyond the barrier »</h4><p>Dr Belmouhoub Abdessamad Privas - France<br>Moderator: R Chiheb — <strong style="color:var(--accent)">Mascara hall</strong></p><span class="timeline-tag tag-workshop" data-i18n="tag_workshop">Workshop</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">08h30</div><div class="timeline-content"><h4>Workshop 2 — When RA Isn't typical: Navigating Diagnostic Challenges, Through Real Cases</h4><p>Pr Acheli Dehbia Algiers - Algeria<br>Moderator: A Boukabous — <strong style="color:var(--accent)">Tlemcen hall</strong></p><span class="timeline-tag tag-workshop" data-i18n="tag_workshop">Workshop</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">08h30</div><div class="timeline-content"><h4>Workshop 3 — Dupuytren's needle aponeurotomy</h4><p>Pr Touzi Mongi Monastir - Tunisie<br>Moderator: K Khelif — <strong style="color:var(--accent)">Chlef hall</strong></p><span class="timeline-tag tag-workshop" data-i18n="tag_workshop">Workshop</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">08h30</div><div class="timeline-content"><h4>Workshop 4 — Capillaroscopy</h4><p>Pr Rahou Amine Oran - Algeria<br>Moderator: R Chetouane — <strong style="color:var(--accent)">Saïda hall</strong></p><span class="timeline-tag tag-workshop" data-i18n="tag_workshop">Workshop</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">08h30</div><div class="timeline-content"><h4>Workshop 5 — Clinical cases: Spinal Pathologies</h4><p>Dr Rouidi Sid Ahmed Châteaudun - France<br>Moderator: S Ouadah — <strong style="color:var(--accent)">Andalous hall</strong></p><span class="timeline-tag tag-workshop" data-i18n="tag_workshop">Workshop</span></div></div>
+      <div class="timeline-item"><div class="timeline-time" style="font-size:0.85rem;color:var(--accent2);">3rd Session</div><div class="timeline-content"><h4>C Haouichet - H Sahli - M Boukredera - S M Bouanani</h4></div></div>
+      <div class="timeline-item"><div class="timeline-time">09h20</div><div class="timeline-content"><h4>Juvenile idiopathic arthritis</h4><p>Hashad Saad Salem Tripoli - Libya</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">09h40</div><div class="timeline-content"><h4>Rheumatoid Vasculitis</h4><p>Huseynova Nargiz Baku - Azerbaijan</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">10h00</div><div class="timeline-content"><h4>The new role of AI in managing patient with autoimmune diseases</h4><p>Ghadanfar Yaser Koweït City - Koweït</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">10h20</div><div class="timeline-content"><h4>🔴 Johnson & Johnson Symposium</h4><p>Role of IL-23 inhibitors in the treatment of psoriatic arthritis<br>Bengana Bilal Algiers - Algeria</p><span class="timeline-tag tag-symposium" data-i18n="tag_symposium">Symposium</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">11h05</div><div class="timeline-content"><h4>PSORIATIC ARTHRITIS: Predicting its appearance for better management</h4><p>Bouziane Kheira Aïn El Türck Oran - Algeria</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">11h20</div><div class="timeline-content"><h4>Psoriatic arthritis is difficult to treat: an overview of the concepts and proposed definition</h4><p>Abdelaoui Selma Alger - Algeria</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">11h35</div><div class="timeline-content"><h4>🔴 Biopharm Symposium</h4><p>Spondyloarthropathies in 2026. The Role of Anti-IL-17 Therapy<br>Pr Durez Patrick Louvain Bruxelles - Belgium</p><span class="timeline-tag tag-symposium" data-i18n="tag_symposium">Symposium</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">12h20</div><div class="timeline-content"><h4 data-i18n="tag_debate">Debate</h4><span class="timeline-tag tag-debate" data-i18n="tag_debate">Debate</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">13h00</div><div class="timeline-content"><h4 style="color:#e74c3c;">Lunch</h4><span class="timeline-tag tag-break" data-i18n="tag_lunch">Lunch</span></div></div>
+      <div class="timeline-item"><div class="timeline-time" style="font-size:0.85rem;color:var(--accent2);">4th Session</div><div class="timeline-content"><h4>Z Lamri - T Duruoz - F Hafi - S Rahim</h4></div></div>
+      <div class="timeline-item"><div class="timeline-time">14h30</div><div class="timeline-content"><h4>Maghreb recommendations for musculoskeletal ultrasound in rheumatoid arthritis</h4><p>Haddouche Assia Algiers & Slimani Samy Batna EULAR teachers Algeria</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">15h00</div><div class="timeline-content"><h4>What's new in interventional rheumatology?</h4><p>Ould Henia Ahmed Chartres - France</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">15h30</div><div class="timeline-content"><h4>Gout: Epidemiology, Clinical characteristics and management strategies</h4><p>Kurmann Patric Thierry Neuchatel - Switzerland</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">15h50</div><div class="timeline-content"><h4>Updates Criteria for pseudo gout</h4><p>El Sayed Rageh Tanta - Egypt <strong style="color:#e74c3c;">"Zoom"</strong></p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">16h10</div><div class="timeline-content"><h4>Updates in the surgical treatment of osteonecrosis of the hip: what role for preservation techniques?</h4><p>Amouri Saadeddine Hichem Ben Aknoun Algiers - Algeria</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">16h25</div><div class="timeline-content"><h4>Current trends and perspectives in the management of rheumatoid Wrist: Evaluation of strategies and functional outcomes</h4><p>Bessai Fouad Ben Aknoun Algiers - Algeria</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">16h40</div><div class="timeline-content"><h4>🔴 SANOFI Symposium</h4><p>Early recognition of Mucopolysaccharidosis type 1 (MPS I): The Rheumatologist's Pivot Role<br>Bencharif Imene Constantine - Algeria</p><span class="timeline-tag tag-symposium" data-i18n="tag_symposium">Symposium</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">17h15</div><div class="timeline-content"><h4 data-i18n="tag_debate">Debate</h4><span class="timeline-tag tag-debate" data-i18n="tag_debate">Debate</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">18h10</div><div class="timeline-content"><h4 style="color:#e74c3c;">Coffee break</h4><span class="timeline-tag tag-break" data-i18n="tag_coffee">Coffee</span></div></div>
+    </div>
+
+    <!-- Day 3 -->
+    <div class="program-day" id="day3">
+      <div class="timeline-item"><div class="timeline-time" style="font-size:0.85rem;color:var(--accent2);">5th Session</div><div class="timeline-content"><h4>B Haddouche - A Abi Ayad - S Lounici - F Oumoussa</h4></div></div>
+      <div class="timeline-item"><div class="timeline-time">09h00</div><div class="timeline-content"><h4>Involvement of the spine in chronic inflammatory rheumatism (CIR): How to approach it?</h4><p>Djelloul Amina Tlemcen - Algeria</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">09h20</div><div class="timeline-content"><h4>MRI in spinal inflammatory rheumatism: what to look for?</h4><p>Djouadi Nadia Oran - Algeria</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">09h40</div><div class="timeline-content"><h4>The place of ultrasound in the diagnosis of spinal inflammatory rheumatism</h4><p>Bouchaour Mohamed Algiers - Algeria</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">10h00</div><div class="timeline-content"><h4>Spondyloarthritides in Algeria: epidemiological and clinical profile</h4><p>Benmansour Fathiya Ain Témouchent - Algeria</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">10h20</div><div class="timeline-content"><h4>SAPHO Syndrome: clinical and radiological approach</h4><p>Abou Elouaf Hicham Oran - Algeria</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">10h40</div><div class="timeline-content"><h4>Axial Spondyloarthritis: New therapeutic perspectives</h4><p>Abidi Mohamed Rabie Tlemcen - Algeria</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">11h00</div><div class="timeline-content"><h4 data-i18n="tag_debate">Debate</h4><span class="timeline-tag tag-debate" data-i18n="tag_debate">Debate</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">11h20</div><div class="timeline-content"><h4 style="color:#e74c3c;">Coffee break</h4><span class="timeline-tag tag-break" data-i18n="tag_coffee">Coffee</span></div></div>
+      <div class="timeline-item"><div class="timeline-time" style="font-size:0.85rem;color:var(--accent2);">6th Session</div><div class="timeline-content"><h4>A Khelif - K Khelif - K Hamdani - B Haddouche</h4></div></div>
+      <div class="timeline-item"><div class="timeline-time">11h35</div><div class="timeline-content"><h4>Sarcoidosis: what's new?</h4><p>Benhamouda Zina Tlemcen - Algeria</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">12h05</div><div class="timeline-content"><h4>The role of capillaroscopy in the management of Systemic Sclerosis</h4><p>Medjaoudi Samira Constantine - Algeria</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">12h25</div><div class="timeline-content"><h4>Systemic sclerosis: what's new in 2026?</h4><p>Hachemi Samia Algiers - Algeria</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">12h45</div><div class="timeline-content"><h4>Systemic Vasculitis: what's new in 2026?</h4><p>Hadj-Said Amel Constantine - Algeria</p><span class="timeline-tag tag-panel" data-i18n="tag_talk">Talk</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">13h05</div><div class="timeline-content"><h4 data-i18n="tag_debate">Debate</h4><span class="timeline-tag tag-debate" data-i18n="tag_debate">Debate</span></div></div>
+      <div class="timeline-item"><div class="timeline-time">13h30</div><div class="timeline-content"><h4 style="color:var(--gold-light);">Closing Ceremony</h4><span class="timeline-tag tag-keynote" data-i18n="tag_closing">Closing</span></div></div>
+    </div>
   </div>
 </section>
 
@@ -1104,7 +1119,6 @@
     }
     document.querySelectorAll('.lang-option').forEach(o => o.classList.remove('active'));
     if (option) option.classList.add('active');
-    if (window.timelineSetLang) window.timelineSetLang(lang);
   }
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -1189,4 +1203,3 @@
 </script>
 </body>
 </html>
-
