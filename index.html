@@ -26,7 +26,8 @@
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; line-height: 1.6; }
+    html, body { overflow-x: hidden; width: 100%; position: relative; }
+    body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
     h1, h2, h3, h4, .font-serif { font-family: 'Playfair Display', serif; }
 
     /* Preloader */
@@ -373,6 +374,19 @@
         grid-template-columns: 1fr;
         gap: 40px;
       }
+      .venue-info { padding: 40px 20px; }
+      .venue-map { min-height: 300px; }
+      .contact-form { padding: 30px 20px; }
+      .stepper { padding-left: 35px; }
+      .stepper::before { left: 12px; }
+      .step-item::before { left: -32px; width: 24px; height: 24px; font-size: 0.7rem; }
+
+      .footer-container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        text-align: center;
+      }
+      .footer-social { justify-content: center; }
 
       .hero-title { font-size: 2.2rem; }
       .hero-desc { font-size: 1rem; }
