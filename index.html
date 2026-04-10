@@ -30,11 +30,57 @@
     h1, h2, h3, h4, .font-serif { font-family: 'Playfair Display', serif; }
 
     /* Preloader */
-    #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--primary); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.8s ease, visibility 0.8s; }
+    #preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--primary);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.8s ease, visibility 0.8s;
+      text-align: center;
+    }
     #preloader.hidden { opacity: 0; visibility: hidden; }
-    .loader-logo { width: 120px; height: 120px; position: relative; margin-bottom: 20px; }
-    .loader-circle { width: 100%; height: 100%; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--accent); border-radius: 50%; animation: spin 1.5s linear infinite; }
-    .loader-text { color: var(--white); font-weight: 300; letter-spacing: 4px; font-size: 0.8rem; text-transform: uppercase; animation: pulse 2s ease-in-out infinite; }
+    .loader-logo {
+      width: 120px;
+      height: 120px;
+      position: relative;
+      margin-bottom: 25px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .loader-circle {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1.5s linear infinite;
+    }
+    .loader-inner-text {
+      color: var(--white);
+      font-weight: 700;
+      font-size: 1.5rem;
+      z-index: 2;
+    }
+    .loader-text {
+      color: var(--white);
+      font-weight: 400;
+      letter-spacing: 4px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      animation: pulse 2s ease-in-out infinite;
+      margin-top: 10px;
+    }
     @keyframes spin { to { transform: rotate(360deg); } }
     @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
 
@@ -281,53 +327,68 @@
 
     /* Mobile Responsive */
     @media (max-width: 992px) {
-      .navbar { padding: 20px 5%; }
+      .navbar { padding: 15px 5%; justify-content: space-between; }
+      .nav-logo { font-size: 1.1rem; }
+
       .nav-links {
         display: flex !important;
         position: fixed;
         top: 0;
         right: -100%;
-        width: 300px;
+        width: 280px;
         height: 100vh;
         background: var(--primary);
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        transition: 0.5s;
-        gap: 40px;
+        transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        gap: 30px;
         z-index: 1000;
-        box-shadow: -10px 0 30px rgba(0,0,0,0.3);
+        box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+        padding: 40px;
       }
       .nav-links.mobile-open { right: 0; }
+      .nav-links li { width: 100%; text-align: center; }
+      .nav-links a { font-size: 1rem; display: block; padding: 10px; }
+
       .mobile-toggle { display: block; z-index: 1001; }
-      .welcome-container { display: flex; flex-direction: column; gap: 40px; }
-      .welcome-images { order: -1; } /* Place images before text */
-      .welcome-container, .venue-container, .contact-grid, .committee-grid { grid-template-columns: 1fr; }
-      .image-stack { margin: 40px auto; }
-      .img-2 { right: 0; bottom: -15px; }
-      .mobile-toggle.active div:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
-      .mobile-toggle.active div:nth-child(2) { opacity: 0; }
-      .mobile-toggle.active div:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
+
+      .welcome-container {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        text-align: center;
+        padding: 0 15px;
+      }
+      .welcome-content { order: 2; }
+      .welcome-images { order: 1; margin-bottom: 10px; }
+      .image-stack { max-width: 280px; margin: 0 auto; }
+
+      .welcome-text p { text-align: justify; font-size: 0.95rem; }
+      .president-signature { text-align: center; margin-top: 30px; }
+      .section-label { text-align: center; width: 100%; }
+      .section-title { font-size: 1.8rem; line-height: 1.2; text-align: center; }
+
+      .venue-container, .contact-grid, .committee-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .hero-title { font-size: 2.2rem; }
+      .hero-desc { font-size: 1rem; }
+      .countdown-container { gap: 15px; }
+      .count-num { font-size: 2rem; }
+      .count-item { min-width: 60px; }
     }
 
     @media (max-width: 576px) {
-      .footer-container { grid-template-columns: 1fr; gap: 40px; }
+      .hero { padding-top: 100px; }
       .hero-btns { flex-direction: column; width: 100%; }
-      .btn { justify-content: center; }
-      .countdown-card { padding: 30px 20px; width: 100%; }
-      .countdown-container { gap: 10px; width: 100%; justify-content: space-between; }
-      .count-item { min-width: unset; flex: 1; }
-      .count-num { font-size: 2.5rem; }
-      .program-tabs { flex-direction: column; align-items: center; }
-      .program-tab { width: 100%; text-align: center; }
-      .program-container { padding: 30px 20px; }
-      .poster-day { padding: 24px; }
-      .poster-day-header { flex-direction: column; align-items: flex-start; }
-      .poster-grid { grid-template-columns: 1fr; }
-      .timeline-item { grid-template-columns: 1fr; gap: 10px; }
-      .timeline-item::before, .timeline-item::after { left: 0; display: none; }
-      .timeline-time { border-bottom: 2px solid var(--accent); display: inline-block; padding-bottom: 5px; margin-bottom: 10px; }
-      .stat-row { flex-direction: column; }
+      .btn { justify-content: center; width: 100%; }
+      .countdown-card { padding: 25px 15px; width: 100%; }
+      .program-container { padding: 25px 15px; }
+      .committee-card { padding: 25px; }
+      .president-item { padding: 30px 20px; }
     }
 
     /* Additional Animations */
@@ -342,7 +403,7 @@
 <div id="preloader">
   <div class="loader-logo">
     <div class="loader-circle"></div>
-    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--white);font-weight:700;font-size:1.5rem;">O-E</div>
+    <div class="loader-inner-text">O-E</div>
   </div>
   <div class="loader-text">Loading Congress Experience...</div>
 </div>
