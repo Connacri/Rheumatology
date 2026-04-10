@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "supabase-db": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        "postgresql://postgres:[TON_DB_PASSWORD]@db.[TON_PROJECT_REF].supabase.co:5432/postgres"
+      ],
+      "env": {
+        "PGSSLMODE": "require"
+      }
+    }
+  }
+}
