@@ -1,0 +1,96 @@
+name: Build multiplateforme & Release
+
+on:
+  push:
+    branches: [ master ]
+    paths-ignore:
+      - 'release.json'   # évite la boucle infinie après le commit du bot
+
+permissions:
+  contents: write
+  issues: read
+  pull-requests: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - run: flutter pub get
+
+      - run: flutter test
+
+  build-android:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x'
+          channel: 'stable'
+          cache: true
+
+      - run: flutter pub get
+
+      - run: flutter build apk --release
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: app-release.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+  release-and-update:
+    needs: [build-android]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Android APK
+        uses: actions/download-artifact@v4
+        with:
+          name: app-release.apk
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ github.run_number }}
+          name: "Release v${{ github.run_number }}"
+          files: |
+            app-release.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Générer release.json
+        run: |
+          cat > release.json << EOF
+          {
+            "version": "v${{ github.run_number }}",
+            "tag": "v${{ github.run_number }}",
+            "date": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "platforms": {
+              "android": {
+                "url": "https://github.com/${{ github.repository }}/releases/download/v${{ github.run_number }}/app-release.apk",
+                "name": "app-release.apk"
+              }
+            }
+          }
+          EOF
+
+      - name: Commit release.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add release.json
+          git commit -m "MAJ release.json v${{ github.run_number }}" || echo "Rien à commiter"
+          git push origin master || echo "Push ignoré"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
