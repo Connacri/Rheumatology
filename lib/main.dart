@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'core/theme.dart';
 import 'core/app_router.dart';
+import 'core/supabase_interceptor.dart';
 import 'providers/auth_provider.dart';
 import 'providers/admin_provider.dart';
 
@@ -42,6 +43,7 @@ Future<void> main() async {
     url: supabaseUrl,
     anonKey: supabaseAnonKey,
     realtimeClientOptions: const RealtimeClientOptions(eventsPerSecond: 10),
+    httpClient: SupabaseAuthInterceptor(),
   );
 
   runApp(const CongressOranApp());

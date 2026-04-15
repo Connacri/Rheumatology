@@ -1,8 +1,8 @@
 {
   "mcpServers": {
     "supabase": {
-      "command": "https://mcp.supabase.com/mcp?project_ref=tkmzeywijodhoudjgtxr",
-      "args": []
+      "url": "https://mcp.supabase.com/mcp?project_ref=tkmzeywijodhoudjgtxr",
+      "type": "http"
     }
   }
 }

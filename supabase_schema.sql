@@ -356,12 +356,32 @@ ALTER TABLE session_feedbacks        ENABLE ROW LEVEL SECURITY;
 ALTER TABLE congress_notifications   ENABLE ROW LEVEL SECURITY;
 ALTER TABLE congress_certificates    ENABLE ROW LEVEL SECURITY;
 
--- Helpers
+-- ── Helpers (DOIVENT ÊTRE DÉFINIS AVANT LES POLICIES) ──────────────────────────
+
+-- Récupère l'ID utilisateur depuis le header Firebase (via interceptor)
+CREATE OR REPLACE FUNCTION get_my_id()
+ RETURNS text
+ LANGUAGE plpgsql
+ STABLE
+AS $function$
+DECLARE
+  _id TEXT;
+BEGIN
+  _id := current_setting('request.headers', true)::json->>'x-user-id';
+  IF _id IS NOT NULL THEN
+    RETURN _id;
+  END IF;
+  RETURN auth.uid()::TEXT;
+EXCEPTION WHEN OTHERS THEN
+  RETURN auth.uid()::TEXT;
+END;
+$function$;
+
 CREATE OR REPLACE FUNCTION is_admin()
 RETURNS BOOLEAN AS $$
   SELECT EXISTS (
     SELECT 1 FROM congress_users
-    WHERE id = auth.uid()
+    WHERE id = get_my_id()
     AND role IN ('admin', 'super_admin')
   );
 $$ LANGUAGE sql SECURITY DEFINER;
@@ -370,7 +390,7 @@ CREATE OR REPLACE FUNCTION is_moderator()
 RETURNS BOOLEAN AS $$
   SELECT EXISTS (
     SELECT 1 FROM congress_users
-    WHERE id = auth.uid()
+    WHERE id = get_my_id()
     AND role IN ('admin', 'super_admin', 'moderator')
   );
 $$ LANGUAGE sql SECURITY DEFINER;
@@ -379,12 +399,12 @@ CREATE OR REPLACE FUNCTION is_receptionist()
 RETURNS BOOLEAN AS $$
   SELECT EXISTS (
     SELECT 1 FROM congress_users
-    WHERE id = auth.uid()
+    WHERE id = get_my_id()
     AND role IN ('admin', 'super_admin', 'receptionist')
   );
 $$ LANGUAGE sql SECURITY DEFINER;
 
--- ── congress_users RLS ────────────────────────────────────────────────────────
+-- ── Policies ─────────────────────────────────────────────────────────────────
 CREATE POLICY "admin_all_users" ON congress_users
   FOR ALL USING (is_admin());
 
@@ -396,18 +416,24 @@ CREATE POLICY "receptionist_update_arrived" ON congress_users
   WITH CHECK (is_receptionist());
 
 CREATE POLICY "user_own_read" ON congress_users
-  FOR SELECT USING (id = auth.uid());
+  FOR SELECT USING (id = get_my_id());
+
+CREATE POLICY "public_read_validated_users" ON congress_users
+  FOR SELECT USING (status = 'validated');
 
 CREATE POLICY "user_own_update_profile" ON congress_users
-  FOR UPDATE USING (id = auth.uid())
-  WITH CHECK (id = auth.uid());
+  FOR UPDATE USING (id = get_my_id())
+  WITH CHECK (id = get_my_id());
 
 CREATE POLICY "user_own_insert" ON congress_users
-  FOR INSERT WITH CHECK (id = auth.uid());
+  FOR INSERT WITH CHECK (id = get_my_id());
+
+CREATE POLICY "Allow public insert" ON congress_users
+  FOR INSERT TO anon WITH CHECK (true);
 
 -- ── congress_sessions RLS ─────────────────────────────────────────────────────
 CREATE POLICY "everyone_read_sessions" ON congress_sessions
-  FOR SELECT USING (auth.uid() IS NOT NULL);
+  FOR SELECT USING (true);
 
 CREATE POLICY "moderator_update_sessions" ON congress_sessions
   FOR UPDATE USING (is_moderator());
@@ -420,11 +446,11 @@ CREATE POLICY "moderator_all_questions" ON congress_questions
   FOR ALL USING (is_moderator());
 
 CREATE POLICY "guest_read_questions" ON congress_questions
-  FOR SELECT USING (status != 'rejected' AND auth.uid() IS NOT NULL);
+  FOR SELECT USING (status != 'rejected');
 
 CREATE POLICY "guest_insert_question" ON congress_questions
   FOR INSERT WITH CHECK (
-    user_id = auth.uid()
+    user_id = get_my_id()
     AND EXISTS (
       SELECT 1 FROM congress_sessions s
       WHERE s.id = session_id AND s.qa_open = TRUE
@@ -433,15 +459,15 @@ CREATE POLICY "guest_insert_question" ON congress_questions
 
 -- ── question_votes RLS ────────────────────────────────────────────────────────
 CREATE POLICY "guest_vote" ON question_votes
-  FOR INSERT WITH CHECK (user_id = auth.uid());
+  FOR INSERT WITH CHECK (user_id = get_my_id());
 
 CREATE POLICY "guest_read_votes" ON question_votes
-  FOR SELECT USING (auth.uid() IS NOT NULL);
+  FOR SELECT USING (true);
 
 -- ── congress_connections RLS ──────────────────────────────────────────────────
 CREATE POLICY "user_own_connections" ON congress_connections
   FOR ALL USING (
-    requester_id = auth.uid() OR target_id = auth.uid()
+    requester_id = get_my_id() OR target_id = get_my_id()
   );
 
 -- ── session_feedbacks RLS ─────────────────────────────────────────────────────
@@ -449,29 +475,54 @@ CREATE POLICY "admin_read_feedbacks" ON session_feedbacks
   FOR SELECT USING (is_admin() OR is_moderator());
 
 CREATE POLICY "guest_own_feedback" ON session_feedbacks
-  FOR ALL USING (user_id = auth.uid());
+  FOR ALL USING (user_id = get_my_id());
 
 -- ── congress_notifications RLS ────────────────────────────────────────────────
 CREATE POLICY "user_own_notifications" ON congress_notifications
-  FOR ALL USING (user_id = auth.uid());
+  FOR ALL USING (user_id = get_my_id());
 
 -- ── congress_certificates RLS ─────────────────────────────────────────────────
 CREATE POLICY "admin_all_certs" ON congress_certificates
   FOR ALL USING (is_admin());
 
 CREATE POLICY "user_own_cert" ON congress_certificates
-  FOR SELECT USING (user_id = auth.uid());
+  FOR SELECT USING (user_id = get_my_id());
 
 -- ═══════════════════════════════════════════════════════════════════════════════
 -- SUPABASE STORAGE BUCKETS
 -- ═══════════════════════════════════════════════════════════════════════════════
--- Exécuter dans Storage → Nouveau bucket
-
 -- INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 -- VALUES
 --   ('congress-avatars',      'congress-avatars',      true,  2097152, ARRAY['image/jpeg','image/png','image/webp']),
 --   ('congress-certificates', 'congress-certificates', false, 5242880, ARRAY['application/pdf']),
---   ('session-slides',        'session-slides',        false, 20971520, ARRAY['application/pdf']);
+--   ('session-slides',        'session-slides',        true, 20971520, ARRAY['application/pdf'])
+-- ON CONFLICT (id) DO UPDATE SET
+--   public = EXCLUDED.public,
+--   file_size_limit = EXCLUDED.file_size_limit,
+--   allowed_mime_types = EXCLUDED.allowed_mime_types;
+
+-- ── STORAGE RLS ──
+-- ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
+
+-- Avatars
+-- CREATE POLICY "avatars_public_select" ON storage.objects FOR SELECT USING (bucket_id = 'congress-avatars');
+-- CREATE POLICY "avatars_owner_insert" ON storage.objects FOR INSERT WITH CHECK (
+--   bucket_id = 'congress-avatars' AND (storage.foldername(name))[1] = 'avatars' AND (split_part(storage.filename(name), '.', 1)) = get_my_id()
+-- );
+-- CREATE POLICY "avatars_owner_update" ON storage.objects FOR UPDATE USING (
+--   bucket_id = 'congress-avatars' AND (storage.foldername(name))[1] = 'avatars' AND (split_part(storage.filename(name), '.', 1)) = get_my_id()
+-- );
+-- CREATE POLICY "avatars_owner_delete" ON storage.objects FOR DELETE USING (
+--   bucket_id = 'congress-avatars' AND (storage.foldername(name))[1] = 'avatars' AND (split_part(storage.filename(name), '.', 1)) = get_my_id()
+-- );
+
+-- Certificates
+-- CREATE POLICY "certificates_owner_select" ON storage.objects FOR SELECT USING (
+--   bucket_id = 'congress-certificates' AND (split_part(storage.filename(name), '.', 1)) = get_my_id()
+-- );
+
+-- Slides
+-- CREATE POLICY "slides_public_select" ON storage.objects FOR SELECT USING (bucket_id = 'session-slides');
 
 -- ═══════════════════════════════════════════════════════════════════════════════
 -- DONNÉES DE TEST — Programme complet 23-25 Avril 2026
