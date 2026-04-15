@@ -9,12 +9,15 @@ class AdminProvider extends ChangeNotifier {
   final _sb = Supabase.instance.client;
 
   List<CongressUser> _allUsers = [];
+  List<EventRegistration> _webRegistrations = [];
   bool _loading = false;
   String _statusFilter = 'all';
   String _searchQuery  = '';
   RealtimeChannel? _usersChannel;
+  RealtimeChannel? _regsChannel;
 
   List<CongressUser> get allUsers => _allUsers;
+  List<EventRegistration> get webRegistrations => _webRegistrations;
   bool   get loading      => _loading;
   String get statusFilter => _statusFilter;
 
@@ -25,6 +28,7 @@ class AdminProvider extends ChangeNotifier {
   int get arrivedCount    => _allUsers.where((u) => u.hasArrived).length;
   int get bannedCount     => _allUsers.where((u) => u.isBanned).length;
   int get reservedCount   => _allUsers.where((u) => u.isReserved).length;
+  int get webPendingCount => _webRegistrations.where((r) => r.isPending).length;
 
   List<CongressUser> get filteredUsers {
     var list = _allUsers;
@@ -55,54 +59,70 @@ class AdminProvider extends ChangeNotifier {
     }
     
     try {
-      final res = await _sb
-          .from('congress_users')
-          .select()
-          .order('created_at', ascending: false);
-      
-      _allUsers = (res as List)
+      final usersRes = await _sb.from('congress_users').select().order('created_at', ascending: false);
+      _allUsers = (usersRes as List)
           .map((j) => CongressUser.fromJson(j as Map<String, dynamic>))
           .toList();
 
-      debugPrint('AdminProvider: ${res.length} users loaded (silent: $silent)');
-      
+      try {
+        final regsRes = await _sb.from('event_registrations').select().order('created_at', ascending: false);
+        _webRegistrations = (regsRes as List)
+            .map((j) => EventRegistration.fromJson(j as Map<String, dynamic>))
+            .toList();
+      } catch (e) {
+        debugPrint('AdminProvider: event_registrations load failed (missing table?): $e');
+      }
+
+      debugPrint('AdminProvider: ${_allUsers.length} users and ${_webRegistrations.length} web regs loaded');
       _initRealtime();
     } catch (e) {
       debugPrint('AdminProvider.loadUsers error: $e');
     } finally {
-      if (!silent) {
-        _loading = false;
-        notifyListeners();
-      } else {
-        notifyListeners();
-      }
+      _loading = false;
+      notifyListeners();
     }
   }
 
   void _initRealtime() {
-    if (_usersChannel != null) return;
+    if (_usersChannel != null && _regsChannel != null) return;
 
-    debugPrint('AdminProvider: Subscribing to congress_users Realtime...');
-    _usersChannel = _sb
-        .channel('admin-users-changes')
-        .onPostgresChanges(
-          event: PostgresChangeEvent.all,
-          schema: 'public',
-          table: 'congress_users',
-          callback: (payload) {
-            debugPrint('AdminProvider: REALTIME UPDATE DETECTED: ${payload.eventType}');
-            loadUsers(silent: true);
-          },
-        )
-        .subscribe((status, [error]) {
-          debugPrint('AdminProvider: Realtime Status: $status');
-          if (error != null) debugPrint('AdminProvider: Realtime Error: $error');
-        });
+    if (_usersChannel == null) {
+      debugPrint('AdminProvider: Subscribing to congress_users Realtime...');
+      _usersChannel = _sb
+          .channel('admin-users-changes')
+          .onPostgresChanges(
+            event: PostgresChangeEvent.all,
+            schema: 'public',
+            table: 'congress_users',
+            callback: (payload) {
+              debugPrint('AdminProvider: USERS REALTIME UPDATE: ${payload.eventType}');
+              loadUsers(silent: true);
+            },
+          )
+          .subscribe();
+    }
+
+    if (_regsChannel == null) {
+      debugPrint('AdminProvider: Subscribing to event_registrations Realtime...');
+      _regsChannel = _sb
+          .channel('admin-regs-changes')
+          .onPostgresChanges(
+            event: PostgresChangeEvent.all,
+            schema: 'public',
+            table: 'event_registrations',
+            callback: (payload) {
+              debugPrint('AdminProvider: REGS REALTIME UPDATE: ${payload.eventType}');
+              loadUsers(silent: true);
+            },
+          )
+          .subscribe();
+    }
   }
 
   @override
   void dispose() {
     _usersChannel?.unsubscribe();
+    _regsChannel?.unsubscribe();
     super.dispose();
   }
 

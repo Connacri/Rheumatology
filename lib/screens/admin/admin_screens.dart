@@ -727,8 +727,21 @@ class AdminShell extends StatelessWidget {
 // ═══════════════════════════════════════════════════════════════════
 // screens/admin/dashboard_screen.dart
 // ═══════════════════════════════════════════════════════════════════
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AdminProvider>().loadUsers();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -745,11 +758,14 @@ class DashboardScreen extends StatelessWidget {
         ],
       ),
       body: Consumer<AdminProvider>(
-        builder: (_, admin, __) => SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+        builder: (_, admin, __) => RefreshIndicator(
+          onRefresh: () => admin.loadUsers(),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
               // Congrès header
               Container(
                 padding: const EdgeInsets.all(16),
@@ -790,14 +806,14 @@ class DashboardScreen extends StatelessWidget {
                 children: [
                   _KpiCard('Total inscrits', '${admin.totalGuests}',
                       Icons.people, AppColors.navyMid),
+                  _KpiCard('Pré-inscrits Web', '${admin.webPendingCount}',
+                      Icons.web_outlined, Colors.deepPurple),
                   _KpiCard('En attente', '${admin.pendingCount}',
                       Icons.hourglass_top, AppColors.warning),
                   _KpiCard('Validés', '${admin.validatedCount}',
                       Icons.check_circle, AppColors.success),
                   _KpiCard('Arrivés', '${admin.arrivedCount}',
                       Icons.where_to_vote, AppColors.info),
-                  _KpiCard('Réserves', '${admin.reservedCount}',
-                      Icons.info_outline, AppColors.accent),
                   _KpiCard('Refusés', '${admin.bannedCount}',
                       Icons.cancel, AppColors.error),
                 ],
@@ -833,7 +849,7 @@ class DashboardScreen extends StatelessWidget {
             ],
           ),
         ),
-      ),
+      ),)
     );
   }
 }

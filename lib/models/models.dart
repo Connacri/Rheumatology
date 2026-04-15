@@ -359,3 +359,71 @@ class SessionFeedback {
     createdAt: DateTime.parse(j['created_at'] as String),
   );
 }
+
+// ═══════════════════════════════════════════════════════════════════
+// lib/models/event_registration.dart
+// ═══════════════════════════════════════════════════════════════════
+class EventRegistration {
+  final String id;
+  final String? userId;
+  final String email;
+  final String firstName;
+  final String lastName;
+  final String phoneNumber;
+  final String city;
+  final String title;
+  final String? titleOther;
+  final String medicalSpecialty;
+  final String? specialtyOther;
+  final String healthcareFacility;
+  final String participationType;
+  final String status; // pending|approved|rejected
+  final String? adminNotes;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  const EventRegistration({
+    required this.id,
+    this.userId,
+    required this.email,
+    required this.firstName,
+    required this.lastName,
+    required this.phoneNumber,
+    required this.city,
+    required this.title,
+    this.titleOther,
+    required this.medicalSpecialty,
+    this.specialtyOther,
+    required this.healthcareFacility,
+    required this.participationType,
+    required this.status,
+    this.adminNotes,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  String get fullName => '$firstName $lastName';
+  bool get isPending => status == 'pending';
+  bool get isApproved => status == 'approved';
+  bool get isRejected => status == 'rejected';
+
+  factory EventRegistration.fromJson(Map<String, dynamic> j) => EventRegistration(
+    id:                 j['id'] as String,
+    userId:             j['user_id'] as String?,
+    email:              (j['email'] as String?) ?? '',
+    firstName:          (j['first_name'] as String?) ?? '',
+    lastName:           (j['last_name'] as String?) ?? '',
+    phoneNumber:        (j['phone_number'] as String?) ?? '',
+    city:               (j['city'] as String?) ?? '',
+    title:              (j['title'] as String?) ?? '',
+    titleOther:         j['title_other'] as String?,
+    medicalSpecialty:   (j['medical_specialty'] as String?) ?? '',
+    specialtyOther:     j['specialty_other'] as String?,
+    healthcareFacility: (j['healthcare_facility'] as String?) ?? '',
+    participationType:  (j['participation_type'] as String?) ?? '',
+    status:             (j['status'] as String?) ?? 'pending',
+    adminNotes:         j['admin_notes'] as String?,
+    createdAt:          DateTime.parse(j['created_at'] as String),
+    updatedAt:          DateTime.parse(j['updated_at'] as String),
+  );
+}
