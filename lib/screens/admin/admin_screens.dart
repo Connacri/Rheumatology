@@ -806,8 +806,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 children: [
                   _KpiCard('Total inscrits', '${admin.totalGuests}',
                       Icons.people, AppColors.navyMid),
-                  _KpiCard('Pré-inscrits Web', '${admin.webPendingCount}',
-                      Icons.web_outlined, Colors.deepPurple),
                   _KpiCard('En attente', '${admin.pendingCount}',
                       Icons.hourglass_top, AppColors.warning),
                   _KpiCard('Validés', '${admin.validatedCount}',

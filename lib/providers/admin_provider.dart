@@ -9,15 +9,12 @@ class AdminProvider extends ChangeNotifier {
   final _sb = Supabase.instance.client;
 
   List<CongressUser> _allUsers = [];
-  List<EventRegistration> _webRegistrations = [];
   bool _loading = false;
   String _statusFilter = 'all';
   String _searchQuery  = '';
   RealtimeChannel? _usersChannel;
-  RealtimeChannel? _regsChannel;
 
   List<CongressUser> get allUsers => _allUsers;
-  List<EventRegistration> get webRegistrations => _webRegistrations;
   bool   get loading      => _loading;
   String get statusFilter => _statusFilter;
 
@@ -28,9 +25,9 @@ class AdminProvider extends ChangeNotifier {
   int get arrivedCount    => _allUsers.where((u) => u.hasArrived).length;
   int get bannedCount     => _allUsers.where((u) => u.isBanned).length;
   int get reservedCount   => _allUsers.where((u) => u.isReserved).length;
-  int get webPendingCount => _webRegistrations.where((r) => r.isPending).length;
 
   List<CongressUser> get filteredUsers {
+
     var list = _allUsers;
     if (_statusFilter != 'all') {
       list = list.where((u) => u.status == _statusFilter).toList();
@@ -64,16 +61,7 @@ class AdminProvider extends ChangeNotifier {
           .map((j) => CongressUser.fromJson(j as Map<String, dynamic>))
           .toList();
 
-      try {
-        final regsRes = await _sb.from('event_registrations').select().order('created_at', ascending: false);
-        _webRegistrations = (regsRes as List)
-            .map((j) => EventRegistration.fromJson(j as Map<String, dynamic>))
-            .toList();
-      } catch (e) {
-        debugPrint('AdminProvider: event_registrations load failed (missing table?): $e');
-      }
-
-      debugPrint('AdminProvider: ${_allUsers.length} users and ${_webRegistrations.length} web regs loaded');
+      debugPrint('AdminProvider: ${_allUsers.length} users loaded');
       _initRealtime();
     } catch (e) {
       debugPrint('AdminProvider.loadUsers error: $e');
@@ -84,7 +72,7 @@ class AdminProvider extends ChangeNotifier {
   }
 
   void _initRealtime() {
-    if (_usersChannel != null && _regsChannel != null) return;
+    if (_usersChannel != null) return;
 
     if (_usersChannel == null) {
       debugPrint('AdminProvider: Subscribing to congress_users Realtime...');
@@ -101,28 +89,11 @@ class AdminProvider extends ChangeNotifier {
           )
           .subscribe();
     }
-
-    if (_regsChannel == null) {
-      debugPrint('AdminProvider: Subscribing to event_registrations Realtime...');
-      _regsChannel = _sb
-          .channel('admin-regs-changes')
-          .onPostgresChanges(
-            event: PostgresChangeEvent.all,
-            schema: 'public',
-            table: 'event_registrations',
-            callback: (payload) {
-              debugPrint('AdminProvider: REGS REALTIME UPDATE: ${payload.eventType}');
-              loadUsers(silent: true);
-            },
-          )
-          .subscribe();
-    }
   }
 
   @override
   void dispose() {
     _usersChannel?.unsubscribe();
-    _regsChannel?.unsubscribe();
     super.dispose();
   }
 
