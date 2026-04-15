@@ -1165,10 +1165,22 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    // Remove preloader
+    setTimeout(() => {
+      const preloader = document.getElementById('preloader');
+      if (preloader) preloader.classList.add('hidden');
+    }, 1500);
+
     // Supabase Initialization
     const supabaseUrl = 'https://tkmzeywijodhoudjgtxr.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRrbXpleXdpam9kaG91ZGpndHhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NzgwNTEsImV4cCI6MjA5MTM1NDA1MX0.s4Ip4JHH3coBUVRmmde5gH6L9_Z4y7POXKN0l9R63AE';
-    const supabase = supabasejs.createClient(supabaseUrl, supabaseKey);
+
+    let supabase;
+    try {
+      supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    } catch (e) {
+      console.error('Supabase failed to initialize:', e);
+    }
 
     const registrationForm = document.getElementById('registrationForm');
     const formMessage = document.getElementById('formMessage');
@@ -1185,6 +1197,7 @@
         formMessage.style.display = 'none';
 
         try {
+          if (!supabase) throw new Error('Supabase not initialized');
           const formData = new FormData(registrationForm);
           const data = Object.fromEntries(formData.entries());
 
@@ -1241,8 +1254,7 @@
       });
     }
 
-    setTimeout(() => document.getElementById('preloader').classList.add('hidden'), 2000);
-
+    // Particles
     const pc = document.getElementById('particles-container');
     for (let i = 0; i < 30; i++) {
       const p = document.createElement('div');
