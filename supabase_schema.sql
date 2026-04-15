@@ -146,8 +146,34 @@ CREATE TABLE IF NOT EXISTS congress_certificates (
 );
 
 -- ═══════════════════════════════════════════════════════════════════════════════
+-- TABLE: event_registrations (Pre-registrations from website)
+-- ═══════════════════════════════════════════════════════════════════════════════
+CREATE TABLE IF NOT EXISTS event_registrations (
+  id                   UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id              UUID        REFERENCES auth.users(id) ON DELETE SET NULL,
+  email                TEXT        NOT NULL,
+  first_name           TEXT        NOT NULL,
+  last_name            TEXT        NOT NULL,
+  phone_number         TEXT        NOT NULL,
+  city                 TEXT        NOT NULL,
+  title                TEXT        NOT NULL,
+  title_other          TEXT,
+  medical_specialty    TEXT        NOT NULL,
+  specialty_other      TEXT,
+  healthcare_facility  TEXT        NOT NULL,
+  participation_type   TEXT        NOT NULL,
+  status               TEXT        NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
+  admin_notes          TEXT,
+  created_at           TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at           TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- ═══════════════════════════════════════════════════════════════════════════════
 -- INDEX
 -- ═══════════════════════════════════════════════════════════════════════════════
+CREATE INDEX IF NOT EXISTS idx_reg_status         ON event_registrations(status);
+CREATE INDEX IF NOT EXISTS idx_reg_email          ON event_registrations(email);
+CREATE INDEX IF NOT EXISTS idx_reg_created_at     ON event_registrations(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_users_status         ON congress_users(status);
 CREATE INDEX IF NOT EXISTS idx_users_role           ON congress_users(role);
 CREATE INDEX IF NOT EXISTS idx_users_arrived        ON congress_users(arrived_at) WHERE arrived_at IS NOT NULL;
@@ -337,12 +363,17 @@ CREATE TRIGGER update_users_updated_at
   BEFORE UPDATE ON congress_users
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 
+CREATE TRIGGER update_registrations_updated_at
+  BEFORE UPDATE ON event_registrations
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+
 -- ═══════════════════════════════════════════════════════════════════════════════
 -- REALTIME
 -- ═══════════════════════════════════════════════════════════════════════════════
 ALTER PUBLICATION supabase_realtime
   ADD TABLE congress_users, congress_notifications,
-            congress_questions, congress_sessions, congress_connections;
+            congress_questions, congress_sessions, congress_connections,
+            event_registrations;
 
 -- ═══════════════════════════════════════════════════════════════════════════════
 -- ROW LEVEL SECURITY (RLS)
@@ -355,6 +386,13 @@ ALTER TABLE congress_connections     ENABLE ROW LEVEL SECURITY;
 ALTER TABLE session_feedbacks        ENABLE ROW LEVEL SECURITY;
 ALTER TABLE congress_notifications   ENABLE ROW LEVEL SECURITY;
 ALTER TABLE congress_certificates    ENABLE ROW LEVEL SECURITY;
+ALTER TABLE event_registrations      ENABLE ROW LEVEL SECURITY;
+
+-- ── Policies for event_registrations ──
+CREATE POLICY "Allow public insert" ON event_registrations FOR INSERT TO anon WITH CHECK (true);
+CREATE POLICY "Allow public insert auth" ON event_registrations FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "Admin full access" ON event_registrations FOR ALL USING (is_admin());
+CREATE POLICY "User own access" ON event_registrations FOR SELECT USING (auth.uid() = user_id);
 
 -- ── Helpers (DOIVENT ÊTRE DÉFINIS AVANT LES POLICIES) ──────────────────────────
 
