@@ -61,9 +61,15 @@ class CongressOranApp extends StatefulWidget {
   @override
   State<CongressOranApp> createState() => _CongressOranAppState();
 }
-
 class _CongressOranAppState extends State<CongressOranApp> {
-  GoRouter? _router;
+  late final GoRouter _router;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _router = AppRouter.router(context.read<AuthProvider>());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,30 +84,15 @@ class _CongressOranAppState extends State<CongressOranApp> {
         ChangeNotifierProvider(create: (_) => ModeratorProvider()),
         ChangeNotifierProvider(create: (_) => GuestProvider()),
       ],
-      child: Builder(
-        builder: (context) {
-          _router ??= AppRouter.router(context.read<AuthProvider>());
-          
-          return MaterialApp.router(
-            title: '14ème Congrès Rhumatologie Oran',
-            debugShowCheckedModeBanner: false,
-            theme:       AppTheme.light,
-            darkTheme:   AppTheme.displayDark,
-            themeMode:   ThemeMode.light,
-            routerConfig: _router!,
-            builder: (context, child) {
-              return MediaQuery(
-                data: MediaQuery.of(context).copyWith(
-                  textScaler: const TextScaler.linear(1.0),
-                ),
-                child: child!,
-              );
-            },
-          );
-        },
+      child: MaterialApp.router(
+        title: '14ème Congrès Rhumatologie Oran',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.light,
+        darkTheme: AppTheme.displayDark,
+        themeMode: ThemeMode.light,
+        routerConfig: _router,
       ),
     );
   }
 }
-
 class DummyAuth extends ChangeNotifier {}
