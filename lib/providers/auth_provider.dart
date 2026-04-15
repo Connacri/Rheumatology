@@ -16,7 +16,8 @@ enum AuthStatus {
 }
 
 class AuthProvider extends ChangeNotifier {
-  final _auth = FirebaseAuth.instance;
+  //final _auth = FirebaseAuth.instance;
+  late final FirebaseAuth _auth;
   final _sb = sb.Supabase.instance.client;
   final _googleSignIn = GoogleSignIn(
     scopes: ['email', 'profile'],
@@ -34,7 +35,8 @@ class AuthProvider extends ChangeNotifier {
   bool get isLoading       => _status == AuthStatus.loading;
   bool get isAuthenticated => _status == AuthStatus.authenticated;
 
-  AuthProvider() {
+  AuthProvider({FirebaseAuth? auth}) {
+    _auth = auth ?? FirebaseAuth.instance;
     _init();
   }
 
