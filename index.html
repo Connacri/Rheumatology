@@ -1242,14 +1242,11 @@
               email: data.email,
               phone: data.phone_number,
               country: data.city,
-              title: data.title,
-              title_other: data.title_other,
               specialty: data.medical_specialty,
-              specialty_other: data.specialty_other,
               institution: data.healthcare_facility,
-              participation_type: data.participation_type,
               role: 'guest',
-              status: 'pending'
+              status: 'pending',
+              admin_notes: `Title: ${data.title}${data.title_other ? ' (' + data.title_other + ')' : ''} | Participation: ${data.participation_type} | Specialty Detail: ${data.specialty_other || 'N/A'}`
             });
 
           if (error) throw error;
