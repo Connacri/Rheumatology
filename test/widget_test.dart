@@ -13,16 +13,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:congres/main.dart';
 
 void main() {
-  setUpAll(() async {
-    TestWidgetsFlutterBinding.ensureInitialized();
-
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-  });
-
   testWidgets('App loads', (WidgetTester tester) async {
-    await tester.pumpWidget(const CongressOranApp());
+    await tester.pumpWidget(const CongressOranApp(isTest: true));
     expect(find.byType(CongressOranApp), findsOneWidget);
   });
 }

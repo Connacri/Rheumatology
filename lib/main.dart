@@ -53,12 +53,16 @@ Future<void> main({bool isTest = false}) async {
 }
 
 class CongressOranApp extends StatelessWidget {
-  const CongressOranApp({super.key});
+  final bool isTest;
+
+  const CongressOranApp({super.key, this.isTest = false});
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
+      providers: isTest
+          ? [] // 🔥 PAS DE FIREBASE EN TEST
+          :[
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => AdminProvider()),
         ChangeNotifierProvider(create: (_) => ModeratorProvider()),
