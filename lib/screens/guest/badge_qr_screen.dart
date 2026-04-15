@@ -256,8 +256,6 @@ class _BadgeQrScreenState extends State<BadgeQrScreen>
                         dataModuleShape: QrDataModuleShape.square,
                         color: AppColors.navyDeep,
                       ),
-                      embeddedImage: const AssetImage('assets/images/logo_small.png'),
-                      embeddedImageStyle: const QrEmbeddedImageStyle(size: Size(32, 32)),
                     ),
                   ),
                   const SizedBox(height: 12),

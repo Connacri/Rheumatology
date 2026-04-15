@@ -2,6 +2,8 @@
 // screens/receptionist/qr_scanner_screen.dart
 // ═══════════════════════════════════════════════════════════════════
 import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -81,24 +83,45 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
           ],
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.flash_on),
-            onPressed: () => _controller.toggleTorch(),
-            tooltip: 'Lampe torche',
-          ),
-          IconButton(
-            icon: const Icon(Icons.flip_camera_ios),
-            onPressed: () => _controller.switchCamera(),
-          ),
+          if (kIsWeb || !Platform.isWindows) ...[
+            IconButton(
+              icon: const Icon(Icons.flash_on),
+              onPressed: () => _controller.toggleTorch(),
+              tooltip: 'Lampe torche',
+            ),
+            IconButton(
+              icon: const Icon(Icons.flip_camera_ios),
+              onPressed: () => _controller.switchCamera(),
+            ),
+          ],
         ],
       ),
-      body: Stack(
-        children: [
-          // ── Caméra ──
-          MobileScanner(
-            controller: _controller,
-            onDetect: _onDetect,
-          ),
+      body: ( !kIsWeb && Platform.isWindows) 
+        ? const Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.computer, size: 64, color: Colors.white24),
+                SizedBox(height: 16),
+                Text(
+                  'Le scanner n\'est pas disponible sur Windows',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'Veuillez tester sur Android ou iOS',
+                  style: TextStyle(color: Colors.white54, fontSize: 14),
+                ),
+              ],
+            ),
+          )
+        : Stack(
+            children: [
+              // ── Caméra ──
+              MobileScanner(
+                controller: _controller,
+                onDetect: _onDetect,
+              ),
 
           // ── Overlay sombre ──
           ColorFiltered(

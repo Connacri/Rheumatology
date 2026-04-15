@@ -12,6 +12,7 @@ class AdminProvider extends ChangeNotifier {
   bool _loading = false;
   String _statusFilter = 'all';
   String _searchQuery  = '';
+  RealtimeChannel? _usersChannel;
 
   List<CongressUser> get allUsers => _allUsers;
   bool   get loading      => _loading;
@@ -47,24 +48,62 @@ class AdminProvider extends ChangeNotifier {
   void setSearch(String q) { _searchQuery = q;  notifyListeners(); }
 
   // ── Load ──────────────────────────────────────────────────────────
-  Future<void> loadUsers() async {
-    _loading = true;
-    notifyListeners();
+  Future<void> loadUsers({bool silent = false}) async {
+    if (!silent) {
+      _loading = true;
+      notifyListeners();
+    }
+    
     try {
       final res = await _sb
           .from('congress_users')
           .select()
-          .eq('role', 'guest')
           .order('created_at', ascending: false);
+      
       _allUsers = (res as List)
           .map((j) => CongressUser.fromJson(j as Map<String, dynamic>))
           .toList();
+
+      debugPrint('AdminProvider: ${res.length} users loaded (silent: $silent)');
+      
+      _initRealtime();
     } catch (e) {
       debugPrint('AdminProvider.loadUsers error: $e');
     } finally {
-      _loading = false;
-      notifyListeners();
+      if (!silent) {
+        _loading = false;
+        notifyListeners();
+      } else {
+        notifyListeners();
+      }
     }
+  }
+
+  void _initRealtime() {
+    if (_usersChannel != null) return;
+
+    debugPrint('AdminProvider: Subscribing to congress_users Realtime...');
+    _usersChannel = _sb
+        .channel('admin-users-changes')
+        .onPostgresChanges(
+          event: PostgresChangeEvent.all,
+          schema: 'public',
+          table: 'congress_users',
+          callback: (payload) {
+            debugPrint('AdminProvider: REALTIME UPDATE DETECTED: ${payload.eventType}');
+            loadUsers(silent: true);
+          },
+        )
+        .subscribe((status, [error]) {
+          debugPrint('AdminProvider: Realtime Status: $status');
+          if (error != null) debugPrint('AdminProvider: Realtime Error: $error');
+        });
+  }
+
+  @override
+  void dispose() {
+    _usersChannel?.unsubscribe();
+    super.dispose();
   }
 
   Future<CongressUser?> getUserById(String userId) async {

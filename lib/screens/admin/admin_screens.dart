@@ -188,12 +188,12 @@ class _UserListScreenState extends State<UserListScreen> {
   Future<void> _quickValidate(String userId) async {
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (_) => AlertDialog(
+      builder: (ctx) => AlertDialog(
         title: const Text('Valider cet inscrit ?'),
         content: const Text('L\'invité recevra son QR badge immédiatement.'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Annuler')),
-          ElevatedButton(onPressed: () => Navigator.pop(context, true), child: const Text('Valider')),
+          TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('Annuler')),
+          ElevatedButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Valider')),
         ],
       ),
     );
@@ -617,12 +617,12 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(ctx),
+            onPressed: () => Navigator.of(ctx).pop(),
             child: const Text('Annuler'),
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.pop(ctx);
+              Navigator.of(ctx).pop();
               if (_notesCtrl.text.trim().isNotEmpty) {
                 _act(() => context.read<AdminProvider>()
                     .reserveUser(_user!.id, _notesCtrl.text.trim()));
@@ -638,18 +638,18 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   void _showBanConfirm() {
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
+      builder: (ctx) => AlertDialog(
         title: const Text('Refuser cette inscription ?'),
         content: const Text(
             'L\'invité recevra une notification de refus. Cette action est réversible.'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.of(ctx).pop(),
             child: const Text('Annuler'),
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.of(ctx).pop();
               _act(() => context.read<AdminProvider>().banUser(_user!.id));
             },
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),

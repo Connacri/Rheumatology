@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -52,17 +53,26 @@ Future<void> main({bool isTest = false}) async {
   runApp(const CongressOranApp());
 }
 
-class CongressOranApp extends StatelessWidget {
+class CongressOranApp extends StatefulWidget {
   final bool isTest;
 
   const CongressOranApp({super.key, this.isTest = false});
 
   @override
+  State<CongressOranApp> createState() => _CongressOranAppState();
+}
+
+class _CongressOranAppState extends State<CongressOranApp> {
+  GoRouter? _router;
+
+  @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: isTest
-          ? [] // 🔥 PAS DE FIREBASE EN TEST
-          :[
+      providers: widget.isTest
+          ? [
+        Provider(create: (_) => DummyAuth()),
+      ]
+          : [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => AdminProvider()),
         ChangeNotifierProvider(create: (_) => ModeratorProvider()),
@@ -70,14 +80,15 @@ class CongressOranApp extends StatelessWidget {
       ],
       child: Builder(
         builder: (context) {
-          final auth = context.watch<AuthProvider>();
+          _router ??= AppRouter.router(context.read<AuthProvider>());
+          
           return MaterialApp.router(
             title: '14ème Congrès Rhumatologie Oran',
             debugShowCheckedModeBanner: false,
             theme:       AppTheme.light,
             darkTheme:   AppTheme.displayDark,
             themeMode:   ThemeMode.light,
-            routerConfig: AppRouter.router(auth),
+            routerConfig: _router!,
             builder: (context, child) {
               return MediaQuery(
                 data: MediaQuery.of(context).copyWith(
@@ -92,3 +103,5 @@ class CongressOranApp extends StatelessWidget {
     );
   }
 }
+
+class DummyAuth extends ChangeNotifier {}

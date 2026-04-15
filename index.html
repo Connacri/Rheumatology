@@ -1008,90 +1008,100 @@
         <strong>Event Participation:</strong> Pre-registration does not constitute confirmation or acceptance of participation in the event.
       </div>
 
-      <div class="stepper">
-        <div class="step-item" data-step="1">
-          <div class="form-group">
-            <label>First Name <span>*</span></label>
-            <input type="text" placeholder="e.g. John" required>
+      <form id="registrationForm">
+        <div class="stepper">
+          <div class="step-item" data-step="1">
+            <div class="form-group">
+              <label>First Name <span>*</span></label>
+              <input type="text" id="firstName" name="first_name" placeholder="e.g. John" required>
+            </div>
           </div>
-        </div>
 
-        <div class="step-item" data-step="2">
-          <div class="form-group">
-            <label>Last Name <span>*</span></label>
-            <input type="text" placeholder="e.g. Doe" required>
+          <div class="step-item" data-step="2">
+            <div class="form-group">
+              <label>Last Name <span>*</span></label>
+              <input type="text" id="lastName" name="last_name" placeholder="e.g. Doe" required>
+            </div>
           </div>
-        </div>
 
-        <div class="step-item" data-step="3">
-          <div class="form-group">
-            <label>Phone Number <span>*</span></label>
-            <input type="tel" placeholder="e.g. +213 5XX XX XX XX" required>
+          <div class="step-item" data-step="3">
+            <div class="form-group">
+              <label>Email Address <span>*</span></label>
+              <input type="email" id="email" name="email" placeholder="e.g. john.doe@example.com" required>
+            </div>
           </div>
-        </div>
 
-        <div class="step-item" data-step="4">
-          <div class="form-group">
-            <label>City <span>*</span></label>
-            <input type="text" placeholder="Your City" required>
+          <div class="step-item" data-step="4">
+            <div class="form-group">
+              <label>Phone Number <span>*</span></label>
+              <input type="tel" id="phone" name="phone_number" placeholder="e.g. +213 5XX XX XX XX" required>
+            </div>
           </div>
-        </div>
 
-        <div class="step-item" data-step="5">
-          <div class="form-group">
-            <label>Title <span>*</span></label>
-            <div class="radio-group">
-              <label class="radio-option"><input type="radio" name="title" value="Professor"> <span>Professor</span></label>
-              <label class="radio-option"><input type="radio" name="title" value="Specialist"> <span>Specialist</span></label>
-              <label class="radio-option"><input type="radio" name="title" value="GP"> <span>General Practitioner</span></label>
-              <label class="radio-option"><input type="radio" name="title" value="Resident"> <span>Medical Resident</span></label>
-              <label class="radio-option"><input type="radio" name="title" value="Visitor"> <span>Visitor</span></label>
-              <label class="radio-option" style="display: flex; gap: 10px; align-items: center;">
-                <input type="radio" name="title" value="Other"> <span style="white-space: nowrap;">Other :</span>
-                <input type="text" placeholder="Specify..." style="padding: 5px; height: 30px; margin: 0; font-size: 0.8rem; background: transparent; border: none; border-bottom: 1px solid #ccc; border-radius: 0; width: 100%;">
-              </label>
+          <div class="step-item" data-step="5">
+            <div class="form-group">
+              <label>City <span>*</span></label>
+              <input type="text" id="city" name="city" placeholder="Your City" required>
+            </div>
+          </div>
+
+          <div class="step-item" data-step="6">
+            <div class="form-group">
+              <label>Title <span>*</span></label>
+              <div class="radio-group" id="titleGroup">
+                <label class="radio-option"><input type="radio" name="title" value="Professor" required> <span>Professor</span></label>
+                <label class="radio-option"><input type="radio" name="title" value="Specialist"> <span>Specialist</span></label>
+                <label class="radio-option"><input type="radio" name="title" value="GP"> <span>General Practitioner</span></label>
+                <label class="radio-option"><input type="radio" name="title" value="Resident"> <span>Medical Resident</span></label>
+                <label class="radio-option"><input type="radio" name="title" value="Visitor"> <span>Visitor</span></label>
+                <label class="radio-option" style="display: flex; gap: 10px; align-items: center;">
+                  <input type="radio" name="title" value="Other" id="titleOtherRadio"> <span style="white-space: nowrap;">Other :</span>
+                  <input type="text" id="titleOther" name="title_other" placeholder="Specify..." style="padding: 5px; height: 30px; margin: 0; font-size: 0.8rem; background: transparent; border: none; border-bottom: 1px solid #ccc; border-radius: 0; width: 100%;">
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-item" data-step="7">
+            <div class="form-group">
+              <label>Medical Specialty <span>*</span></label>
+              <div class="radio-group" id="specialtyGroup">
+                <label class="radio-option"><input type="radio" name="medical_specialty" value="Rheumatology" required> <span>Rheumatology</span></label>
+                <label class="radio-option"><input type="radio" name="medical_specialty" value="Orthopaedics"> <span>Orthopaedics, Traumatology, and Rehabilitation</span></label>
+                <label class="radio-option"><input type="radio" name="medical_specialty" value="PMR"> <span>Physical Medicine and Rehabilitation</span></label>
+                <label class="radio-option"><input type="radio" name="medical_specialty" value="Internal"> <span>Internal Medicine</span></label>
+                <label class="radio-option"><input type="radio" name="medical_specialty" value="GP"> <span>General Practitioner</span></label>
+                <label class="radio-option" style="display: flex; gap: 10px; align-items: center;">
+                  <input type="radio" name="medical_specialty" value="Other" id="specialtyOtherRadio"> <span style="white-space: nowrap;">Other :</span>
+                  <input type="text" id="specialtyOther" name="specialty_other" placeholder="Specify..." style="padding: 5px; height: 30px; margin: 0; font-size: 0.8rem; background: transparent; border: none; border-bottom: 1px solid #ccc; border-radius: 0; width: 100%;">
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-item" data-step="8">
+            <div class="form-group">
+              <label>Healthcare Facility/Workplace <span>*</span></label>
+              <input type="text" id="facility" name="healthcare_facility" placeholder="Hospital, Clinic, or University" required>
+            </div>
+          </div>
+
+          <div class="step-item" data-step="9">
+            <div class="form-group">
+              <label>Participation <span>*</span></label>
+              <div class="radio-group" id="participationGroup">
+                <label class="radio-option"><input type="radio" name="participation_type" value="Returning" required> <span>Returning Attendee</span></label>
+                <label class="radio-option"><input type="radio" name="participation_type" value="First-time"> <span>First-time Attendee</span></label>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="step-item" data-step="6">
-          <div class="form-group">
-            <label>Medical Specialty <span>*</span></label>
-            <div class="radio-group">
-              <label class="radio-option"><input type="radio" name="specialty" value="Rheumatology"> <span>Rheumatology</span></label>
-              <label class="radio-option"><input type="radio" name="specialty" value="Orthopaedics"> <span>Orthopaedics, Traumatology, and Rehabilitation</span></label>
-              <label class="radio-option"><input type="radio" name="specialty" value="PMR"> <span>Physical Medicine and Rehabilitation</span></label>
-              <label class="radio-option"><input type="radio" name="specialty" value="Internal"> <span>Internal Medicine</span></label>
-              <label class="radio-option"><input type="radio" name="specialty" value="GP"> <span>General Practitioner</span></label>
-              <label class="radio-option" style="display: flex; gap: 10px; align-items: center;">
-                <input type="radio" name="specialty" value="Other"> <span style="white-space: nowrap;">Other :</span>
-                <input type="text" placeholder="Specify..." style="padding: 5px; height: 30px; margin: 0; font-size: 0.8rem; background: transparent; border: none; border-bottom: 1px solid #ccc; border-radius: 0; width: 100%;">
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div class="step-item" data-step="7">
-          <div class="form-group">
-            <label>Healthcare Facility/Workplace <span>*</span></label>
-            <input type="text" placeholder="Hospital, Clinic, or University" required>
-          </div>
-        </div>
-
-        <div class="step-item" data-step="8">
-          <div class="form-group">
-            <label>Participation <span>*</span></label>
-            <div class="radio-group">
-              <label class="radio-option"><input type="radio" name="participation" value="Returning"> <span>Returning Attendee</span></label>
-              <label class="radio-option"><input type="radio" name="participation" value="First-time"> <span>First-time Attendee</span></label>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:20px; padding: 20px;">
-        <span>📝</span><span>Pre-Register Now</span>
-      </button>
+        <button type="submit" id="submitBtn" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:20px; padding: 20px;">
+          <span>📝</span><span>Pre-Register Now</span>
+        </button>
+      </form>
+      <div id="formMessage" style="margin-top: 20px; text-align: center; display: none; padding: 15px; border-radius: 12px;"></div>
     </div>
     <div class="reveal-right">
       <div class="contact-info-item"><div class="icon">📍</div><div><h4>Congress Venue</h4><p>Oran Bay Accor Hotel, Oran, Algeria</p></div></div>
@@ -1150,8 +1160,87 @@
 
 <button class="back-to-top" id="backToTop">↑</button>
 
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    // Supabase Initialization
+    const supabaseUrl = 'https://tkmzeywijodhoudjgtxr.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRrbXpleXdpam9kaG91ZGpndHhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NzgwNTEsImV4cCI6MjA5MTM1NDA1MX0.s4Ip4JHH3coBUVRmmde5gH6L9_Z4y7POXKN0l9R63AE';
+    const supabase = supabasejs.createClient(supabaseUrl, supabaseKey);
+
+    const registrationForm = document.getElementById('registrationForm');
+    const formMessage = document.getElementById('formMessage');
+    const submitBtn = document.getElementById('submitBtn');
+
+    if (registrationForm) {
+      registrationForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // UI Feedback: Loading
+        submitBtn.disabled = true;
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<span>⏳</span><span>Processing...</span>';
+        formMessage.style.display = 'none';
+
+        try {
+          const formData = new FormData(registrationForm);
+          const data = Object.fromEntries(formData.entries());
+
+          // Handle "Other" inputs for Title and Specialty
+          if (data.title === 'Other') {
+            data.title = data.title_other || 'Other';
+          }
+          if (data.medical_specialty === 'Other') {
+            data.medical_specialty = data.specialty_other || 'Other';
+          }
+
+          // Insert into Supabase
+          const { error } = await supabase
+            .from('event_registrations')
+            .insert([
+              {
+                first_name: data.first_name,
+                last_name: data.last_name,
+                email: data.email,
+                phone_number: data.phone_number,
+                city: data.city,
+                title: data.title,
+                title_other: data.title_other,
+                medical_specialty: data.medical_specialty,
+                specialty_other: data.specialty_other,
+                healthcare_facility: data.healthcare_facility,
+                participation_type: data.participation_type,
+                status: 'pending'
+              }
+            ]);
+
+          if (error) throw error;
+
+          // Success feedback
+          formMessage.innerHTML = '<strong>Success!</strong> Your pre-registration has been submitted successfully. You will be contacted soon.';
+          formMessage.style.background = '#dcfce7';
+          formMessage.style.color = '#166534';
+          formMessage.style.display = 'block';
+          registrationForm.reset();
+
+          // Scroll to message
+          formMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        } catch (err) {
+          console.error('Registration error:', err);
+          formMessage.innerHTML = '<strong>Error!</strong> ' + (err.message || 'Something went wrong. Please try again later.');
+          formMessage.style.background = '#fee2e2';
+          formMessage.style.color = '#991b1b';
+          formMessage.style.display = 'block';
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalBtnText;
+        }
+      });
+    }
+
     setTimeout(() => document.getElementById('preloader').classList.add('hidden'), 2000);
 
     const pc = document.getElementById('particles-container');

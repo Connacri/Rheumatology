@@ -27,12 +27,13 @@ class AuthProvider extends ChangeNotifier {
   AuthStatus _status = AuthStatus.loading;
   String? _error;
   bool _uploadingAvatar = false;
+  bool _isLoadingUser = false;
 
   CongressUser? get user   => _user;
   AuthStatus get status    => _status;
   String? get error        => _error;
   bool get uploadingAvatar => _uploadingAvatar;
-  bool get isLoading       => _status == AuthStatus.loading;
+  bool get isLoading       => _status == AuthStatus.loading || _isLoadingUser;
   bool get isAuthenticated => _status == AuthStatus.authenticated;
 
   AuthProvider({FirebaseAuth? auth}) {
@@ -45,19 +46,24 @@ class AuthProvider extends ChangeNotifier {
     // 1. Charger l'état initial immédiatement
     final firebaseUser = _auth.currentUser;
     if (firebaseUser != null) {
+      // Éviter de bloquer l'initialisation si possible, 
+      // mais on a besoin du profil pour le routage initial
       await _loadAndRouteUser(firebaseUser);
     } else {
       _setStatus(AuthStatus.unauthenticated);
     }
 
-    // 2. Différer l'écoute du stream pour laisser le temps au plugin de s'initialiser sur Windows
-    Future.delayed(const Duration(milliseconds: 500), () {
-      _auth.authStateChanges().listen(_onAuthStateChanged);
-    });
+    // 2. Écouter les changements d'auth
+    // On retire le delay qui était une tentative de fix pour Windows
+    // et on gère proprement les appels multiples
+    _auth.authStateChanges().listen(_onAuthStateChanged);
   }
 
   void _onAuthStateChanged(User? firebaseUser) async {
+    debugPrint('Auth state changed: ${firebaseUser?.uid}');
     if (firebaseUser != null) {
+      // Si on est déjà en train de charger cet utilisateur, on ignore
+      if (_isLoadingUser && _user?.id == firebaseUser.uid) return;
       await _loadAndRouteUser(firebaseUser);
     } else {
       _user = null;
@@ -66,15 +72,21 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> _loadAndRouteUser(User firebaseUser) async {
+    if (_isLoadingUser) return;
+    _isLoadingUser = true;
+
     try {
       _error = null;
-      // 1. Vérifier si l'email est vérifié (sauf pour Google qui est auto-vérifié)
+      // 1. Vérifier si l'email est vérifié
       final isGoogle = firebaseUser.providerData.any((p) => p.providerId == 'google.com');
       
-      // Recharger l'utilisateur pour avoir le statut de vérification à jour
-      await firebaseUser.reload();
-      final updatedUser = FirebaseAuth.instance.currentUser;
-
+      // On ne reload que si nécessaire pour éviter les boucles infinies sur certaines plateformes
+      // car reload() peut déclencher authStateChanges()
+      if (!firebaseUser.emailVerified && !isGoogle) {
+        await firebaseUser.reload();
+      }
+      
+      final updatedUser = _auth.currentUser;
       if (updatedUser == null) {
         _setStatus(AuthStatus.unauthenticated);
         return;
@@ -86,7 +98,11 @@ class AuthProvider extends ChangeNotifier {
       }
 
       // 2. Charger le profil depuis Supabase
-      // Note: On utilise l'ID Firebase comme ID dans Supabase
+      // On évite de refaire la requête si on a déjà les données et que c'est le même user
+      if (_user?.id == updatedUser.uid && _status == AuthStatus.authenticated) {
+        return;
+      }
+
       final data = await _sb
           .from('congress_users')
           .select()
@@ -108,7 +124,12 @@ class AuthProvider extends ChangeNotifier {
     } catch (e) {
       debugPrint('Error loading user: $e');
       _error = e.toString();
-      _setStatus(AuthStatus.unauthenticated);
+      // On ne repasse en unauthenticated que si c'est vraiment une erreur critique
+      if (_status == AuthStatus.loading) {
+        _setStatus(AuthStatus.unauthenticated);
+      }
+    } finally {
+      _isLoadingUser = false;
     }
   }
 
