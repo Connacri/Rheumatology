@@ -1,20 +1,29 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:congres/firebase_options.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:congres/main.dart';
 
 void main() {
-  testWidgets('App loads', (WidgetTester tester) async {
+  setUpAll(() async {
+    // Supabase doit être initialisé même en test (AuthProvider.stub() ne
+    // l'appelle pas, mais AdminProvider/GuestProvider en auraient besoin
+    // s'ils étaient instanciés — ici ils ne le sont pas en mode isTest).
+    // On garde l'init pour éviter une erreur si Supabase.instance est
+    // accédé indirectement.
+    try {
+      await Supabase.initialize(
+        url: 'https://placeholder.supabase.co',
+        anonKey: 'placeholder-anon-key',
+      );
+    } catch (_) {
+      // Déjà initialisé dans un run précédent — ignoré.
+    }
+  });
+
+  testWidgets('App loads', (tester) async {
+    // isTest: true → pas d'init Firebase, AuthProvider.stub(), router minimal
     await tester.pumpWidget(const CongressOranApp(isTest: true));
+    await tester.pump();
+
     expect(find.byType(CongressOranApp), findsOneWidget);
   });
 }

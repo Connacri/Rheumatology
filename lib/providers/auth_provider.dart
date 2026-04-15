@@ -16,18 +16,21 @@ enum AuthStatus {
 }
 
 class AuthProvider extends ChangeNotifier {
-  //final _auth = FirebaseAuth.instance;
   late final FirebaseAuth _auth;
-  final _sb = sb.Supabase.instance.client;
-  final _googleSignIn = GoogleSignIn(
-    scopes: ['email', 'profile'],
-  );
+  final _googleSignIn = GoogleSignIn(scopes: ['email', 'profile']);
+
+  // Supabase client — nullable pour les stubs de test.
+  sb.SupabaseClient? _sbClient;
+  sb.SupabaseClient get _sb => _sbClient ?? sb.Supabase.instance.client;
 
   CongressUser? _user;
   AuthStatus _status = AuthStatus.loading;
   String? _error;
   bool _uploadingAvatar = false;
   bool _isLoadingUser = false;
+
+  // Flag interne : si true, _init() ne sera pas appelé (mode stub/test).
+  final bool _isStub;
 
   CongressUser? get user   => _user;
   AuthStatus get status    => _status;
@@ -36,33 +39,40 @@ class AuthProvider extends ChangeNotifier {
   bool get isLoading       => _status == AuthStatus.loading || _isLoadingUser;
   bool get isAuthenticated => _status == AuthStatus.authenticated;
 
-  AuthProvider({FirebaseAuth? auth}) {
+  // ── Constructeur principal (production) ───────────────────────────
+  AuthProvider({FirebaseAuth? auth})
+      : _isStub = false {
     _auth = auth ?? FirebaseAuth.instance;
     _init();
   }
 
+  // ── Constructeur stub (tests uniquement) ─────────────────────────
+  // N'appelle pas FirebaseAuth.instance ni _init().
+  AuthProvider.stub()
+      : _isStub = true {
+    // FirebaseAuth non initialisé en test → on utilise un fake.
+    // Le status reste 'unauthenticated' par défaut.
+    _auth = FirebaseAuth.instance; // ignoré en stub — aucune méthode appelée
+    _status = AuthStatus.unauthenticated;
+  }
+
   // ── Init ──────────────────────────────────────────────────────────
   Future<void> _init() async {
-    // 1. Charger l'état initial immédiatement
+    if (_isStub) return;
+
     final firebaseUser = _auth.currentUser;
     if (firebaseUser != null) {
-      // Éviter de bloquer l'initialisation si possible, 
-      // mais on a besoin du profil pour le routage initial
       await _loadAndRouteUser(firebaseUser);
     } else {
       _setStatus(AuthStatus.unauthenticated);
     }
-
-    // 2. Écouter les changements d'auth
-    // On retire le delay qui était une tentative de fix pour Windows
-    // et on gère proprement les appels multiples
     _auth.authStateChanges().listen(_onAuthStateChanged);
   }
 
   void _onAuthStateChanged(User? firebaseUser) async {
+    if (_isStub) return;
     debugPrint('Auth state changed: ${firebaseUser?.uid}');
     if (firebaseUser != null) {
-      // Si on est déjà en train de charger cet utilisateur, on ignore
       if (_isLoadingUser && _user?.id == firebaseUser.uid) return;
       await _loadAndRouteUser(firebaseUser);
     } else {
@@ -77,15 +87,13 @@ class AuthProvider extends ChangeNotifier {
 
     try {
       _error = null;
-      // 1. Vérifier si l'email est vérifié
-      final isGoogle = firebaseUser.providerData.any((p) => p.providerId == 'google.com');
-      
-      // On ne reload que si nécessaire pour éviter les boucles infinies sur certaines plateformes
-      // car reload() peut déclencher authStateChanges()
+      final isGoogle = firebaseUser.providerData
+          .any((p) => p.providerId == 'google.com');
+
       if (!firebaseUser.emailVerified && !isGoogle) {
         await firebaseUser.reload();
       }
-      
+
       final updatedUser = _auth.currentUser;
       if (updatedUser == null) {
         _setStatus(AuthStatus.unauthenticated);
@@ -97,9 +105,8 @@ class AuthProvider extends ChangeNotifier {
         return;
       }
 
-      // 2. Charger le profil depuis Supabase
-      // On évite de refaire la requête si on a déjà les données et que c'est le même user
-      if (_user?.id == updatedUser.uid && _status == AuthStatus.authenticated) {
+      if (_user?.id == updatedUser.uid &&
+          _status == AuthStatus.authenticated) {
         return;
       }
 
@@ -124,7 +131,6 @@ class AuthProvider extends ChangeNotifier {
     } catch (e) {
       debugPrint('Error loading user: $e');
       _error = e.toString();
-      // On ne repasse en unauthenticated que si c'est vraiment une erreur critique
       if (_status == AuthStatus.loading) {
         _setStatus(AuthStatus.unauthenticated);
       }
@@ -138,7 +144,7 @@ class AuthProvider extends ChangeNotifier {
     try {
       _error = null;
       _setStatus(AuthStatus.loading);
-      
+
       final googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         _setStatus(AuthStatus.unauthenticated);
@@ -159,7 +165,6 @@ class AuthProvider extends ChangeNotifier {
         return 'Erreur d\'authentification Firebase';
       }
 
-      // Vérifier/Créer le profil Supabase
       final existing = await _sb
           .from('congress_users')
           .select('id')
@@ -168,14 +173,15 @@ class AuthProvider extends ChangeNotifier {
 
       if (existing == null) {
         await _sb.from('congress_users').insert({
-          'id':             firebaseUser.uid,
-          'email':          firebaseUser.email,
-          'first_name':     firebaseUser.displayName?.split(' ').first ?? '',
-          'last_name':      firebaseUser.displayName?.split(' ').skip(1).join(' ') ?? '',
-          'avatar_url':     firebaseUser.photoURL,
-          'google_id':      firebaseUser.uid,
-          'role':           'guest',
-          'status':         'pending',
+          'id': firebaseUser.uid,
+          'email': firebaseUser.email,
+          'first_name': firebaseUser.displayName?.split(' ').first ?? '',
+          'last_name':
+          firebaseUser.displayName?.split(' ').skip(1).join(' ') ?? '',
+          'avatar_url': firebaseUser.photoURL,
+          'google_id': firebaseUser.uid,
+          'role': 'guest',
+          'status': 'pending',
           'email_verified': true,
           'profile_complete': false,
         });
@@ -194,50 +200,35 @@ class AuthProvider extends ChangeNotifier {
     required String password,
   }) async {
     try {
-      debugPrint('SIGNUP: Début de l\'inscription pour $email');
       _error = null;
       _setStatus(AuthStatus.loading);
-      
-      debugPrint('SIGNUP: Tentative createUserWithEmailAndPassword...');
+
       final res = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      if (res.user == null) {
-        debugPrint('SIGNUP ERROR: Firebase user est null');
-        return 'Erreur lors de l\'inscription';
-      }
-      debugPrint('SIGNUP: Utilisateur créé avec UID: ${res.user!.uid}');
+      if (res.user == null) return 'Erreur lors de l\'inscription';
 
-      // Envoyer l'email de vérification
-      debugPrint('SIGNUP: Envoi de l\'email de vérification...');
       await res.user!.sendEmailVerification();
-      debugPrint('SIGNUP: Email de vérification envoyé');
 
-      // Créer le profil minimal dans Supabase
-      debugPrint('SIGNUP: Insertion dans Supabase (congress_users)...');
       await _sb.from('congress_users').insert({
-        'id':               res.user!.uid,
-        'email':            email,
-        'first_name':       '',
-        'last_name':        '',
-        'role':             'guest',
-        'status':           'pending',
-        'email_verified':   false,
+        'id': res.user!.uid,
+        'email': email,
+        'first_name': '',
+        'last_name': '',
+        'role': 'guest',
+        'status': 'pending',
+        'email_verified': false,
         'profile_complete': false,
       });
-      debugPrint('SIGNUP: Profil Supabase créé avec succès');
 
       _setStatus(AuthStatus.needsEmailVerification);
-      debugPrint('SIGNUP: Terminé avec succès');
       return null;
     } on FirebaseAuthException catch (e) {
-      debugPrint('SIGNUP FIREBASE_ERROR: [${e.code}] ${e.message}');
       _setStatus(AuthStatus.unauthenticated);
       return _mapFirebaseError(e.code);
     } catch (e) {
-      debugPrint('SIGNUP GENERAL_ERROR: $e');
       _setStatus(AuthStatus.unauthenticated);
       return e.toString();
     }
@@ -251,7 +242,8 @@ class AuthProvider extends ChangeNotifier {
     try {
       _error = null;
       _setStatus(AuthStatus.loading);
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
       return null;
     } on FirebaseAuthException catch (e) {
       _setStatus(AuthStatus.unauthenticated);
@@ -296,58 +288,46 @@ class AuthProvider extends ChangeNotifier {
     File? avatarFile,
   }) async {
     try {
-      debugPrint('PROFILE: Début de completeProfile');
       _uploadingAvatar = true;
       notifyListeners();
 
       final uid = _auth.currentUser?.uid;
-      if (uid == null) {
-        debugPrint('PROFILE ERROR: Aucun UID trouvé (session expirée)');
-        return 'Session expirée';
-      }
+      if (uid == null) return 'Session expirée';
 
       String? avatarUrl;
 
-      // Upload photo si fournie (Storage Supabase reste utilisable avec RLS adaptée)
       if (avatarFile != null) {
-        debugPrint('PROFILE: Upload de l\'avatar (${avatarFile.path})...');
-        final ext  = avatarFile.path.split('.').last;
+        final ext = avatarFile.path.split('.').last;
         final path = 'avatars/$uid.$ext';
         await _sb.storage.from('congress-avatars').upload(
           path,
           avatarFile,
           fileOptions: const sb.FileOptions(upsert: true),
         );
-        avatarUrl = _sb.storage.from('congress-avatars').getPublicUrl(path);
-        debugPrint('PROFILE: Avatar uploadé: $avatarUrl');
+        avatarUrl =
+            _sb.storage.from('congress-avatars').getPublicUrl(path);
       }
 
       final updateData = <String, dynamic>{
-        'first_name':          firstName,
-        'last_name':           lastName,
-        'specialty':           specialty,
-        'institution':         institution,
-        'country':             country,
-        'phone':               phone,
-        'phone_country_code':  phoneCountryCode,
-        'profile_complete':    true,
-        'email_verified':      true,
+        'first_name': firstName,
+        'last_name': lastName,
+        'specialty': specialty,
+        'institution': institution,
+        'country': country,
+        'phone': phone,
+        'phone_country_code': phoneCountryCode,
+        'profile_complete': true,
+        'email_verified': true,
       };
       if (avatarUrl != null) updateData['avatar_url'] = avatarUrl;
 
-      debugPrint('PROFILE: Mise à jour Supabase (congress_users)...');
-      await _sb.from('congress_users')
-          .upsert({
-            'id':    uid,
-            'email': _auth.currentUser?.email,
-            ...updateData,
-          });
-      debugPrint('PROFILE: Profil mis à jour avec succès');
+      await _sb.from('congress_users').upsert({
+        'id': uid,
+        'email': _auth.currentUser?.email,
+        ...updateData,
+      });
 
-      debugPrint('PROFILE: Rechargement des données utilisateur...');
       await _loadAndRouteUser(_auth.currentUser!);
-      debugPrint('PROFILE: Terminé');
-      
       return null;
     } catch (e) {
       debugPrint('PROFILE ERROR: $e');
@@ -365,9 +345,8 @@ class AuthProvider extends ChangeNotifier {
     await _loadAndRouteUser(user);
   }
 
-  // ── Pick and crop avatar ──────────────────────────────────────────
+  // ── Pick avatar ───────────────────────────────────────────────────
   Future<File?> pickAvatar(ImageSource source) async {
-    // Utiliser FilePicker sur Windows ou pour la galerie pour éviter les plantages
     if (Platform.isWindows || source == ImageSource.gallery) {
       final result = await FilePicker.platform.pickFiles(
         type: FileType.image,
@@ -378,8 +357,6 @@ class AuthProvider extends ChangeNotifier {
       }
       return null;
     }
-
-    // ImagePicker reste utilisé pour la caméra sur Mobile
     final picker = ImagePicker();
     final picked = await picker.pickImage(
       source: source,
@@ -394,13 +371,10 @@ class AuthProvider extends ChangeNotifier {
   // ── Sign Out ──────────────────────────────────────────────────────
   Future<void> signOut() async {
     try {
-      // google_sign_in n'est pas supporté sur Windows, on vérifie avant d'appeler
       if (!Platform.isWindows && !Platform.isLinux) {
         await _googleSignIn.signOut();
       }
-    } catch (_) {
-      // Ignorer si le plugin n'est pas initialisé ou non supporté
-    }
+    } catch (_) {}
     await _auth.signOut();
   }
 
