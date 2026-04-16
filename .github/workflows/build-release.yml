@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master ]
     paths-ignore:
-      - 'release.json'   # évite la boucle infinie après le commit du bot
+      - 'release.json'
 
 permissions:
   contents: write
@@ -37,12 +37,10 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x'
           channel: 'stable'
           cache: true
 
       - run: flutter pub get
-
       - run: flutter build apk --release
 
       - uses: actions/upload-artifact@v4
@@ -58,17 +56,29 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x'
           channel: 'stable'
           cache: true
 
       - run: flutter pub get
 
-      - run: flutter build windows
+      # ✅ Build Windows
+      - name: Build Windows app
+        run: flutter build windows
 
+      # ✅ DEBUG (IMPORTANT)
+      - name: Check build output
+        run: dir build\windows\x64\runner\Release
+
+      # ✅ Install Inno Setup
       - run: choco install innosetup -y
 
-      - run: iscc installer/setup.iss
+      # ✅ Build installer
+      - name: Build installer
+        run: iscc installer/setup.iss
+
+      # ✅ DEBUG installer
+      - name: Check installer output
+        run: dir installer\output
 
       - uses: actions/upload-artifact@v4
         with:
@@ -91,8 +101,11 @@ jobs:
         with:
           name: installer.exe
 
+      # ✅ IMPORTANT : renommer correctement
+      - name: Rename installer
+        run: mv installer.exe/*.exe installer.exe || true
+
       - name: Create Release
-        id: create_release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ github.run_number }}
@@ -130,5 +143,3 @@ jobs:
           git add release.json
           git commit -m "MAJ release.json v${{ github.run_number }}" || echo "Rien à commiter"
           git push origin master || echo "Push ignoré"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
