@@ -12,6 +12,9 @@
 Held in the heart of **Oran**, this event brings together leading experts, researchers, and healthcare professionals to share knowledge, innovations, and scientific excellence.
 
 ---
+<a href="https://play.google.com/store/apps/details?id=com.monapp.test" target="_blank">
+   Télécharger l'application
+</a>
 
 ## 🎯 Objectives
 
