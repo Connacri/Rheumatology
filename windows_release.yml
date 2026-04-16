@@ -1,0 +1,56 @@
+# .github/workflows/windows_release.yml
+# Build Flutter Windows + package Inno Setup → artifact téléchargeable
+
+name: Windows Release
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      # ── 1. Checkout ──────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Flutter setup ─────────────────────────────────────────
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Flutter version
+        run: flutter --version
+
+      # ── 3. Dépendances ───────────────────────────────────────────
+      - name: Get dependencies
+        run: flutter pub get
+
+      # ── 4. Build Windows ─────────────────────────────────────────
+      - name: Build Windows Release
+        run: flutter build windows --release
+
+      # ── 5. Créer le dossier output de l'installeur ───────────────
+      - name: Create installer output directory
+        run: New-Item -ItemType Directory -Force -Path installer\output
+        shell: pwsh
+
+      # ── 6. Inno Setup ────────────────────────────────────────────
+      - name: Build Installer with Inno Setup
+        run: iscc installer\setup.iss
+        shell: pwsh
+
+      # ── 7. Upload artifact ───────────────────────────────────────
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CongressOran-Windows-Installer
+          path: installer\output\*.exe
+          retention-days: 30
