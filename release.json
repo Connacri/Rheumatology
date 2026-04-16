@@ -1,14 +1,14 @@
 {
-  "version": "v20",
-  "tag": "v20",
-  "date": "2026-04-16T10:32:45Z",
+  "version": "v28",
+  "tag": "v28",
+  "date": "2026-04-16T12:51:48Z",
   "platforms": {
     "android": {
-      "url": "https://github.com/Connacri/Rheumatology/releases/download/v20/app-release.apk",
+      "url": "https://github.com/Connacri/Rheumatology/releases/download/v28/app-release.apk",
       "name": "app-release.apk"
     },
     "windows": {
-      "url": "https://github.com/Connacri/Rheumatology/releases/download/v20/installer.exe",
+      "url": "https://github.com/Connacri/Rheumatology/releases/download/v28/installer.exe",
       "name": "installer.exe"
     }
   }
