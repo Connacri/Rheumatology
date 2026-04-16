@@ -9,7 +9,7 @@
 //   • AuthProvider.stub() évite tout appel à FirebaseAuth.instance.
 //   • GoRouter de test pointe sur '/test' → Scaffold simple.
 
-import 'package:congres/main.dart';
+import 'package:aamro/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +18,7 @@ void main() {
   testWidgets('Smoke test — app démarre sans crash', (WidgetTester tester) async {
     // On n'appelle PAS main() pour ne pas déclencher Supabase.initialize().
     // On monte directement le widget en mode test.
-    await tester.pumpWidget(const CongressOranApp(isTest: true));
+    await tester.pumpWidget(const AAMROApp(isTest: true));
 
     // Laisse Flutter résoudre les frames et les futures synchrones.
     await tester.pump();

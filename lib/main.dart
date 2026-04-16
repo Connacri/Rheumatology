@@ -44,21 +44,21 @@ Future<void> main({bool isTest = false}) async {
     httpClient: SupabaseAuthInterceptor(),
   );
 
-  runApp(CongressOranApp(isTest: isTest));
+  runApp(AAMROApp(isTest: isTest));
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// CongressOranApp
+// AAMROApp
 // ═══════════════════════════════════════════════════════════════════
-class CongressOranApp extends StatefulWidget {
+class AAMROApp extends StatefulWidget {
   final bool isTest;
-  const CongressOranApp({super.key, this.isTest = false});
+  const AAMROApp({super.key, this.isTest = false});
 
   @override
-  State<CongressOranApp> createState() => _CongressOranAppState();
+  State<AAMROApp> createState() => _AAMROAppState();
 }
 
-class _CongressOranAppState extends State<CongressOranApp> {
+class _AAMROAppState extends State<AAMROApp> {
   // Nullable intentionnel :
   //   - test → initialisé dans initState (pas de provider needed)
   //   - prod → initialisé dans le Builder (contexte provider requis)
@@ -102,7 +102,7 @@ class _CongressOranAppState extends State<CongressOranApp> {
         builder: (ctx) {
           _router ??= AppRouter.router(ctx.read<AuthProvider>());
           return MaterialApp.router(
-            title: '14ème Congrès Rhumatologie Oran',
+            title: 'AAMRO',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.light,
             darkTheme: AppTheme.displayDark,
