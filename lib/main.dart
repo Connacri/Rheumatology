@@ -12,7 +12,7 @@ import 'providers/admin_provider.dart';
 
 import 'firebase_options.dart';
 
-// ── Supabase config ────────────────────────────────────────────────
+// //── Supabase config ────────────────────────────────────────────────
 const supabaseUrl = 'https://tkmzeywijodhoudjgtxr.supabase.co';
 const supabaseAnonKey =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRrbXpleXdpam9kaG91ZGpndHhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NzgwNTEsImV4cCI6MjA5MTM1NDA1MX0.s4Ip4JHH3coBUVRmmde5gH6L9_Z4y7POXKN0l9R63AE';
