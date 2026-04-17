@@ -1,6 +1,7 @@
 // ═══════════════════════════════════════════════════════════════════
 // screens/admin/user_list_screen.dart
 // ═══════════════════════════════════════════════════════════════════
+import 'package:aamro/screens/admin/compte_creation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -386,7 +387,15 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
-          children: [
+          children: [   const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => const compteCreation()));
+
+              },
+              child: const Text("Créer des comptes"),
+            ),   const SizedBox(height: 16),
             // ── Card profil ──
             _buildProfileCard(u),
             const SizedBox(height: 16),

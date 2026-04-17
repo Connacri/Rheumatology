@@ -5,18 +5,12 @@ import '../providers/auth_provider.dart';
 import '../screens/admin/admin_screens.dart';
 import '../screens/auth/auth_screens.dart';
 import '../screens/splash_screen.dart';
-
 import '../screens/auth/profile_completion_screen.dart';
-
-
-
 import '../screens/receptionist/receptionist_dashboard_screen.dart';
 import '../screens/receptionist/qr_scanner_screen.dart';
-
 import '../screens/guest/badge_qr_screen.dart';
 import '../screens/guest/program_timeline_screen.dart';
 import '../screens/guest/qa_screen.dart';
-
 import '../screens/display/grand_ecran_screen.dart';
 
 class AppRouter {
