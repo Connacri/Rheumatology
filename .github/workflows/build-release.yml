@@ -40,8 +40,16 @@ jobs:
           channel: 'stable'
           cache: true
 
+      - name: Extract version and Update pubspec.yaml
+        run: |
+          VERSION_NAME=$(grep 'version: ' pubspec.yaml | sed 's/version: //' | cut -d'+' -f1 | tr -d '[:space:]')
+          echo "Building version $VERSION_NAME+${{ github.run_number }}"
+          sed -i "s/^version: .*/version: $VERSION_NAME+${{ github.run_number }}/" pubspec.yaml
+
       - run: flutter pub get
-      - run: flutter build apk --release
+      - name: Build APK
+        run: |
+          flutter build apk --release --build-name=$(grep 'version: ' pubspec.yaml | sed 's/version: //' | cut -d'+' -f1 | tr -d '[:space:]') --build-number=${{ github.run_number }}
 
       - uses: actions/upload-artifact@v4
         with:
@@ -58,6 +66,22 @@ jobs:
         with:
           channel: 'stable'
           cache: true
+
+      - name: Increment Windows Version
+        shell: pwsh
+        run: |
+          $content = Get-Content pubspec.yaml -Raw
+          if ($content -match 'version:\s+([^\+]+)\+') {
+              $versionName = $Matches[1].Trim()
+              $newVersion = "$versionName+${{ github.run_number }}"
+              $content -replace '^version: .*', "version: $newVersion" | Set-Content pubspec.yaml
+              
+              $setupContent = Get-Content installer/setup.iss -Raw
+              $setupContent -replace '#define AppVersion\s+".*"', "#define AppVersion `"$versionName.${{ github.run_number }}`"" | Set-Content installer/setup.iss
+              
+              Write-Host "Updated pubspec.yaml to $newVersion"
+              Write-Host "Updated setup.iss version to $versionName.${{ github.run_number }}"
+          }
 
       - run: flutter pub get
 
@@ -116,11 +140,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Générer release.json
+      - name: Générer release.json et mettre à jour les fichiers
         run: |
+          VERSION_NAME=$(grep 'version: ' pubspec.yaml | sed 's/version: //' | cut -d'+' -f1)
+          NEW_VERSION="$VERSION_NAME+${{ github.run_number }}"
+          
+          # Mise à jour des fichiers pour le commit final
+          sed -i "s/^version: .*/version: $NEW_VERSION/" pubspec.yaml
+          sed -i "s/#define AppVersion   \".*\"/#define AppVersion   \"$VERSION_NAME.${{ github.run_number }}\"/" installer/setup.iss
+
           cat > release.json << EOF
           {
-            "version": "v${{ github.run_number }}",
+            "version": "$VERSION_NAME.${{ github.run_number }}",
             "tag": "v${{ github.run_number }}",
             "date": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
             "platforms": {
@@ -136,10 +167,10 @@ jobs:
           }
           EOF
 
-      - name: Commit release.json
+      - name: Commit version updates and release.json
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add release.json
-          git commit -m "MAJ release.json v${{ github.run_number }}" || echo "Rien à commiter"
+          git add release.json pubspec.yaml installer/setup.iss
+          git commit -m "chore: bump version to ${{ github.run_number }} and update release.json [skip ci]" || echo "Rien à commiter"
           git push origin master || echo "Push ignoré"

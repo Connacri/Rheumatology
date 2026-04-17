@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "456602364782-r60ql59cqfhast6dgih3flg9su4eun8n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rhumato.oran.congres",
+            "certificate_hash": "503bca0e7d9cf11193b8a34339154f33bc34aace"
+          }
+        },
+        {
           "client_id": "456602364782-q5tvhujm6hg6flh38h0aplkse03cvk3d.apps.googleusercontent.com",
           "client_type": 3
         }

@@ -42,12 +42,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyB44rzprsmw_spoKHyjgk4-ea7iNi7lV9I',
-    appId: '1:456602364782:web:752b89c341e24161c9af7f',
+    appId: '1:456602364782:web:54162687fb32ea0dc9af7f',
     messagingSenderId: '456602364782',
     projectId: 'rheumatology-4f669',
     authDomain: 'rheumatology-4f669.firebaseapp.com',
     storageBucket: 'rheumatology-4f669.firebasestorage.app',
-    measurementId: 'G-BCK6DN7MF3',
+    measurementId: 'G-92XZWNQ6VX',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
@@ -64,6 +64,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '456602364782',
     projectId: 'rheumatology-4f669',
     storageBucket: 'rheumatology-4f669.firebasestorage.app',
+    androidClientId: '456602364782-r60ql59cqfhast6dgih3flg9su4eun8n.apps.googleusercontent.com',
     iosClientId: '456602364782-81kcri4v16s8fhpd2eqg027drdg6s5nb.apps.googleusercontent.com',
     iosBundleId: 'com.rhumato.oran.congres',
   );
@@ -74,18 +75,19 @@ class DefaultFirebaseOptions {
     messagingSenderId: '456602364782',
     projectId: 'rheumatology-4f669',
     storageBucket: 'rheumatology-4f669.firebasestorage.app',
+    androidClientId: '456602364782-r60ql59cqfhast6dgih3flg9su4eun8n.apps.googleusercontent.com',
     iosClientId: '456602364782-81kcri4v16s8fhpd2eqg027drdg6s5nb.apps.googleusercontent.com',
     iosBundleId: 'com.rhumato.oran.congres',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
     apiKey: 'AIzaSyB44rzprsmw_spoKHyjgk4-ea7iNi7lV9I',
-    appId: '1:456602364782:web:54162687fb32ea0dc9af7f',
+    appId: '1:456602364782:web:048ea312df0a6751c9af7f',
     messagingSenderId: '456602364782',
     projectId: 'rheumatology-4f669',
     authDomain: 'rheumatology-4f669.firebaseapp.com',
     storageBucket: 'rheumatology-4f669.firebasestorage.app',
-    measurementId: 'G-92XZWNQ6VX',
+    measurementId: 'G-688VLWJ592',
   );
 
 }
