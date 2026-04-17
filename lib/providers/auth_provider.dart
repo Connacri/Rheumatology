@@ -17,7 +17,10 @@ enum AuthStatus {
 
 class AuthProvider extends ChangeNotifier {
   late final FirebaseAuth _auth;
-  final _googleSignIn = GoogleSignIn(scopes: ['email', 'profile']);
+  final _googleSignIn = GoogleSignIn(
+    serverClientId: '456602364782-q5tvhujm6hg6flh38h0aplkse03cvk3d.apps.googleusercontent.com',
+    scopes: ['email', 'profile'],
+  );
 
   // Supabase client — nullable pour les stubs de test.
   sb.SupabaseClient? _sbClient;
@@ -188,7 +191,9 @@ class AuthProvider extends ChangeNotifier {
       }
 
       return null;
-    } catch (e) {
+    } catch (e, stack) {
+      debugPrint('Google Sign-In Error: $e');
+      debugPrint('Stack trace: $stack');
       _setStatus(AuthStatus.unauthenticated);
       return e.toString();
     }
@@ -228,7 +233,9 @@ class AuthProvider extends ChangeNotifier {
     } on FirebaseAuthException catch (e) {
       _setStatus(AuthStatus.unauthenticated);
       return _mapFirebaseError(e.code);
-    } catch (e) {
+    } catch (e, stack) {
+      debugPrint('Google Sign-In Error: $e');
+      debugPrint('Stack trace: $stack');
       _setStatus(AuthStatus.unauthenticated);
       return e.toString();
     }
@@ -248,7 +255,9 @@ class AuthProvider extends ChangeNotifier {
     } on FirebaseAuthException catch (e) {
       _setStatus(AuthStatus.unauthenticated);
       return _mapFirebaseError(e.code);
-    } catch (e) {
+    } catch (e, stack) {
+      debugPrint('Google Sign-In Error: $e');
+      debugPrint('Stack trace: $stack');
       _setStatus(AuthStatus.unauthenticated);
       return e.toString();
     }
