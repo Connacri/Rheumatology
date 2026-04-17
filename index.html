@@ -568,13 +568,13 @@
     class="btn btn-primary"
     aria-label="Télécharger l'application Android"
   >
-    <span class="icon" id="versionText">
+    <span class="icon">
       <!-- Icône Android SVG officielle -->
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0001.5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.022 3.5025C15.5907 8.389 13.8533 8 12 8s-3.5907.389-5.1373 1.0492L4.8406 5.5467a.416.416 0 00-.5676-.1521.416.416 0 00-.1521.5676l1.9973 3.4592C2.8447 11.0205 2 13.4157 2 16v2h20v-2c0-2.5843-.8447-4.9795-4.1185-6.6786M12 13a1 1 0 110-2 1 1 0 010 2"/>
       </svg>
     </span>
-    <span>Télécharger l'application</span>
+    <span id="versionText">Télécharger l'application</span>
   </a></div>
     <div class="countdown-card">
       <div class="countdown-container">
@@ -592,7 +592,7 @@
 <div class="yt-container">
  <iframe
   src="https://www.youtube.com/embed/xLzFe17DzQU?autoplay=1"
-  frameborder="0"
+
   allow="autoplay; encrypted-media"
   allowfullscreen>
 </iframe>
@@ -931,7 +931,7 @@
       </div>
       <div class="poster-grid">
         <article class="poster-card"><div class="poster-code">S13</div><h4 class="poster-title">Adult-Onset Still's Disease Revealed in the Postpartum Period: A Case Report</h4><p class="poster-meta">University Hospital - Oran</p></article>
-        <article class="poster-card"><div class="poster-code">S14</div><h4 class="poster-title">The Impact of Anti-CCP on the Early Onset of Rheumatoid Arthritis in the Region of Sidi Bel Abbes</h4><p class="poster-meta">University - Sidi Bel Abbes</p></article>
+        <article class="poster-card"><div class="poster-code">S14</div><h4 class="poster-title">The Impact of Anti-CCP on the Early Onset of Rheumatoid Arthritis in the Region of Sidi Bel Abbés</h4><p class="poster-meta">University - Sidi Bel Abbés</p></article>
         <article class="poster-card"><div class="poster-code">S15</div><h4 class="poster-title">Chronic Polyarthralgia Revealing Whipple’s Disease: A Case Report</h4><p class="poster-meta">University Hospital - Tlemcen</p></article>
         <article class="poster-card"><div class="poster-code">S16</div><h4 class="poster-title">Atrophic Polychondritis by Acute Polyarthritis: A Case Report</h4><p class="poster-meta">University Hospital - Tizi Ouzou</p></article>
         <article class="poster-card"><div class="poster-code">S17</div><h4 class="poster-title">Late-Onset Neuro-Sjögren: Sensory Ganglionopathy and Cochleovestibular Involvement in a 70-Year-Old Woman: A Case Report</h4><p class="poster-meta">University Hospital - Oran</p></article>
@@ -961,7 +961,7 @@
         <article class="poster-card"><div class="poster-code">S07</div><h4 class="poster-title">Psoriatic Arthritis or Rheumatoid Arthritis?: A Case Report</h4><p class="poster-meta">Hospital - Balaska, Oran</p></article>
         <article class="poster-card"><div class="poster-code">S08</div><h4 class="poster-title">Chronic Arthralgia in Young Adults: Think of Marfan Syndrome</h4><p class="poster-meta">University Hospital - Tlemcen</p></article>
         <article class="poster-card"><div class="poster-code">S09</div><h4 class="poster-title">Juvenile Idiopathic Arthritis: Experience of the Rheumatology Department of Bab El Oued University Hospital - Algiers</h4><p class="poster-meta">University Hospital - Bab El Oued, Algiers</p></article>
-        <article class="poster-card"><div class="poster-code">S10</div><h4 class="poster-title">Vitamin D Status: A Key Factor in the Severity of Rheumatoid Arthritis</h4><p class="poster-meta">University - Sidi Bel Abbes</p></article>
+        <article class="poster-card"><div class="poster-code">S10</div><h4 class="poster-title">Vitamin D Status: A Key Factor in the Severity of Rheumatoid Arthritis</h4><p class="poster-meta">University - Sidi Bel Abbés</p></article>
         <article class="poster-card"><div class="poster-code">S11</div><h4 class="poster-title">HLA-B27 Profile in Algerian Patients with Ankylosing Spondylitis</h4><p class="poster-meta">Molecular Microbiology Lab - Sidi Bel Abbes</p></article>
         <article class="poster-card"><div class="poster-code">S12</div><h4 class="poster-title">Severe Rheumatoid Arthritis and Multimorbidity: Navigating a Therapeutic Impasse</h4><p class="poster-meta">University Hospital - Constantine</p></article>
       </div>
@@ -1457,7 +1457,7 @@
 
     const obs = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    }, { threshold: 0.1, rootMargin: '0px -50px 0px' });
     document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el => obs.observe(el));
 
     const co = new IntersectionObserver(entries => {
@@ -1520,13 +1520,25 @@ setTimeout(() => {
 }, 3000);
 
   async function loadRelease() {
-  const res = await fetch("release.json");
-  const data = await res.json();
+    try {
+      const res = await fetch("release.json?t=" + new Date().getTime());
+      if (!res.ok) throw new Error('Failed to fetch release info');
+      const data = await res.json();
 
-  document.getElementById("downloadBtn").href = data.platforms.android.url;
-  document.getElementById("versionText").innerText = "Version " + data.version;
-}
-loadRelease();
+      const btn = document.getElementById("downloadBtn");
+      const text = document.getElementById("versionText");
+
+      if (btn && data.platforms?.android?.url) {
+        btn.href = data.platforms.android.url;
+      }
+      if (text && data.version) {
+        text.innerText = "Télécharger " + data.version;
+      }
+    } catch (e) {
+      console.error('Error loading release:', e);
+    }
+  }
+  loadRelease();
 
 </script>
 </body>
