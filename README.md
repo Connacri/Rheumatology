@@ -12,14 +12,14 @@
 Held in the heart of **Oran**, this event brings together leading experts, researchers, and healthcare professionals to share knowledge, innovations, and scientific excellence.
 
 ---
-<a href="https://release-assets.githubusercontent.com/github-production-release-asset/1205809017/28708926-246c-4a10-bbe4-d537c37108e4?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-04-16T13%3A22%3A41Z&rscd=attachment%3B+filename%3Dapp-release.apk&rsct=application%2Fvnd.android.package-archive&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-04-16T12%3A21%3A48Z&ske=2026-04-16T13%3A22%3A41Z&sks=b&skv=2018-11-09&sig=LqN1HT8mgxO6TiFgceQCdABK9NYDrJ9XGd5ukOTYV4c%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc3NjM0MzkwOSwibmJmIjoxNzc2MzQyMTA5LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.rxAF5Sy8EgAf5ET_rLJSudULhJHuFKYJTsUk1Lq0SCs&response-content-disposition=attachment%3B%20filename%3Dapp-release.apk&response-content-type=application%2Fvnd.android.package-archive"
+<a href="https://github.com/Connacri/Rheumatology/releases/latest/download/app-release.apk"
    target="_blank"
    style="
       display:inline-flex;
       align-items:center;
       gap:10px;
       padding:12px 18px;
-      background-color:#1a73e8;
+      background-color:#2e7d32;
       color:white;
       text-decoration:none;
       border-radius:10px;
@@ -28,15 +28,12 @@ Held in the heart of **Oran**, this event brings together leading experts, resea
       box-shadow:0 4px 10px rgba(0,0,0,0.15);
    ">
 
-   <!-- Icône Play Store -->
-   <svg width="22" height="22" viewBox="0 0 512 512" fill="none">
-      <path d="M325.3 234.3L104.6 13.6C97.9 6.9 89.2 3.6 80.5 3.6c-4.4 0-8.8.9-13 2.6L292.7 240 325.3 234.3z" fill="#34A853"/>
-      <path d="M104.6 13.6l220.7 220.7 69.2-69.2L129.6 1.2C118.3-2.3 106.2 0 97.9 6.9l6.7 6.7z" fill="#FBBC04"/>
-      <path d="M104.6 498.4l220.7-220.7-32.6-5.7L91.8 499.4c8.3 6.9 20.4 9.2 31.7 5.7z" fill="#EA4335"/>
-      <path d="M325.3 277.7L104.6 498.4c8.7 7 20.8 9.1 31.9 5.7l289.3-167.1c10.6-6.1 17.2-17.3 17.2-29.3s-6.6-23.2-17.2-29.3l-100.5-57.7z" fill="#4285F4"/>
+   <!-- Icône Android -->
+   <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
+      <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0001.5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.022 3.5025C15.5907 8.389 13.8533 8 12 8s-3.5907.389-5.1373 1.0492L4.8406 5.5467a.416.416 0 00-.5676-.1521.416.416 0 00-.1521.5676l1.9973 3.4592C2.8447 11.0205 2 13.4157 2 16v2h20v-2c0-2.5843-.8447-4.9795-4.1185-6.6786M12 13a1 1 0 110-2 1 1 0 010 2"/>
    </svg>
 
-   Télécharger sur Play Store
+   Télécharger l'APK (Dernière version)
 </a>
 
 
