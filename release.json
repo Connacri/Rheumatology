@@ -1,14 +1,14 @@
 {
-  "version": "v32",
-  "tag": "v32",
-  "date": "2026-04-16T20:06:37Z",
+  "version": "v35",
+  "tag": "v35",
+  "date": "2026-04-17T08:11:27Z",
   "platforms": {
     "android": {
-      "url": "https://github.com/Connacri/Rheumatology/releases/download/v32/app-release.apk",
+      "url": "https://github.com/Connacri/Rheumatology/releases/download/v35/app-release.apk",
       "name": "app-release.apk"
     },
     "windows": {
-      "url": "https://github.com/Connacri/Rheumatology/releases/download/v32/installer.exe",
+      "url": "https://github.com/Connacri/Rheumatology/releases/download/v35/installer.exe",
       "name": "installer.exe"
     }
   }
