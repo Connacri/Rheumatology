@@ -1,5 +1,5 @@
 #define AppName      "Congrès Rhumatologie Oran"
-#define AppVersion   "1.0.0"
+#define AppVersion   "1.0.0.43"
 #define AppPublisher "AAMRO"
 #define BuildDir     "..\build\windows\x64\runner\Release"
 

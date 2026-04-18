@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -562,21 +562,20 @@
 
 <br>
 <div class="hero-btns">
-  <!-- Bouton de téléchargement vers la dernière version GitHub -->
-  <a id="downloadBtn" href="https://github.com/Connacri/Rheumatology/releases/latest/download/app-release.apk"
+  <!-- Bouton de téléchargement -->
+  <a id="downloadBtn" href="https://release-assets.githubusercontent.com/github-production-release-asset/1205809017/dcef61cc-9f26-4813-bbc9-d1781ca28064?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-04-18T08%3A47%3A23Z&rscd=attachment%3B+filename%3Dapp-release.apk&rsct=application%2Fvnd.android.package-archive&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-04-18T07%3A46%3A44Z&ske=2026-04-18T08%3A47%3A23Z&sks=b&skv=2018-11-09&sig=Oly8bZrFns7LJWzp97%2F5wo416rAwF1l3Mpocq4eLfic%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc3NjUwMDIwNCwibmJmIjoxNzc2NDk4NDA0LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.HwBKnl6MWjywGDw5cvmOFF1mzmF3KPF2EAHR3CjkxyY&response-content-disposition=attachment%3B%20filename%3Dapp-release.apk&response-content-type=application%2Fvnd.android.package-archive"
     target="_blank"
     class="btn btn-primary"
     aria-label="Télécharger l'application Android"
   >
     <span class="icon">
-      <!-- Icône Android SVG -->
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width: 20px; height: 20px; margin-right: 8px;">
+      <!-- Icône Android SVG officielle -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0001.5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.022 3.5025C15.5907 8.389 13.8533 8 12 8s-3.5907.389-5.1373 1.0492L4.8406 5.5467a.416.416 0 00-.5676-.1521.416.416 0 00-.1521.5676l1.9973 3.4592C2.8447 11.0205 2 13.4157 2 16v2h20v-2c0-2.5843-.8447-4.9795-4.1185-6.6786M12 13a1 1 0 110-2 1 1 0 010 2"/>
       </svg>
     </span>
-    <span id="versionText">Télécharger l'APK</span>
-  </a>
-</div>
+    <span id="versionText">Télécharger l'application</span>
+  </a></div>
     <div class="countdown-card">
       <div class="countdown-container">
         <div class="count-item"><span class="count-num" id="countdown-days">000</span><span class="count-label">Days</span></div>
@@ -1520,29 +1519,50 @@ setTimeout(() => {
   document.querySelector(".skip-btn").style.display = "block";
 }, 3000);
 
-  async function loadRelease() {
+  
+
+         async function loadRelease() {
     try {
-      const res = await fetch("release.json?t=" + new Date().getTime());
-      if (!res.ok) return; // Silent return if file doesn't exist yet
-      const data = await res.json();
+        const res = await fetch(`release.json?t=${Date.now()}`, {
+            cache: "no-store",
+            headers: {
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache'
+            }
+        });
 
-      const btn = document.getElementById("downloadBtn");
-      const text = document.getElementById("versionText");
+        if (!res.ok) {
+            throw new Error(`Erreur HTTP: ${res.status}`);
+        }
 
-      // Mise à jour de l'URL si présente dans le JSON
-      if (btn && data.platforms?.android?.url) {
-        btn.href = data.platforms.android.url;
-      }
+        const data = await res.json();
+        console.log("✅ JSON chargé :", data);   // Pour voir si ça marche
 
-      // Affichage dynamique de la version (ex: "v38")
-      if (text && data.version) {
-        text.innerText = "Télécharger " + data.version;
-      }
-    } catch (e) {
-      console.warn('Release info not yet available, using defaults.');
+        // Mise à jour du bouton
+        const btn = document.getElementById("downloadBtn");
+        const text = document.getElementById("versionText");
+
+        if (btn && data.platforms?.android?.url) {
+            btn.href = data.platforms.android.url;
+            console.log("✅ Lien mis à jour :", btn.href);
+        } else {
+            console.warn("⚠️ Bouton ou URL Android non trouvé");
+        }
+
+        // Mise à jour du texte
+        if (text && data.version) {
+            text.innerText = `Télécharger ${data.version}`;
+            console.log("✅ Texte mis à jour :", text.innerText);
+        }
+
+    } catch (error) {
+        console.error("❌ Erreur loadRelease :", error);
     }
-  }
-  loadRelease();
+}
+
+// Important : attendre que la page soit complètement chargée
+document.addEventListener("DOMContentLoaded", loadRelease);
+
 
 </script>
 </body>
