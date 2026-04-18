@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -1519,53 +1519,50 @@ setTimeout(() => {
   document.querySelector(".skip-btn").style.display = "block";
 }, 3000);
 
-  async function loadRelease() {
-    try {
-        const timestamp = Date.now(); // Pour forcer le rafraîchissement
+  
 
-        const res = await fetch(`release.json?t=${timestamp}`, {
-            cache: "no-store",           // Force le navigateur à ignorer complètement le cache
+         async function loadRelease() {
+    try {
+        const res = await fetch(`release.json?t=${Date.now()}`, {
+            cache: "no-store",
             headers: {
                 'Cache-Control': 'no-cache, no-store, must-revalidate',
-                'Pragma': 'no-cache',
-                'Expires': '0'
+                'Pragma': 'no-cache'
             }
         });
 
         if (!res.ok) {
-            throw new Error(`HTTP error! Status: ${res.status}`);
+            throw new Error(`Erreur HTTP: ${res.status}`);
         }
 
         const data = await res.json();
+        console.log("✅ JSON chargé :", data);   // Pour voir si ça marche
 
-        console.log("Données chargées :", data); // ← Très utile pour debugger
-
+        // Mise à jour du bouton
         const btn = document.getElementById("downloadBtn");
         const text = document.getElementById("versionText");
 
         if (btn && data.platforms?.android?.url) {
             btn.href = data.platforms.android.url;
-            console.log("Lien mis à jour :", btn.href);
+            console.log("✅ Lien mis à jour :", btn.href);
         } else {
-            console.warn("Bouton ou URL Android non trouvé dans le JSON");
+            console.warn("⚠️ Bouton ou URL Android non trouvé");
         }
 
+        // Mise à jour du texte
         if (text && data.version) {
             text.innerText = `Télécharger ${data.version}`;
+            console.log("✅ Texte mis à jour :", text.innerText);
         }
 
-    } catch (e) {
-        console.error('Erreur lors du chargement du release.json :', e);
-        // Optionnel : afficher un message à l'utilisateur
-        // document.getElementById("errorMsg").innerText = "Impossible de charger la dernière version";
+    } catch (error) {
+        console.error("❌ Erreur loadRelease :", error);
     }
 }
 
-// Exécuter au chargement de la page
-window.addEventListener('load', loadRelease);
+// Important : attendre que la page soit complètement chargée
+document.addEventListener("DOMContentLoaded", loadRelease);
 
-// Ou si tu préfères directement :
-loadRelease();
 
 </script>
 </body>
