@@ -1521,24 +1521,51 @@ setTimeout(() => {
 
   async function loadRelease() {
     try {
-      const res = await fetch("release.json?t=" + new Date().getTime());
-      if (!res.ok) throw new Error('Failed to fetch release info');
-      const data = await res.json();
+        const timestamp = Date.now(); // Pour forcer le rafraîchissement
 
-      const btn = document.getElementById("downloadBtn");
-      const text = document.getElementById("versionText");
+        const res = await fetch(`release.json?t=${timestamp}`, {
+            cache: "no-store",           // Force le navigateur à ignorer complètement le cache
+            headers: {
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
+            }
+        });
 
-      if (btn && data.platforms?.android?.url) {
-        btn.href = data.platforms.android.url;
-      }
-      if (text && data.version) {
-        text.innerText = "Télécharger " + data.version;
-      }
+        if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+
+        const data = await res.json();
+
+        console.log("Données chargées :", data); // ← Très utile pour debugger
+
+        const btn = document.getElementById("downloadBtn");
+        const text = document.getElementById("versionText");
+
+        if (btn && data.platforms?.android?.url) {
+            btn.href = data.platforms.android.url;
+            console.log("Lien mis à jour :", btn.href);
+        } else {
+            console.warn("Bouton ou URL Android non trouvé dans le JSON");
+        }
+
+        if (text && data.version) {
+            text.innerText = `Télécharger ${data.version}`;
+        }
+
     } catch (e) {
-      console.error('Error loading release:', e);
+        console.error('Erreur lors du chargement du release.json :', e);
+        // Optionnel : afficher un message à l'utilisateur
+        // document.getElementById("errorMsg").innerText = "Impossible de charger la dernière version";
     }
-  }
-  loadRelease();
+}
+
+// Exécuter au chargement de la page
+window.addEventListener('load', loadRelease);
+
+// Ou si tu préfères directement :
+loadRelease();
 
 </script>
 </body>
