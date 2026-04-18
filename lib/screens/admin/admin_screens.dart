@@ -248,6 +248,8 @@ class _UserCard extends StatelessWidget {
                       Text(user.institution!,
                           style: AppTextStyles.labelSmall,
                           overflow: TextOverflow.ellipsis),
+                    Text(user.email.toString(),
+                        style: const TextStyle(fontSize: 10, color: AppColors.textMuted)),
                     const SizedBox(height: 4),
                     Row(
                       children: [

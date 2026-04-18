@@ -5,6 +5,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
 import '../models/models.dart';
 
 enum AuthStatus {
@@ -17,10 +19,9 @@ enum AuthStatus {
 
 class AuthProvider extends ChangeNotifier {
   late final FirebaseAuth _auth;
-  final _googleSignIn = GoogleSignIn(
-    serverClientId: '456602364782-q5tvhujm6hg6flh38h0aplkse03cvk3d.apps.googleusercontent.com',
-    scopes: ['email', 'profile'],
-  );
+  
+  // Dans la version 7.0+, GoogleSignIn utilise un singleton
+  final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
 
   // Supabase client — nullable pour les stubs de test.
   sb.SupabaseClient? _sbClient;
@@ -147,27 +148,49 @@ class AuthProvider extends ChangeNotifier {
     try {
       _error = null;
       _setStatus(AuthStatus.loading);
+      debugPrint('Démarrage de Google Sign-In (v7.2.0)...');
 
-      final googleUser = await _googleSignIn.signIn();
+      // 1. Initialisation (scopes ne sont plus passés ici dans la v7.2)
+      await _googleSignIn.initialize(
+        serverClientId: '456602364782-q5tvhujm6hg6flh38h0aplkse03cvk3d.apps.googleusercontent.com',
+      );
+
+      // 2. Authentification (Identité)
+      final googleUser = await _googleSignIn.authenticate();
+
       if (googleUser == null) {
+        debugPrint('Google Sign-In annulé par l\'utilisateur.');
         _setStatus(AuthStatus.unauthenticated);
         return 'Connexion annulée';
       }
 
+      debugPrint('Utilisateur Google obtenu: ${googleUser.email}');
+
+      // 3. Obtenir les détails d'authentification (idToken)
       final googleAuth = await googleUser.authentication;
+      
+      // 4. Obtenir l'autorisation pour les scopes via authorizationClient (v7.2+)
+      final scopes = ['email', 'profile', 'openid'];
+      final authorization = await googleUser.authorizationClient.authorizeScopes(scopes);
+      final accessToken = authorization.accessToken;
+
+      // 5. Créer le credential Firebase
       final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
+        accessToken: accessToken,
         idToken: googleAuth.idToken,
       );
 
+      debugPrint('Tentative de connexion à Firebase avec le credential Google...');
       final userCredential = await _auth.signInWithCredential(credential);
       final firebaseUser = userCredential.user;
 
       if (firebaseUser == null) {
-        _setStatus(AuthStatus.unauthenticated);
-        return 'Erreur d\'authentification Firebase';
+        throw 'Erreur lors de la récupération de l\'utilisateur Firebase.';
       }
 
+      debugPrint('Connexion Firebase réussie: ${firebaseUser.uid}');
+
+      // 5. Synchronisation avec Supabase
       final existing = await _sb
           .from('congress_users')
           .select('id')
@@ -175,12 +198,12 @@ class AuthProvider extends ChangeNotifier {
           .maybeSingle();
 
       if (existing == null) {
+        debugPrint('Nouvel utilisateur détecté, création du profil dans Supabase...');
         await _sb.from('congress_users').insert({
           'id': firebaseUser.uid,
           'email': firebaseUser.email,
           'first_name': firebaseUser.displayName?.split(' ').first ?? '',
-          'last_name':
-          firebaseUser.displayName?.split(' ').skip(1).join(' ') ?? '',
+          'last_name': firebaseUser.displayName?.split(' ').skip(1).join(' ') ?? '',
           'avatar_url': firebaseUser.photoURL,
           'google_id': firebaseUser.uid,
           'role': 'guest',
@@ -192,11 +215,30 @@ class AuthProvider extends ChangeNotifier {
 
       return null;
     } catch (e, stack) {
-      debugPrint('Google Sign-In Error: $e');
+      debugPrint('ERREUR CRITIQUE Google Sign-In: $e');
       debugPrint('Stack trace: $stack');
+      
+      // En cas d'erreur, on déconnecte Google pour permettre une nouvelle tentative propre
+      try {
+        await _googleSignIn.signOut();
+      } catch (_) {}
+      
+      _error = _handleGoogleError(e);
       _setStatus(AuthStatus.unauthenticated);
-      return e.toString();
+      return _error;
     }
+  }
+
+  String _handleGoogleError(dynamic e) {
+    final errorStr = e.toString().toLowerCase();
+    if (errorStr.contains('network_error')) {
+      return 'Erreur réseau. Vérifiez votre connexion.';
+    } else if (errorStr.contains('12500') || errorStr.contains('10')) {
+      return 'Erreur de configuration Google (SHA-1/Package Name). Vérifiez que les clés SHA sont bien sur Firebase.';
+    } else if (errorStr.contains('access_denied')) {
+      return 'Accès refusé par Google.';
+    }
+    return 'Une erreur est survenue : $e';
   }
 
   // ── Email Sign Up ─────────────────────────────────────────────────
@@ -229,6 +271,10 @@ class AuthProvider extends ChangeNotifier {
       });
 
       _setStatus(AuthStatus.needsEmailVerification);
+      
+      // Envoi du mail de bienvenue (Optionnel)
+      _sendWelcomeEmail(email, password);
+      
       return null;
     } on FirebaseAuthException catch (e) {
       _setStatus(AuthStatus.unauthenticated);
@@ -246,20 +292,38 @@ class AuthProvider extends ChangeNotifier {
     required String email,
     required String password,
   }) async {
+// ... (rest of the code until the end of the class)
+  }
+
+  // ── Private Helper for Welcome Email ──────────────────────────────
+  void _sendWelcomeEmail(String userEmail, String userPassword) async {
+    // NOTE: Il est déconseillé de mettre des identifiants SMTP en dur dans le code client.
+    // Idéalement, utilisez une Cloud Function ou un service de backend.
+    String username = 'votre-email@gmail.com'; 
+    String appPassword = 'votre-mot-de-passe-application'; 
+
+    final smtpServer = gmail(username, appPassword);
+
+    final message = Message()
+      ..from = Address(username, 'AAMRO Congress')
+      ..recipients.add(userEmail)
+      ..subject = 'Bienvenue au Congrès AAMRO'
+      ..html = """
+        <h3>Bienvenue !</h3>
+        <p>Votre compte a été créé avec succès pour le Congrès AAMRO.</p>
+        <p>Voici vos identifiants de connexion :</p>
+        <ul>
+          <li><strong>Email :</strong> $userEmail</li>
+          <li><strong>Mot de passe :</strong> $userPassword</li>
+        </ul>
+        <p>Veuillez vérifier votre email via le lien envoyé par Firebase pour activer votre compte.</p>
+      """;
+
     try {
-      _error = null;
-      _setStatus(AuthStatus.loading);
-      await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
-      return null;
-    } on FirebaseAuthException catch (e) {
-      _setStatus(AuthStatus.unauthenticated);
-      return _mapFirebaseError(e.code);
-    } catch (e, stack) {
-      debugPrint('Google Sign-In Error: $e');
-      debugPrint('Stack trace: $stack');
-      _setStatus(AuthStatus.unauthenticated);
-      return e.toString();
+      await send(message, smtpServer);
+      debugPrint('Email de bienvenue envoyé avec succès.');
+    } catch (e) {
+      debugPrint('Erreur lors de l\'envoi de l\'email : $e');
     }
   }
 

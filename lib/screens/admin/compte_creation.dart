@@ -2,6 +2,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../firebase_options.dart';
 
 
 
@@ -14,7 +17,6 @@ class compteCreation extends StatefulWidget {
 
 class _compteCreationState extends State<compteCreation> {
   final TextEditingController _emailController = TextEditingController();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   bool _isLoading = false;
 
   // --- LOGIQUE METIER ---
@@ -37,14 +39,45 @@ class _compteCreationState extends State<compteCreation> {
     try {
       final password = _generatePassword();
 
-      // Création Firebase
-      await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      // Utiliser une application Firebase secondaire pour éviter de déconnecter l'admin actuel
+      final tempAppName = "TempApp_${DateTime.now().millisecondsSinceEpoch}";
+      FirebaseApp tempApp = await Firebase.initializeApp(
+        name: tempAppName,
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
 
-      // Succès : On affiche le mot de passe à l'utilisateur
-      _showSuccessDialog(email, password);
+      try {
+        FirebaseAuth tempAuth = FirebaseAuth.instanceFor(app: tempApp);
+        final res = await tempAuth.createUserWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+
+        if (res.user != null) {
+          // Créer aussi l'entrée dans Supabase pour que le compte soit fonctionnel
+          await Supabase.instance.client.from('congress_users').insert({
+            'id': res.user!.uid,
+            'email': email,
+            'first_name': '',
+            'last_name': '',
+            'role': 'guest',
+            'status': 'pending',
+            'email_verified': false,
+            'profile_complete': false,
+          });
+          
+          await res.user!.sendEmailVerification();
+        }
+
+        _showSuccessDialog(email, password);
+      } finally {
+        await tempApp.delete();
+      }
 
     } on FirebaseAuthException catch (e) {
       _showSnackBar(e.message ?? "Une erreur est survenue", Colors.red);
+    } catch (e) {
+      _showSnackBar("Erreur: ${e.toString()}", Colors.red);
     } finally {
       setState(() => _isLoading = false);
     }
@@ -95,7 +128,10 @@ class _compteCreationState extends State<compteCreation> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              Navigator.pop(context); // Ferme le dialogue
+              Navigator.pop(context); // Revient à l'écran précédent
+            },
             child: const Text("OK"),
           ),
         ],
