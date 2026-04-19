@@ -20,7 +20,6 @@ enum AuthStatus {
 class AuthProvider extends ChangeNotifier {
   late final FirebaseAuth _auth;
   
-  // Dans la version 7.0+, GoogleSignIn utilise un singleton
   final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
 
   // Supabase client — nullable pour les stubs de test.
@@ -152,7 +151,7 @@ class AuthProvider extends ChangeNotifier {
 
       // 1. Déclenche le flux d'authentification
       // Sur Android, les paramètres sont lus depuis google-services.json
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      final GoogleSignInAccount? googleUser = await _googleSignIn.authenticate();
 
       if (googleUser == null) {
         debugPrint('Google Sign-In annulé par l\'utilisateur.');
@@ -163,11 +162,12 @@ class AuthProvider extends ChangeNotifier {
       debugPrint('Utilisateur Google obtenu: ${googleUser.email}');
 
       // 2. Obtenir les détails d'authentification (tokens)
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
+      final auth = await googleUser.authorizationClient.authorizeScopes([]);
       
       // 3. Créer le credential Firebase
       final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
+        accessToken: auth.accessToken,
         idToken: googleAuth.idToken,
       );
 
