@@ -17,12 +17,12 @@ Held in the heart of **Oran**, this event brings together leading experts, resea
 
 <p align="center">
 
-<a href="https://github.com/Connacri/Rheumatology/releases/download/v1.0.2.54/app-release.apk" target="_blank">
-  <img src="https://img.shields.io/badge/Android-APK_1.0.2.54-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Download Android APK"/>
+<a href="https://github.com/Connacri/Rheumatology/releases/download/v1.0.2.55/app-release.apk" target="_blank">
+  <img src="https://img.shields.io/badge/Android-APK_1.0.2.55-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Download Android APK"/>
 </a>
 &nbsp;&nbsp;
-<a href="https://github.com/Connacri/Rheumatology/releases/download/v1.0.2.54/installer.exe" target="_blank">
-  <img src="https://img.shields.io/badge/Windows-Installer_1.0.2.54-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Download Windows Installer"/>
+<a href="https://github.com/Connacri/Rheumatology/releases/download/v1.0.2.55/installer.exe" target="_blank">
+  <img src="https://img.shields.io/badge/Windows-Installer_1.0.2.55-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Download Windows Installer"/>
 </a>
 
 </p>
