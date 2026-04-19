@@ -150,7 +150,7 @@ class AuthProvider extends ChangeNotifier {
       _setStatus(AuthStatus.loading);
       debugPrint('Démarrage de Google Sign-In (v7.2.0)...');
 
-      // 1. Initialisation (scopes ne sont plus passés ici dans la v7.2)
+      // 1. Initialisation
       await _googleSignIn.initialize(
         serverClientId: '456602364782-q5tvhujm6hg6flh38h0aplkse03cvk3d.apps.googleusercontent.com',
       );
@@ -180,7 +180,7 @@ class AuthProvider extends ChangeNotifier {
         idToken: googleAuth.idToken,
       );
 
-      debugPrint('Tentative de connexion à Firebase avec le credential Google...');
+      debugPrint('Tentative de connexion à Firebase...');
       final userCredential = await _auth.signInWithCredential(credential);
       final firebaseUser = userCredential.user;
 

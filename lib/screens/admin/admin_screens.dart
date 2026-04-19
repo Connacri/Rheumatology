@@ -342,6 +342,12 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   final _notesCtrl = TextEditingController();
 
   @override
+  void dispose() {
+    _notesCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
     _load();

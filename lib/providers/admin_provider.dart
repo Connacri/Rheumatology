@@ -110,29 +110,45 @@ class AdminProvider extends ChangeNotifier {
 
   // ── Actions sur les users ─────────────────────────────────────────
   Future<void> validateUser(String userId) async {
-    await _sb.from('congress_users')
-        .update({'status': 'validated'}).eq('id', userId);
-    await loadUsers();
+    try {
+      await _sb.from('congress_users')
+          .update({'status': 'validated'}).eq('id', userId);
+      await loadUsers(silent: true);
+    } catch (e) {
+      debugPrint('AdminProvider.validateUser error: $e');
+    }
   }
 
   Future<void> banUser(String userId) async {
-    await _sb.from('congress_users')
-        .update({'status': 'banned'}).eq('id', userId);
-    await loadUsers();
+    try {
+      await _sb.from('congress_users')
+          .update({'status': 'banned'}).eq('id', userId);
+      await loadUsers(silent: true);
+    } catch (e) {
+      debugPrint('AdminProvider.banUser error: $e');
+    }
   }
 
   Future<void> reserveUser(String userId, String notes) async {
-    await _sb.from('congress_users').update({
-      'status':      'reserved',
-      'admin_notes': notes,
-    }).eq('id', userId);
-    await loadUsers();
+    try {
+      await _sb.from('congress_users').update({
+        'status':      'reserved',
+        'admin_notes': notes,
+      }).eq('id', userId);
+      await loadUsers(silent: true);
+    } catch (e) {
+      debugPrint('AdminProvider.reserveUser error: $e');
+    }
   }
 
   Future<void> resetToPending(String userId) async {
-    await _sb.from('congress_users')
-        .update({'status': 'pending', 'admin_notes': null}).eq('id', userId);
-    await loadUsers();
+    try {
+      await _sb.from('congress_users')
+          .update({'status': 'pending', 'admin_notes': null}).eq('id', userId);
+      await loadUsers(silent: true);
+    } catch (e) {
+      debugPrint('AdminProvider.resetToPending error: $e');
+    }
   }
 
   // ── Marquer arrivée depuis scan QR ───────────────────────────────

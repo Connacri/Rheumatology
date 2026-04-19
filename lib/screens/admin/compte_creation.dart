@@ -19,6 +19,12 @@ class _compteCreationState extends State<compteCreation> {
   final TextEditingController _emailController = TextEditingController();
   bool _isLoading = false;
 
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
+
   // --- LOGIQUE METIER ---
 
   String _generatePassword({int length = 12}) {
