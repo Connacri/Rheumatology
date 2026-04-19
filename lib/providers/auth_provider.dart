@@ -148,15 +148,11 @@ class AuthProvider extends ChangeNotifier {
     try {
       _error = null;
       _setStatus(AuthStatus.loading);
-      debugPrint('Démarrage de Google Sign-In (v7.2.0)...');
+      debugPrint('Démarrage de Google Sign-In...');
 
-      // 1. Initialisation
-      await _googleSignIn.initialize(
-        serverClientId: '456602364782-q5tvhujm6hg6flh38h0aplkse03cvk3d.apps.googleusercontent.com',
-      );
-
-      // 2. Authentification (Identité)
-      final googleUser = await _googleSignIn.authenticate();
+      // 1. Déclenche le flux d'authentification
+      // Sur Android, les paramètres sont lus depuis google-services.json
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
       if (googleUser == null) {
         debugPrint('Google Sign-In annulé par l\'utilisateur.');
@@ -166,17 +162,12 @@ class AuthProvider extends ChangeNotifier {
 
       debugPrint('Utilisateur Google obtenu: ${googleUser.email}');
 
-      // 3. Obtenir les détails d'authentification (idToken)
-      final googleAuth = await googleUser.authentication;
+      // 2. Obtenir les détails d'authentification (tokens)
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
       
-      // 4. Obtenir l'autorisation pour les scopes via authorizationClient (v7.2+)
-      final scopes = ['email', 'profile', 'openid'];
-      final authorization = await googleUser.authorizationClient.authorizeScopes(scopes);
-      final accessToken = authorization.accessToken;
-
-      // 5. Créer le credential Firebase
+      // 3. Créer le credential Firebase
       final credential = GoogleAuthProvider.credential(
-        accessToken: accessToken,
+        accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
@@ -190,7 +181,7 @@ class AuthProvider extends ChangeNotifier {
 
       debugPrint('Connexion Firebase réussie: ${firebaseUser.uid}');
 
-      // 5. Synchronisation avec Supabase
+      // 4. Synchronisation avec Supabase
       final existing = await _sb
           .from('congress_users')
           .select('id')
@@ -218,7 +209,6 @@ class AuthProvider extends ChangeNotifier {
       debugPrint('ERREUR CRITIQUE Google Sign-In: $e');
       debugPrint('Stack trace: $stack');
       
-      // En cas d'erreur, on déconnecte Google pour permettre une nouvelle tentative propre
       try {
         await _googleSignIn.signOut();
       } catch (_) {}
@@ -292,7 +282,32 @@ class AuthProvider extends ChangeNotifier {
     required String email,
     required String password,
   }) async {
-// ... (rest of the code until the end of the class)
+    try {
+      _error = null;
+      _setStatus(AuthStatus.loading);
+
+      final res = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      if (res.user == null) {
+        _setStatus(AuthStatus.unauthenticated);
+        return 'Erreur de connexion';
+      }
+
+      // Le listener _onAuthStateChanged prendra le relais pour charger le profil Supabase
+      // mais on peut forcer le chargement ici pour plus de réactivité
+      await _loadAndRouteUser(res.user!);
+      
+      return null;
+    } on FirebaseAuthException catch (e) {
+      _setStatus(AuthStatus.unauthenticated);
+      return _mapFirebaseError(e.code);
+    } catch (e) {
+      _setStatus(AuthStatus.unauthenticated);
+      return e.toString();
+    }
   }
 
   // ── Private Helper for Welcome Email ──────────────────────────────

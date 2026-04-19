@@ -3,20 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../firebase_options.dart';
+import '../../providers/admin_provider.dart';
 
 
 
 class compteCreation extends StatefulWidget {
-  const compteCreation({super.key});
-
+  final String mail;
+    const compteCreation({super.key, required this.mail});
   @override
   State<compteCreation> createState() => _compteCreationState();
 }
 
 class _compteCreationState extends State<compteCreation> {
-  final TextEditingController _emailController = TextEditingController();
+  late final TextEditingController _emailController = TextEditingController(text: widget.mail);
   bool _isLoading = false;
 
   @override
@@ -61,18 +63,19 @@ class _compteCreationState extends State<compteCreation> {
 
         if (res.user != null) {
           // Créer aussi l'entrée dans Supabase pour que le compte soit fonctionnel
-          await Supabase.instance.client.from('congress_users').insert({
-            'id': res.user!.uid,
-            'email': email,
-            'first_name': '',
-            'last_name': '',
-            'role': 'guest',
-            'status': 'pending',
-            'email_verified': false,
-            'profile_complete': false,
-          });
-          
+          // await Supabase.instance.client.from('congress_users').insert({
+          //   'id': res.user!.uid,
+          //   'email': email,
+          //   'first_name': '',
+          //   'last_name': '',
+          //   'role': 'guest',
+          //   'status': 'pending',
+          //   'email_verified': false,
+          //   'profile_complete': false,
+          // });
           await res.user!.sendEmailVerification();
+          if (!mounted) return;
+          context.read<AdminProvider>().validateUser(res.user!.uid);
         }
 
         _showSuccessDialog(email, password);

@@ -356,6 +356,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   Future<void> _load() async {
     setState(() => _loading = true);
     final u = await context.read<AdminProvider>().getUserById(widget.userId);
+
     if (mounted) setState(() { _user = u; _loading = false; });
   }
 
@@ -390,20 +391,29 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
               child: SizedBox(width: 20, height: 20,
                   child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)),
             ),
+          IconButton(
+            icon: const Icon(Icons.edit_outlined),
+            onPressed: _acting ? null : _showEditDialog,
+            tooltip: 'Modifier',
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+            onPressed: _acting ? null : _showDeleteConfirm,
+            tooltip: 'Supprimer',
+          ),
         ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
-          children: [   const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () async {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => const compteCreation()));
-
-              },
-              child: const Text("Créer des comptes"),
-            ),   const SizedBox(height: 16),
+          children: [
+            ElevatedButton.icon(
+              onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) =>  compteCreation(  mail: u.email!,))),
+              icon: const Icon(Icons.person_add_outlined),
+              label: const Text("Créer des comptes de test"),
+            ),
+            const SizedBox(height: 16),
             // ── Card profil ──
             _buildProfileCard(u),
             const SizedBox(height: 16),
@@ -420,6 +430,75 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
             _buildActions(u),
           ],
         ),
+      ),
+    );
+  }
+
+  void _showEditDialog() {
+    final u = _user!;
+    final fNameCtrl = TextEditingController(text: u.firstName);
+    final lNameCtrl = TextEditingController(text: u.lastName);
+    final specCtrl  = TextEditingController(text: u.specialty);
+    final instCtrl  = TextEditingController(text: u.institution);
+    final countryCtrl = TextEditingController(text: u.country);
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Modifier le profil'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(controller: fNameCtrl, decoration: const InputDecoration(labelText: 'Prénom')),
+              TextField(controller: lNameCtrl, decoration: const InputDecoration(labelText: 'Nom')),
+              TextField(controller: specCtrl,  decoration: const InputDecoration(labelText: 'Spécialité')),
+              TextField(controller: instCtrl,  decoration: const InputDecoration(labelText: 'Établissement')),
+              TextField(controller: countryCtrl, decoration: const InputDecoration(labelText: 'Pays')),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Annuler')),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              _act(() => context.read<AdminProvider>().updateUser(u.id, {
+                'first_name': fNameCtrl.text.trim(),
+                'last_name':  lNameCtrl.text.trim(),
+                'specialty':   specCtrl.text.trim(),
+                'institution': instCtrl.text.trim(),
+                'country':     countryCtrl.text.trim(),
+              }));
+            },
+            child: const Text('Enregistrer'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDeleteConfirm() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Supprimer cet utilisateur ?'),
+        content: const Text(
+            'Cette action supprimera toutes les données de l\'utilisateur dans Supabase '
+            '(profil, questions, votes, certificats, avatar).\n\n'
+            '⚠️ Note : Le compte Firebase Auth doit être supprimé manuellement depuis la console Firebase si nécessaire.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Annuler')),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.pop(ctx);
+              await _act(() => context.read<AdminProvider>().deleteUser(_user!.id));
+              if (mounted) context.pop();
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
+            child: const Text('Supprimer définitivement'),
+          ),
+        ],
       ),
     );
   }

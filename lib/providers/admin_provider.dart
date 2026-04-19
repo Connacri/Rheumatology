@@ -151,6 +151,65 @@ class AdminProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> updateUser(String userId, Map<String, dynamic> data) async {
+    try {
+      await _sb.from('congress_users').update(data).eq('id', userId);
+      await loadUsers(silent: true);
+    } catch (e) {
+      debugPrint('AdminProvider.updateUser error: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> deleteUser(String userId) async {
+    try {
+      // 1. Récupérer l'utilisateur pour avoir l'URL de l'avatar
+      final user = await getUserById(userId);
+      if (user != null && user.avatarUrl != null) {
+        // Extraire le chemin du bucket depuis l'URL
+        // URL format: .../storage/v1/object/public/congress-avatars/avatars/UID.jpg
+        final uri = Uri.parse(user.avatarUrl!);
+        final pathSegments = uri.pathSegments;
+        final avatarIdx = pathSegments.indexOf('congress-avatars');
+        if (avatarIdx != -1 && avatarIdx + 1 < pathSegments.length) {
+          final filePath = pathSegments.skip(avatarIdx + 1).join('/');
+          await _sb.storage.from('congress-avatars').remove([filePath]);
+        }
+      }
+
+      // 2. Supprimer les certificats du storage si besoin
+      try {
+        final certs = await _sb.from('congress_certificates').select('pdf_url').eq('user_id', userId).maybeSingle();
+        if (certs != null && certs['pdf_url'] != null) {
+          final uri = Uri.parse(certs['pdf_url'] as String);
+          final pathSegments = uri.pathSegments;
+          final certIdx = pathSegments.indexOf('congress-certificates');
+          if (certIdx != -1 && certIdx + 1 < pathSegments.length) {
+            final filePath = pathSegments.skip(certIdx + 1).join('/');
+            await _sb.storage.from('congress-certificates').remove([filePath]);
+          }
+        }
+      } catch (e) {
+        debugPrint('AdminProvider.deleteUser (cert cleanup) error: $e');
+      }
+
+      // 3. Supprimer de event_registrations si lié
+      try {
+        await _sb.from('event_registrations').delete().eq('user_id', userId);
+      } catch (e) {
+        debugPrint('AdminProvider.deleteUser (registrations cleanup) error: $e');
+      }
+
+      // 4. Supprimer de la table congress_users (le cascade s'occupe du reste dans Supabase)
+      await _sb.from('congress_users').delete().eq('id', userId);
+      
+      await loadUsers(silent: true);
+    } catch (e) {
+      debugPrint('AdminProvider.deleteUser error: $e');
+      rethrow;
+    }
+  }
+
   // ── Marquer arrivée depuis scan QR ───────────────────────────────
   Future<CongressUser?> markArrivalByQrToken(String qrToken) async {
     try {
