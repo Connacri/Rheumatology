@@ -88,7 +88,7 @@ class _AAMROAppState extends State<AAMROApp> {
       );
     }
 
-    // ── Mode PRODUCTION d ──────────────────────────────────────────────
+    // ── Mode PRODUCTION ──────────────────────────────────────────────
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
