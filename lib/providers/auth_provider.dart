@@ -151,7 +151,7 @@ class AuthProvider extends ChangeNotifier {
 
       // 1. Déclenche le flux d'authentification
       // Sur Android, les paramètres sont lus depuis google-services.json
-      final GoogleSignInAccount? googleUser = await _googleSignIn.authenticate();
+      final GoogleSignInAccount googleUser = await _googleSignIn.authenticate();
 
       if (googleUser == null) {
         debugPrint('Google Sign-In annulé par l\'utilisateur.');

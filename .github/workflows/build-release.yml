@@ -5,6 +5,7 @@ on:
     branches: [ master ]
     paths-ignore:
       - 'release.json'
+      - 'index.html'
 
 permissions:
   contents: write
@@ -42,9 +43,11 @@ jobs:
 
       - name: Extract version and Update pubspec.yaml
         run: |
-          VERSION_NAME=$(grep 'version: ' pubspec.yaml | sed 's/version: //' | cut -d'+' -f1 | tr -d '[:space:]')
-          echo "Building version $VERSION_NAME+${{ github.run_number }}"
-          sed -i "s/^version: .*/version: $VERSION_NAME+${{ github.run_number }}/" pubspec.yaml
+          VERSION=$(grep 'version:' pubspec.yaml | awk '{print $2}')
+          VERSION_NAME=$(echo $VERSION | cut -d'+' -f1)
+          BUILD_NUMBER=$(echo $VERSION | cut -d'+' -f2)
+
+      
 
       - run: flutter pub get
       - name: Build APK
