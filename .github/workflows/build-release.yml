@@ -4,16 +4,52 @@ on:
   push:
     branches: [ master ]
     paths-ignore:
-#      - 'release.json'
       - 'index.html'
+      - 'README.md'
 
 permissions:
   contents: write
-  issues: read
-  pull-requests: read
+
+# ─────────────────────────────────────────────
+# STRATÉGIE DE VERSIONING
+# pubspec.yaml contient : version: 1.0.3+0
+#   → VERSION_NAME = 1.0.3  (lu depuis pubspec)
+#   → BUILD_NUMBER = github.run_number (ex: 42)
+#   → VERSION_FULL = 1.0.3.42  (utilisé partout)
+#   → TAG = v1.0.3.42
+# ─────────────────────────────────────────────
 
 jobs:
+  # ═══════════════════════════════════════════
+  # JOB 0 – Extraire la version (partagée)
+  # ═══════════════════════════════════════════
+  extract-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version_name: ${{ steps.ver.outputs.version_name }}
+      version_full: ${{ steps.ver.outputs.version_full }}
+      tag: ${{ steps.ver.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extraire VERSION_NAME depuis pubspec.yaml
+        id: ver
+        run: |
+          VERSION_NAME=$(grep '^version:' pubspec.yaml | sed 's/version: //' | cut -d'+' -f1 | tr -d '[:space:]')
+          VERSION_FULL="${VERSION_NAME}.${{ github.run_number }}"
+          TAG="v${VERSION_FULL}"
+          echo "version_name=${VERSION_NAME}" >> $GITHUB_OUTPUT
+          echo "version_full=${VERSION_FULL}"  >> $GITHUB_OUTPUT
+          echo "tag=${TAG}"                    >> $GITHUB_OUTPUT
+          echo "▶ VERSION_NAME = ${VERSION_NAME}"
+          echo "▶ VERSION_FULL = ${VERSION_FULL}"
+          echo "▶ TAG          = ${TAG}"
+
+  # ═══════════════════════════════════════════
+  # JOB 1 – Tests
+  # ═══════════════════════════════════════════
   test:
+    needs: extract-version
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -25,14 +61,20 @@ jobs:
 
       - run: flutter pub get
 
-      - name: Install ObjectBox native library
+      - name: Installer ObjectBox native
         run: bash <(curl -s https://raw.githubusercontent.com/objectbox/objectbox-dart/main/install.sh) --quiet
 
       - run: flutter test
 
+  # ═══════════════════════════════════════════
+  # JOB 2 – Build Android APK
+  # ═══════════════════════════════════════════
   build-android:
-    needs: test
+    needs: [extract-version, test]
     runs-on: ubuntu-latest
+    env:
+      VERSION_NAME: ${{ needs.extract-version.outputs.version_name }}
+      VERSION_FULL: ${{ needs.extract-version.outputs.version_full }}
     steps:
       - uses: actions/checkout@v4
 
@@ -41,27 +83,31 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Extract version and Update pubspec.yaml
-        run: |
-          VERSION=$(grep 'version:' pubspec.yaml | awk '{print $2}')
-          VERSION_NAME=$(echo $VERSION | cut -d'+' -f1)
-          BUILD_NUMBER=$(echo $VERSION | cut -d'+' -f2)
-
-      
-
       - run: flutter pub get
-      - name: Build APK
+
+      - name: Build APK release
         run: |
-          flutter build apk --release --build-name=$(grep 'version: ' pubspec.yaml | sed 's/version: //' | cut -d'+' -f1 | tr -d '[:space:]') --build-number=${{ github.run_number }}
+          flutter build apk --release \
+            --build-name="${VERSION_NAME}" \
+            --build-number=${{ github.run_number }}
+
+      - name: Vérification artefact
+        run: ls -lh build/app/outputs/flutter-apk/app-release.apk
 
       - uses: actions/upload-artifact@v4
         with:
           name: app-release.apk
           path: build/app/outputs/flutter-apk/app-release.apk
 
+  # ═══════════════════════════════════════════
+  # JOB 3 – Build Windows + Inno Setup
+  # ═══════════════════════════════════════════
   build-windows:
-    needs: test
+    needs: [extract-version, test]
     runs-on: windows-latest
+    env:
+      VERSION_NAME: ${{ needs.extract-version.outputs.version_name }}
+      VERSION_FULL: ${{ needs.extract-version.outputs.version_full }}
     steps:
       - uses: actions/checkout@v4
 
@@ -70,41 +116,40 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Increment Windows Version
+      - name: Patcher pubspec.yaml & setup.iss avec VERSION_FULL
         shell: pwsh
         run: |
-          $content = Get-Content pubspec.yaml -Raw
-          if ($content -match 'version:\s+([^\+]+)\+') {
-              $versionName = $Matches[1].Trim()
-              $newVersion = "$versionName+${{ github.run_number }}"
-              $content -replace '^version: .*', "version: $newVersion" | Set-Content pubspec.yaml
-              
-              $setupContent = Get-Content installer/setup.iss -Raw
-              $setupContent -replace '#define AppVersion\s+".*"', "#define AppVersion `"$versionName.${{ github.run_number }}`"" | Set-Content installer/setup.iss
-              
-              Write-Host "Updated pubspec.yaml to $newVersion"
-              Write-Host "Updated setup.iss version to $versionName.${{ github.run_number }}"
-          }
+          $versionName = "$env:VERSION_NAME"
+          $versionFull = "$env:VERSION_FULL"
+          $buildNumber = "${{ github.run_number }}"
+
+          # --- pubspec.yaml ---
+          $pub = Get-Content pubspec.yaml -Raw
+          $pub -replace '^version: .*', "version: $versionName+$buildNumber" |
+            Set-Content pubspec.yaml -NoNewline
+          Write-Host "✅ pubspec.yaml → version: $versionName+$buildNumber"
+
+          # --- installer/setup.iss ---
+          $iss = Get-Content installer/setup.iss -Raw
+          $iss -replace '#define AppVersion\s+"[^"]*"', "#define AppVersion `"$versionFull`"" |
+            Set-Content installer/setup.iss -NoNewline
+          Write-Host "✅ setup.iss → AppVersion = $versionFull"
 
       - run: flutter pub get
 
-      # ✅ Build Windows
-      - name: Build Windows app
-        run: flutter build windows
+      - name: Build Windows
+        run: flutter build windows --release
 
-      # ✅ DEBUG (IMPORTANT)
-      - name: Check build output
+      - name: Vérification build
         run: dir build\windows\x64\runner\Release
 
-      # ✅ Install Inno Setup
-      - run: choco install innosetup -y
+      - name: Installer Inno Setup
+        run: choco install innosetup -y
 
-      # ✅ Build installer
-      - name: Build installer
+      - name: Build installeur .exe
         run: iscc installer/setup.iss
 
-      # ✅ DEBUG installer
-      - name: Check installer output
+      - name: Vérification installeur
         run: dir installer\output
 
       - uses: actions/upload-artifact@v4
@@ -112,68 +157,220 @@ jobs:
           name: installer.exe
           path: installer/output/*.exe
 
+  # ═══════════════════════════════════════════
+  # JOB 4 – Release GitHub + Mise à jour fichiers
+  # ═══════════════════════════════════════════
   release-and-update:
-    needs: [build-android, build-windows]
+    needs: [extract-version, build-android, build-windows]
     runs-on: ubuntu-latest
+    env:
+      VERSION_NAME: ${{ needs.extract-version.outputs.version_name }}
+      VERSION_FULL: ${{ needs.extract-version.outputs.version_full }}
+      TAG:          ${{ needs.extract-version.outputs.tag }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Token avec droit push pour le commit final
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Download Android APK
+      # ── Récupérer les artefacts ──────────────
+      - name: Télécharger APK
         uses: actions/download-artifact@v4
         with:
           name: app-release.apk
+          path: dist/
 
-      - name: Download Windows installer
+      - name: Télécharger installeur Windows
         uses: actions/download-artifact@v4
         with:
           name: installer.exe
+          path: dist/
 
-      # ✅ IMPORTANT : renommer correctement
-      - name: Rename installer
-        run: mv installer.exe/*.exe installer.exe || true
+      - name: Renommer installeur (nom fixe)
+        run: |
+          cd dist
+          # L'artifact Windows peut avoir un nom variable → on le normalise
+          find . -name "*.exe" -exec mv {} installer.exe \;
+          ls -lh
 
-      - name: Create Release
+      # ── Créer la GitHub Release ──────────────
+      - name: Créer la Release GitHub
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ github.run_number }}
-          name: "Release v${{ github.run_number }}"
+          tag_name:   ${{ env.TAG }}
+          name:       "Release ${{ env.VERSION_FULL }}"
+          body: |
+            ## 🩺 AAMRO – Release ${{ env.VERSION_FULL }}
+
+            | Plateforme | Fichier |
+            |---|---|
+            | 🤖 Android | [app-release.apk](https://github.com/${{ github.repository }}/releases/download/${{ env.TAG }}/app-release.apk) |
+            | 🪟 Windows | [installer.exe](https://github.com/${{ github.repository }}/releases/download/${{ env.TAG }}/installer.exe) |
           files: |
-            app-release.apk
-            installer.exe
+            dist/app-release.apk
+            dist/installer.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Générer release.json et mettre à jour les fichiers
+      # ── Générer release.json ─────────────────
+      - name: Générer release.json
         run: |
-          VERSION_NAME=$(grep 'version: ' pubspec.yaml | sed 's/version: //' | cut -d'+' -f1)
-          NEW_VERSION="$VERSION_NAME+${{ github.run_number }}"
-          
-          # Mise à jour des fichiers pour le commit final
-          sed -i "s/^version: .*/version: $NEW_VERSION/" pubspec.yaml
-          sed -i "s/#define AppVersion   \".*\"/#define AppVersion   \"$VERSION_NAME.${{ github.run_number }}\"/" installer/setup.iss
+          APK_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/app-release.apk"
+          WIN_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/installer.exe"
+          DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 
           cat > release.json << EOF
           {
-            "version": "$VERSION_NAME.${{ github.run_number }}",
-            "tag": "v${{ github.run_number }}",
-            "date": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "version": "${VERSION_FULL}",
+            "tag": "${TAG}",
+            "date": "${DATE}",
             "platforms": {
               "android": {
-                "url": "https://github.com/${{ github.repository }}/releases/download/v${{ github.run_number }}/app-release.apk",
+                "url": "${APK_URL}",
                 "name": "app-release.apk"
               },
               "windows": {
-                "url": "https://github.com/${{ github.repository }}/releases/download/v${{ github.run_number }}/installer.exe",
+                "url": "${WIN_URL}",
                 "name": "installer.exe"
               }
             }
           }
           EOF
 
-      - name: Commit version updates and release.json
+          echo "✅ release.json généré :"
+          cat release.json
+
+      # ── Mettre à jour index.html ─────────────
+      - name: Mettre à jour le bouton dans index.html
         run: |
-          git config user.name "github-actions[bot]"
+          APK_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/app-release.apk"
+          # Remplace l'href du bouton downloadBtn (href statique de fallback)
+          sed -i "s|href=\"https://github.com/Connacri/Rheumatology/releases/.*download/app-release.apk\"|href=\"${APK_URL}\"|g" index.html
+          echo "✅ index.html mis à jour avec l'URL : ${APK_URL}"
+
+      # ── Mettre à jour README.md ──────────────
+      - name: Mettre à jour README.md
+        run: |
+          APK_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/app-release.apk"
+          WIN_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/installer.exe"
+
+          cat > README.md << 'HEREDOC'
+          # 🩺 AAMRO
+          ### *Advancing Rheumatology through international collaboration*
+
+          ![AAMRO Banner](https://connacri.github.io/Rheumatology/assets/1775811758912.png)
+
+          ---
+
+          ## 🌍 About the Event
+
+          **AAMRO** (*14th Orano-Eurelian Meeting of Rheumatology & 2nd International Congress*) is a prestigious international gathering dedicated to advancing the field of rheumatology.
+
+          Held in the heart of **Oran**, this event brings together leading experts, researchers, and healthcare professionals to share knowledge, innovations, and scientific excellence.
+
+          ---
+
+          ## 📲 Download the App
+
+          <p align="center">
+
+          <a href="PLACEHOLDER_APK_URL" target="_blank">
+            <img src="https://img.shields.io/badge/Android-APK_PLACEHOLDER_VERSION-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Download Android APK"/>
+          </a>
+          &nbsp;&nbsp;
+          <a href="PLACEHOLDER_WIN_URL" target="_blank">
+            <img src="https://img.shields.io/badge/Windows-Installer_PLACEHOLDER_VERSION-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Download Windows Installer"/>
+          </a>
+
+          </p>
+
+          ---
+
+          ## 🎯 Objectives
+
+          - 🤝 Strengthen international collaboration
+          - 🔬 Promote cutting-edge research in rheumatology
+          - 📚 Share clinical expertise and best practices
+          - 🌐 Build a global network of specialists
+
+          ---
+
+          ## 📍 Location
+
+          **Oran, Algeria** 🇩🇿
+
+          ---
+
+          ## 🔗 Official Website
+
+          👉 https://connacri.github.io/Rheumatology/
+
+          ---
+
+          ## 📢 Highlights
+
+          - International speakers
+          - Scientific sessions & workshops
+          - Networking opportunities
+          - Latest innovations in rheumatology
+
+          ---
+
+          ## 🖼️ Preview
+
+          ![Preview](https://connacri.github.io/Rheumatology/assets/1775811758912.png)
+
+          ---
+
+          ## 📣 Social Sharing
+
+          This project is optimized for social media sharing using **Open Graph** and **Twitter Cards**, ensuring a rich preview with image, title, and description.
+
+          ---
+
+          ## ⚙️ Meta Tags Used
+
+          ```html
+          <meta property="og:title" content="AAMRO" />
+          <meta property="og:description" content="Advancing Rheumatology through international collaboration and scientific excellence in the heart of Oran." />
+          <meta property="og:url" content="https://connacri.github.io/Rheumatology/" />
+          <meta property="og:image" content="https://connacri.github.io/Rheumatology/assets/1775811758912.png" />
+          <meta property="og:site_name" content="14th Orano-Eurelian Meeting of Rheumatology & 2nd International Congress" />
+          <meta property="og:type" content="website" />
+          <meta name="twitter:card" content="summary_large_image" />
+          ```
+          HEREDOC
+
+          # Injecter les URLs dynamiques dans le README
+          sed -i "s|PLACEHOLDER_APK_URL|${APK_URL}|g" README.md
+          sed -i "s|PLACEHOLDER_WIN_URL|${WIN_URL}|g" README.md
+          sed -i "s|PLACEHOLDER_VERSION|${VERSION_FULL}|g" README.md
+
+          echo "✅ README.md mis à jour"
+
+      # ── Patcher pubspec.yaml avec version finale ─
+      - name: Patcher pubspec.yaml (version finale)
+        run: |
+          sed -i "s/^version: .*/version: ${VERSION_NAME}+${{ github.run_number }}/" pubspec.yaml
+          echo "✅ pubspec.yaml → version: ${VERSION_NAME}+${{ github.run_number }}"
+
+      # ── Patcher setup.iss ────────────────────
+      - name: Patcher installer/setup.iss
+        run: |
+          sed -i "s/#define AppVersion   \"[^\"]*\"/#define AppVersion   \"${VERSION_FULL}\"/" installer/setup.iss
+          echo "✅ setup.iss → AppVersion = ${VERSION_FULL}"
+
+      # ── Commit final [skip ci] ───────────────
+      - name: Commit & push (version + release.json + index + README)
+        run: |
+          git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add release.json pubspec.yaml installer/setup.iss
-          git commit -m "chore: bump version to ${{ github.run_number }} and update release.json [skip ci]" || echo "Rien à commiter"
-          git push origin master || echo "Push ignoré"
+          git add \
+            pubspec.yaml \
+            installer/setup.iss \
+            release.json \
+            index.html \
+            README.md
+          git diff --cached --quiet && echo "Rien à commiter" && exit 0
+          git commit -m "chore: release ${VERSION_FULL} — bump version & update assets [skip ci]"
+          git push origin master
