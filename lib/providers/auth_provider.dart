@@ -153,11 +153,11 @@ class AuthProvider extends ChangeNotifier {
       // Sur Android, les paramètres sont lus depuis google-services.json
       final GoogleSignInAccount googleUser = await _googleSignIn.authenticate();
 
-      if (googleUser == null) {
-        debugPrint('Google Sign-In annulé par l\'utilisateur.');
-        _setStatus(AuthStatus.unauthenticated);
-        return 'Connexion annulée';
-      }
+      // if (googleUser == null) {
+      //   debugPrint('Google Sign-In annulé par l\'utilisateur.');
+      //   _setStatus(AuthStatus.unauthenticated);
+      //   return 'Connexion annulée';
+      // }
 
       debugPrint('Utilisateur Google obtenu: ${googleUser.email}');
 
