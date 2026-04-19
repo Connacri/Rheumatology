@@ -4,7 +4,7 @@
 #define BuildDir     "..\build\windows\x64\runner\Release"
 
 [Setup]
-AppId={{B3F2A1C4-9D7E-4F2A-B8C1-1234567890AB}
+AppId={{B3F2A1C4-9D7E-4F2A-B8C1-1234567890AB}}
 AppName={#AppName}
 AppVersion={#AppVersion}
 AppPublisher={#AppPublisher}
